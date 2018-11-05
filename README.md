@@ -4,8 +4,8 @@
 Name: 'Your real name'  
 Student Number: 'Your student number'
 
-Name: 'Your real name'  
-Student Number: 'Your student number'
+Name: Ameer Dow  
+Student Number: 203844956
 
 ### Lecturer
 *Roi Poranne*
