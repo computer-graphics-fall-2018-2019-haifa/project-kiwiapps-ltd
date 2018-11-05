@@ -2,9 +2,11 @@
 ## Students Team data
 
 Name: David Antoon
+
 Student Number: 204489470
 
 Name: Ameer Dow  
+
 Student Number: 203844956
 
 ### Lecturer
