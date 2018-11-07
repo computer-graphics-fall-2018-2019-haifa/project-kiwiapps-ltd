@@ -15,12 +15,13 @@ private:
 	std::vector<Face> faces;
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> textures;
 	glm::mat4x4 worldTransform;
 	glm::vec4 color;
 	std::string modelName;
 
 public:
-	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::string& modelName = "");
+	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& textures, const std::string& modelName = "");
 	virtual ~MeshModel();
 
 	void SetWorldTransformation(const glm::mat4x4& worldTransform);

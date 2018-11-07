@@ -6,16 +6,19 @@
 #include <fstream>
 #include <sstream>
 
-MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::string& modelName) :
-	modelName(modelName),
-	worldTransform(glm::mat4x4(1))
+MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& textures, const std::string& modelName) :
+worldTransform(glm::mat4x4(1)), modelName(modelName)
 {
-
+    this->faces = faces;
+    this->vertices = vertices;
+    this->normals = normals;
+    this->textures = textures;
+    this->modelName = modelName;
 }
 
 MeshModel::~MeshModel()
 {
-
+    
 }
 
 void MeshModel::SetWorldTransformation(const glm::mat4x4& worldTransform)
