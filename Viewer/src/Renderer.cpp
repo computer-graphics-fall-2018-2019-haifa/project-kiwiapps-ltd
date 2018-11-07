@@ -6,6 +6,7 @@
 #include <imgui/imgui.h>
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
@@ -79,25 +80,51 @@ void Renderer::Render(const Scene& scene)
 	//## Here you should render the scene.       ##
 	//#############################################
 
-	// Draw a chess board in the middle of the screen
-	for (int i = 100; i < viewportWidth - 100; i++)
-	{
-		for (int j = 100; j < viewportHeight - 100; j++)
-		{
-			int mod_i = i / 50;
-			int mod_j = j / 50;
-
-			int odd = (mod_i + mod_j) % 2;
-			if (odd)
-			{
-				putPixel(i, j, glm::vec3(0, 1, 0));
-			}
-			else
-			{
-				putPixel(i, j, glm::vec3(1, 0, 0));
-			}
-		}
-	}
+//    // Draw a chess board in the middle of the screen
+//    for (int i = 10; i < viewportWidth - 10; i++)
+//    {
+//        for (int j = 100; j < viewportHeight - 100; j++)
+//        {
+//            int mod_i = i / 50;
+//            int mod_j = j / 50;
+//
+//            int odd = (mod_i + mod_j) % 2;
+//            if (odd)
+//            {
+//                putPixel(i, j, glm::vec3(0, 1, 0));
+//            }
+//            else
+//            {
+//                putPixel(i, j, glm::vec3(1, 0, 0));
+//            }
+//        }
+//    }
+    
+    // loop over cameras
+    // project from active camera
+    // loop over models and present by active camera
+    // highlight active model
+    
+    scene.models.at(10);
+    
+}
+void Renderer::line(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color) {
+    
+    int x0 = p1.x;
+    int y0 = p1.y;
+    int x1 = p2.x;
+    int y1 = p2.y;
+    int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
+    int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
+    int err = (dx>dy ? dx : -dy)/2, e2;
+    
+    while(true){
+        putPixel(x0,y0, glm::vec3(1, 0, 0));
+        if (x0==x1 && y0==y1) break;
+        e2 = err;
+        if (e2 >-dx) { err -= dy; x0 += sx; }
+        if (e2 < dy) { err += dx; y0 += sy; }
+    }
 }
 
 //##############################

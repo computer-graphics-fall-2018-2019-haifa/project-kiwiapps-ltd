@@ -35,5 +35,5 @@ public:
 	void SetActiveModelIndex(int index);
 	const int GetActiveModelIndex() const;
 
-	// Add more methods as needed...
+	
 };

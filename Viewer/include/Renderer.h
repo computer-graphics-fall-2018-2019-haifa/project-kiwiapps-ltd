@@ -20,6 +20,7 @@ private:
 	int viewportY;
 
 	void putPixel(int x, int y, const glm::vec3& color);
+    void line(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color);
 	void createBuffers(int viewportWidth, int viewportHeight);
 
 	GLuint glScreenTex;
