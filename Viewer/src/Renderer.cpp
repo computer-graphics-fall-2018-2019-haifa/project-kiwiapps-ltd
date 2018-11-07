@@ -108,12 +108,13 @@ void Renderer::Render(const Scene& scene)
     scene.models.at(10);
     
 }
-void Renderer::line(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color) {
-    
+void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color) {
+    // init points per vec
     int x0 = p1.x;
     int y0 = p1.y;
     int x1 = p2.x;
     int y1 = p2.y;
+    
     int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
     int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
     int err = (dx>dy ? dx : -dy)/2, e2;
