@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <nfd.h>
 #include <random>
+#include <GLFW/glfw3.h>
 
 bool showDemoWindow = false;
 bool showAnotherWindow = false;
@@ -23,7 +24,7 @@ const glm::vec4& GetClearColor()
 	return clearColor;
 }
 
-void DrawImguiMenus(ImGuiIO& io, Scene& scene)
+void DrawImguiMenus(ImGuiIO& io, Scene& scene, GLFWwindow* window)
 {
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	if (showDemoWindow)
@@ -68,7 +69,7 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 
 	// 4. Demonstrate creating a fullscreen menu bar and populating it.
 	{
-		ImGuiWindowFlags flags = ImGuiWindowFlags_NoFocusOnAppearing;
+//        ImGuiWindowFlags flags = ImGuiWindowFlags_NoFocusOnAppearing;
 		if (ImGui::BeginMainMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -78,15 +79,21 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene)
 					nfdchar_t *outPath = NULL;
 					nfdresult_t result = NFD_OpenDialog("obj;png,jpg", NULL, &outPath);
 					if (result == NFD_OKAY) {
+                        printf("Load_Model obj Loaded\n");
 						scene.AddModel(std::make_shared<MeshModel>(Utils::LoadMeshModel(outPath)));
 						free(outPath);
 					}
 					else if (result == NFD_CANCEL) {
+                        printf("Load_Model canceled\n");
 					}
 					else {
+                        printf("Load_Model Failed to Error\n");
 					}
 
 				}
+                if (ImGui::MenuItem("Exit", "CTRL+Q")){
+                    glfwSetWindowShouldClose(window, true);
+                }
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();
