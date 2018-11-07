@@ -35,5 +35,9 @@ public:
 	void SetActiveModelIndex(int index);
 	const int GetActiveModelIndex() const;
 
-	
+    const std::vector<Camera> GetAllCameras() const;
+    const std::vector<std::shared_ptr<MeshModel>> GetAllModels() const;
+    
+    const Camera GetCameraByIndex(int index) const;
+    const std::shared_ptr<MeshModel> GetModelByIndex(int index) const;
 };

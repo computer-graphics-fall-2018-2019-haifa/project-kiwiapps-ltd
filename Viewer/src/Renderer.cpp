@@ -105,7 +105,7 @@ void Renderer::Render(const Scene& scene)
     // loop over models and present by active camera
     // highlight active model
     
-    scene.models.at(10);
+//    scene.models.at(10);
     
 }
 void Renderer::line(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color) {

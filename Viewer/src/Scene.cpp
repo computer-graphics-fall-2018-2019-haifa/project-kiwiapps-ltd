@@ -56,3 +56,41 @@ const int Scene::GetActiveModelIndex() const
 {
 	return activeModelIndex;
 }
+
+const std::vector<Camera> Scene::GetAllCameras() const
+{
+    return cameras;
+}
+
+const std::vector<std::shared_ptr<MeshModel>> Scene::GetAllModels() const
+{
+    return models;
+}
+
+
+const Camera Scene::GetCameraByIndex(int index) const
+{
+    if(index > 0 && index < cameras.size())
+    {
+        return cameras.at(index);
+    } else {
+        std::cerr << "Failed to get camera, please check index " << index << std::endl;
+        throw "Failed to get camera, please check index " + std::to_string(index);
+    }
+}
+const std::shared_ptr<MeshModel> Scene::GetModelByIndex(int index) const
+{
+    if(index > 0 && index < models.size())
+    {
+        return models.at(index);
+    } else {
+        std::cerr << "Failed to get model, please check index " << index << std::endl;
+        throw "Failed to get model, please check index " + std::to_string(index);
+    }
+}
+
+
+
+
+
+
