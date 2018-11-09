@@ -73,6 +73,22 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 	createOpenGLBuffer();
 }
 
+void Renderer::DrawTriangles(const std::vector<glm::vec3>* vertexPositions, const std::vector<glm::vec3>* normalPositions, const std::vector<glm::vec3>* texturePositions)
+{
+}
+
+void Renderer::SetCameraTransform(const glm::mat4x4 & cTransform)
+{
+}
+
+void Renderer::SetProjection(const glm::mat4x4 & projection)
+{
+}
+
+void Renderer::SetModelTransforms(const glm::mat4x4 & mTransform, ...)
+{
+}
+
 void Renderer::Render(const Scene& scene)
 {
 	//#############################################
