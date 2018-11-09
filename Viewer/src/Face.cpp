@@ -42,7 +42,7 @@ Face::~Face()
 
 }
 
-const int Face::GetVertexIndex(int index)
+const int Face::GetVertexByIndex(int index)
 {
 	return vertexIndices[index];
 }

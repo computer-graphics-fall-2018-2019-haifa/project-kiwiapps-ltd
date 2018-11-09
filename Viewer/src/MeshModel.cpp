@@ -45,3 +45,70 @@ const std::string& MeshModel::GetModelName()
 {
 	return modelName;
 }
+
+const glm::vec3 MeshModel::CalculateFaceNormal(Face face){
+    int v1Index = face.GetVertexByIndex(0);
+    int v2Index = face.GetVertexByIndex(1);
+    int v3Index = face.GetVertexByIndex(2);
+
+    glm::vec3 vertex1 = GetVertexByIndex(v1Index);
+    glm::vec3 vertex2 = GetVertexByIndex(v2Index);
+    glm::vec3 vertex3 = GetVertexByIndex(v3Index);
+
+    glm::vec3 ver1 = vertex1 - vertex2;
+    glm::vec3 ver2 = vertex3 - vertex1;
+    
+    return cross(ver1,ver2);
+}
+
+const glm::vec3 MeshModel::GetVertexByIndex(int index){
+    return this->vertices[index];
+}
+
+const float MeshModel::GetMin(int index){
+    std::vector<float> allV;
+    for(auto const& v: this->vertices) {
+        allV.push_back(v[index]);
+    }
+    return *min_element(std::begin(allV), std::end(allV)); // c++11
+}
+
+const float MeshModel::GetMax(int index){
+    std::vector<float> allV;
+    for(auto const& v: this->vertices) {
+        allV.push_back(v[index]);
+    }
+    return *max_element(std::begin(allV), std::end(allV)); // c++11
+}
+
+const std::vector<glm::vec3> MeshModel::CalculateBoundingBox(){
+    float minX = GetMin(0);
+    float minY = GetMin(1);
+    float minZ = GetMin(2);
+    
+    float maxX = GetMax(0);
+    float maxY = GetMax(1);
+    float maxZ = GetMax(2);
+
+    this->boundingBox.clear();
+    
+    this->boundingBox.push_back(glm::vec3(minX, minY, minZ));
+    this->boundingBox.push_back(glm::vec3(maxX, minY, minZ));
+    this->boundingBox.push_back(glm::vec3(minX, maxY, minZ));
+    this->boundingBox.push_back(glm::vec3(maxX, maxY, minZ));
+    this->boundingBox.push_back(glm::vec3(minX, minY, maxZ));
+    this->boundingBox.push_back(glm::vec3(maxX, minY, maxZ));
+    this->boundingBox.push_back(glm::vec3(minX, maxY, maxZ));
+    this->boundingBox.push_back(glm::vec3(maxX, maxY, maxZ));
+
+    return this->boundingBox;
+}
+
+
+
+
+
+
+
+
+
