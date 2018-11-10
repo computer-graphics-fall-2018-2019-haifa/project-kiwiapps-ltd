@@ -22,10 +22,10 @@ private:
 	std::string modelName;
     //get minimum index value in all the verticses
     // 0 -> x, 1 -> y, 2 -> z
-    const float GetMin(int index);
+    const float GetMin(int type);
     //get maximum  value in all the vertices
     // 0 -> x, 1 -> y, 2 -> z
-    const float GetMax(int index);
+    const float GetMax(int type);
 
 public:
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& textures, const std::string& modelName = "");

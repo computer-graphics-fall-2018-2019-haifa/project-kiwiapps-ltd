@@ -14,8 +14,22 @@
 #include <random>
 #include <GLFW/glfw3.h>
 
+static const int mainMenuWidth = 400;
+
+
+bool addCameraWindow = false;
+bool addCameraWindowResult = false;
+static glm::vec3 eye = glm::vec3(0.0f, 0.0f, 0.0f);
+static glm::vec3 at = glm::vec3(0.0f, 0.0f, 0.0f);
+static glm::vec3 up = glm::vec3(0.0f, 0.0f, 0.0f);
+
+
 bool showDemoWindow = false;
+
 bool showAnotherWindow = false;
+
+bool drawNormalVertex = false;
+bool drawNormalFace = false;
 
 glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
 
@@ -34,23 +48,21 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene, GLFWwindow* window)
 
 	// 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
 	{
-		static float f = 0.0f;
-		static int counter = 0;
-
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::Checkbox("Demo Window", &showDemoWindow);      // Edit bools storing our window open/close state
-		ImGui::Checkbox("Another Window", &showAnotherWindow);
-
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		ImGui::ColorEdit3("clear color", (float*)&clearColor); // Edit 3 floats representing a color
-
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
-
+        int display_w = 0 , display_h = 0;
+        glfwPollEvents();
+        glfwGetFramebufferSize( window , &display_w , &display_h );
+        
+        ImGui::Begin("", 0 , ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove );
+        ImGui::SetWindowSize(ImVec2((float)mainMenuWidth, (float)display_h - 22));
+        ImGui::SetWindowPos(ImVec2(2, 20));
+        
+        ImGui::Checkbox("Demo Window", &showDemoWindow);
+        ImGui::Text("OBJ settings:");
+        ImGui::Checkbox("Draw OBJ normal-per-vertex", &drawNormalVertex);
+        ImGui::Checkbox("Draw OBJ normal-per-face", &drawNormalFace);
+        ImGui::Text("");
+        
+        
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
@@ -96,7 +108,72 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene, GLFWwindow* window)
                 }
 				ImGui::EndMenu();
 			}
+            if (ImGui::BeginMenu("Insert"))
+            {
+                if (ImGui::MenuItem("New Camera"))
+                {
+                    addCameraWindow = true;
+                }
+                ImGui::EndMenu();
+            }
 			ImGui::EndMainMenuBar();
 		}
 	}
+    
+    
+    if(addCameraWindow) ShowAddCameraMenu();
+    else {
+        if(addCameraWindowResult){
+            addCameraWindowResult = false;
+            const Camera* camera = new Camera(eye, at, up);
+            scene.AddCamera(*camera);
+        }
+        eye = glm::vec3(0.0f, 0.0f, 0.0f);
+        at = glm::vec3(0.0f, 0.0f, 0.0f);
+        up = glm::vec3(0.0f, 0.0f, 0.0f);
+    }
+}
+
+void ShowAddCameraMenu() {
+
+    ImGui::Begin("Add Camera", &addCameraWindow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse);
+    ImGui::SetWindowPos(ImVec2(mainMenuWidth+10, 20));
+    
+    ImGui::BeginGroup();
+    
+    ImGui::Text("Add new camera to the scene, please specify the camera eye, at, up position:\n\n");
+    
+    BuildVectorInput("Eye position: (", "##eyeX", "##eyeY", "##eyeZ", eye);
+    BuildVectorInput("At position:  (", "##ayX", "##atY", "##atZ", at);
+    BuildVectorInput("Up position:  (", "##upX", "##upY", "##upZ", up);
+
+
+    if (ImGui::Button("Cancel")){
+        addCameraWindow = false;
+        addCameraWindowResult = false;
+        eye = glm::vec3(0.0f, 0.0f, 0.0f);
+        at = glm::vec3(0.0f, 0.0f, 0.0f);
+        up = glm::vec3(0.0f, 0.0f, 0.0f);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Add")){
+        addCameraWindow = false;
+        addCameraWindowResult = true;
+    }
+    
+    ImGui::EndGroup();
+    ImGui::End();
+}
+
+void BuildVectorInput(const char* title, const char* xId, const char* yId, const char* zId, glm::vec3& vector){
+    
+    ImGui::Text(title);
+    ImGui::PushItemWidth(80);
+    ImGui::SameLine(); ImGui::InputFloat(xId, &vector[0]);
+    ImGui::SameLine(); ImGui::Text(",");
+    ImGui::SameLine(); ImGui::InputFloat(yId, &vector[1]);
+    ImGui::SameLine(); ImGui::Text(",");
+    ImGui::SameLine(); ImGui::InputFloat(zId, &vector[2]);
+    ImGui::SameLine(); ImGui::Text(")");
+    ImGui::PopItemWidth();
 }
