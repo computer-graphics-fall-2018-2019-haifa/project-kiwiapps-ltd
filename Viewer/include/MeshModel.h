@@ -16,7 +16,7 @@ private:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
     std::vector<glm::vec2> textures;
-    std::vector<glm::vec3> boundingBox;
+    std::vector<Line> boundingBox;
 	glm::mat4x4 worldTransform;
 	glm::vec4 color;
 	std::string modelName;
@@ -26,6 +26,8 @@ private:
     //get maximum  value in all the vertices
     // 0 -> x, 1 -> y, 2 -> z
     const float GetMax(int type);
+
+	void addLine(glm::vec3& p1, glm::vec3& p2);
 
 public:
 	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& textures, const std::string& modelName = "");
@@ -41,7 +43,7 @@ public:
 
     const glm::vec3 CalculateFaceNormal(Face face);
     const glm::vec3 GetVertexByIndex(int index);
-    const std::vector<glm::vec3> CalculateBoundingBox();
+    std::vector<Line> CalculateBoundingBox();
 
 	// Add more methods/functionality as needed...
 };
