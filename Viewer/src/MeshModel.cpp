@@ -7,13 +7,17 @@
 #include <sstream>
 
 MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& textures, const std::string& modelName) :
-worldTransform(glm::mat4x4(1)), modelName(modelName)
+faces(faces),
+vertices(vertices),
+normals(normals),
+textures(textures),
+worldTransform(glm::mat4x4(1)),
+modelName(modelName),
+scale({ 1,1,1 }),
+rotate({ 0,0,0 }),
+translate({ 0,0,0 }),
+visibilityOptions({ 0,0,0 })
 {
-    this->faces = faces;
-    this->vertices = vertices;
-    this->normals = normals;
-    this->textures = textures;
-    this->modelName = modelName;
 }
 
 MeshModel::~MeshModel()

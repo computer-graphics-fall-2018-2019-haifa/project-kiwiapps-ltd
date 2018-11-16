@@ -20,7 +20,6 @@ private:
 	int viewportY;
 
 	void putPixel(int x, int y, const glm::vec3& color);
-    void drawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color);
 	void createBuffers(int viewportWidth, int viewportHeight);
 
 	GLuint glScreenTex;
@@ -38,14 +37,9 @@ public:
 	void ClearColorBuffer(const glm::vec3& color);
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 
-    void  DrawTriangles(const std::vector<glm::vec3>*  vertexPositions,
-                        const std::vector<glm::vec3>*  normalPositions,
-                        const std::vector<glm::vec3>*  texturePositions);
+    void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color);
+    void DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::vec3& color);
+    void DrawFace(const Face& face, const bool drawNormals, const glm::vec3& color);
+    void DrawModel(MeshModel* model, glm::mat4 transformMatrix);
 
-    void  SetCameraTransform(const  glm::mat4x4&  cTransform);
-    void  SetProjection(const  glm::mat4x4&  projection);
-    void  SetModelTransforms(const  glm::mat4x4&  mTransform,...);
-    // void  ClearDepthBuffer();
-    // void  SetDemoBuffer();
-	// Add more methods/functionality as needed...
 };

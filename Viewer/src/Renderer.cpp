@@ -73,58 +73,9 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 	createOpenGLBuffer();
 }
 
-void Renderer::DrawTriangles(const std::vector<glm::vec3>* vertexPositions, const std::vector<glm::vec3>* normalPositions, const std::vector<glm::vec3>* texturePositions)
-{
-}
+void Renderer::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color) {
+    // Bresenham’s Line Drawing Algorithm
 
-void Renderer::SetCameraTransform(const glm::mat4x4 & cTransform)
-{
-}
-
-void Renderer::SetProjection(const glm::mat4x4 & projection)
-{
-}
-
-void Renderer::SetModelTransforms(const glm::mat4x4 & mTransform, ...)
-{
-}
-
-void Renderer::Render(const Scene& scene)
-{
-	//#############################################
-	//## You should override this implementation ##
-	//## Here you should render the scene.       ##
-	//#############################################
-
-//    // Draw a chess board in the middle of the screen
-//    for (int i = 10; i < viewportWidth - 10; i++)
-//    {
-//        for (int j = 100; j < viewportHeight - 100; j++)
-//        {
-//            int mod_i = i / 50;
-//            int mod_j = j / 50;
-//
-//            int odd = (mod_i + mod_j) % 2;
-//            if (odd)
-//            {
-//                putPixel(i, j, glm::vec3(0, 1, 0));
-//            }
-//            else
-//            {
-//                putPixel(i, j, glm::vec3(1, 0, 0));
-//            }
-//        }
-//    }
-    
-    // loop over cameras
-    // project from active camera
-    // loop over models and present by active camera
-    // highlight active model
-    
-//    scene.models.at(10);
-    
-}
-void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color) {
     // init points per vec
     int x0 = p1.x;
     int y0 = p1.y;
@@ -143,6 +94,71 @@ void Renderer::drawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec
         if (e2 < dy) { err += dx; y0 += sy; }
     }
 }
+
+
+// draw triangle by calling drawLine foreach rib
+void Renderer::DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::vec3& color)
+{
+    if(vertices.size() != 3){
+        throw "Triangle must have three vertices";
+    }
+    DrawLine(vertices[0], vertices[1], color);
+    DrawLine(vertices[0], vertices[2], color);
+    DrawLine(vertices[1], vertices[2], color);
+}
+
+// get face triangle vertices, compute face normals
+void Renderer::DrawFace(const Face& face, const bool drawNormals, const glm::vec3& color)
+{
+    
+}
+
+// loop over model vertices and extract the model min and max vertices over x,y,z axes
+// draw each line by the provided transformation matrix
+void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix) {
+    
+}
+
+
+// loop over model faces
+// build face vertics from model vertices positions
+// draw bounding box
+void DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
+    
+    // get model faces
+    // get model vertics
+    // get model normals
+    // get model color by checking if is active model -> green else darkGray
+    
+    // call draw bounding box if requested
+    
+    // loop over faces and draw each face by calling the DrawFace function
+        // use the provided transformMatrix when drawing the Faces
+        // check if draw face normals requested
+    
+}
+
+void Renderer::Render(const Scene& scene)
+{
+	
+    // draw axes
+    
+    // loop over cameras
+        // calcualte foreach camera the transform matrix
+        // skip drawing active camera
+        // draw camera
+    
+    // loop over models
+        // calcualte foreach model the transform matrix
+        // loop over model faces
+            // draw face triangle
+            // draw face normal
+        // highlight active model
+    
+//    scene.models.at(10);
+    
+}
+
 
 //##############################
 //##OpenGL stuff. Don't touch.##

@@ -18,9 +18,18 @@ private:
 	std::vector<glm::vec3> normals;
     std::vector<glm::vec2> textures;
     std::vector<Line> boundingBox;
+    
+    // scale, rotate, translate and visibilityOptions specified per model
+    std::vector<glm::vec3> scale;
+    std::vector<glm::vec3> rotate;
+    std::vector<glm::vec3> translate;
+    // boundingBox, vertice normals, face normals
+    std::vector<glm::vec3> visibilityOptions;
+    
 	glm::mat4x4 worldTransform;
 	glm::vec4 color;
 	std::string modelName;
+    
     //get minimum index value in all the verticses
     // 0 -> x, 1 -> y, 2 -> z
     const float GetMin(int type);
