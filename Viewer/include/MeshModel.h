@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include "Face.h"
+#include "Line.h"
 
 /*
  * MeshModel class.

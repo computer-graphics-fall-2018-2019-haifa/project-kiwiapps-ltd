@@ -6,12 +6,6 @@
 #include <fstream>
 #include <sstream>
 
-
-struct Line {
-	glm::vec3 point1;
-	glm::vec3 point2;
-};
-
 MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& textures, const std::string& modelName) :
 worldTransform(glm::mat4x4(1)), modelName(modelName)
 {
@@ -100,6 +94,10 @@ std::vector<Line> MeshModel::CalculateBoundingBox(){
     
     // store drawing lines instead of points
 
+    
+    // TODO: change every line to push_back directly
+    this->boundingBox.push_back(Line(glm::vec3(minX, minY, minZ), glm::vec3(minX, maxY, minZ)));
+    
 	addLine(glm::vec3(minX, minY, minZ), glm::vec3(minX, maxY, minZ));
 	addLine(glm::vec3(minX, minY, minZ), glm::vec3(maxX, minY, minZ));
 	addLine(glm::vec3(minX, minY, minZ), glm::vec3(minX, minY, maxZ));
@@ -124,9 +122,7 @@ std::vector<Line> MeshModel::CalculateBoundingBox(){
 
 
 void MeshModel::addLine(glm::vec3& p1, glm::vec3& p2) {
-	this->boundingBox.push_back(Line());
-	this->boundingBox[this->boundingBox.size - 1].point1 = p1;
-	this->boundingBox[this->boundingBox.size - 1].point1 = p2;
+	this->boundingBox.push_back(Line(p1, p2));
 }
 
 
