@@ -33,6 +33,7 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
 void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float zoom)
 {
     // https://www.dropbox.com/s/9e8fqucirrwcgng/TranformationsAgain.pptx?dl=0#
+    // page 64
     // lookAt() with vec3 instead of vec4
     
     SetZoom(zoom);

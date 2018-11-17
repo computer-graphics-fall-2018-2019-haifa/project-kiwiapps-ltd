@@ -216,16 +216,9 @@ glm::mat4 MeshModel::CalculateTranslationMatrix()
 
 glm::mat4 MeshModel::CalculateRotationMatrix()
 {
-	/*
-	glm::vec3 myRotationAxis = glm::vec3(
-		this->rotate.x * 3.14 / 180,
-		this->rotate.y * 3.14 / 180,
-		this->rotate.z * 3.14 / 180);
-
-	return glm::rotate*/
-	float xRotation = this->rotate.x * 3.14 / 180,
-		  yRotation = this->rotate.y * 3.14 / 180,
-		  zRotation = this->rotate.z * 3.14 / 180;
+	float xRotation = this->rotate.x * M_PI / 180,
+		  yRotation = this->rotate.y * M_PI / 180,
+		  zRotation = this->rotate.z * M_PI / 180;
 
 	glm::mat4 xRotationMatrix = glm::mat4(
 		1, 0				  , 0						  , 0,

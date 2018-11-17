@@ -160,7 +160,7 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
 	glm::vec3 modelColor = glm::vec3(model->GetColor().x, model->GetColor().y, model->GetColor().z);
 
     // call draw bounding box if requested
-	if (model->GetVisibilityOptions.x == 1) {
+    if (model->GetVisibilityOptions().x == 1) {
 		DrawModelBoundingBox(model, transformMatrix);
 	}
     // loop over faces and draw each face by calling the DrawFace function
@@ -169,7 +169,7 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
 
 	for (std::vector<Face>::iterator it = faces.begin(); it < faces.end(); it++) {
 		bool drawNormal = false;
-		if (model->GetVisibilityOptions.z == 1) {
+        if (model->GetVisibilityOptions().z == 1) {
 			drawNormal = 1;
 		}
 		DrawFace(*model, *it, drawNormal, modelColor);
@@ -186,7 +186,7 @@ void Renderer::Render(const Scene& scene)
         // skip drawing active camera
         // draw camera
 	std::vector<Camera> cameras = scene.GetAllCameras();
-	Camera activeCamera = scene.GetCameraByIndex(scene.GetActiveCameraIndex);
+    Camera activeCamera = scene.GetCameraByIndex(scene.GetActiveCameraIndex());
 
 	std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
 	std::shared_ptr<MeshModel> activeModel = scene.GetModelByIndex(scene.GetActiveModelIndex());

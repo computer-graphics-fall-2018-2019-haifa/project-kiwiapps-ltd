@@ -5,7 +5,6 @@
 #include "Face.h"
 #include "Line.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/transform.hpp>
 
 /*
  * MeshModel class.
