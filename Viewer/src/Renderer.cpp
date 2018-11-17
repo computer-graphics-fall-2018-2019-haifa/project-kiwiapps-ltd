@@ -7,6 +7,7 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <list>
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
@@ -108,15 +109,43 @@ void Renderer::DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::v
 }
 
 // get face triangle vertices, compute face normals
-void Renderer::DrawFace(const Face& face, const bool drawNormals, const glm::vec3& color)
+void Renderer::DrawFace(MeshModel model, Face face, const bool drawNormals, const glm::vec3& color)
 {
-    
+	std::list<int> verticesIndex;
+	for (int i = 0; i < 3; i++) {
+		verticesIndex.push_back(face.GetVertexByIndex(i));
+	}
+
+	std::vector<glm::vec3> vertices;
+	
+	vertices.push_back(model.GetVertexByIndex(verticesIndex.pop_front));
+	vertices.push_back(model.GetVertexByIndex(verticesIndex.pop_front));
+	vertices.push_back(model.GetVertexByIndex(verticesIndex.pop_front));
+
+	//draw face
+	DrawTriangle(vertices, color);
+
+	if (drawNormals) {
+		std::vector<glm::vec3> normals = model.GetNormals();
+		for (std::vector<glm::vec3>::iterator it = normals.begin(); it != normals.end(); it++) {
+			glm::vec3 normal = model.CalculateFaceNormal(face);
+			DrawLine(vertices[0], normal, color);
+		}
+	}
+
 }
 
-// loop over model vertices and extract the model min and max vertices over x,y,z axes
 // draw each line by the provided transformation matrix
-void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix) {
-    
+void Renderer::DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix) {
+	std::vector<Line> boundingBox = model->GetBoundingBox();
+
+	for (std::vector<Line>::iterator it = boundingBox.begin; it < boundingBox.end; it++) {
+		glm::vec4 p1 = transformMatrix * glm::vec4(it->point1, 1);
+		glm::vec4 p2 = transformMatrix * glm::vec4(it->point2, 1);
+
+		DrawLine(glm::vec3(p1.x, p1.y, p1.z), glm::vec3(p2.x, p2.y, p2.z), glm::vec3(1, 0, 0));
+
+	}
 }
 
 

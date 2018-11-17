@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
+#include <list>
 
 /*
  * Renderer class.
@@ -39,7 +40,8 @@ public:
 
     void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color);
     void DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::vec3& color);
-    void DrawFace(const Face& face, const bool drawNormals, const glm::vec3& color);
+    void DrawFace(MeshModel model, Face face, const bool drawNormals, const glm::vec3& color);
     void DrawModel(MeshModel* model, glm::mat4 transformMatrix);
+	void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix)
 
 };

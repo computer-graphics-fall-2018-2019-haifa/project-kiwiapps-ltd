@@ -49,6 +49,7 @@ public:
     const std::vector<Face>& GetFaces() const;
     const glm::vec3 CalculateFaceNormal(Face face) const;
     const glm::vec3 GetVertexByIndex(int index) const;
+    const glm::vec3 GetNormalByIndex(int index) const;
     const std::vector<Line> GetBoundingBox() const;
     
     // getter setters

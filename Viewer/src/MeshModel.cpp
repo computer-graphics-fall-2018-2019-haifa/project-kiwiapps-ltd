@@ -134,6 +134,11 @@ const glm::vec3 MeshModel::GetVertexByIndex(int index) const
     return this->vertices[index];
 }
 
+const glm::vec3 MeshModel::GetNormalByIndex(int index) const
+{
+	return this->normals[index];
+}
+
 
 const std::vector<Line> MeshModel::GetBoundingBox() const
 {
