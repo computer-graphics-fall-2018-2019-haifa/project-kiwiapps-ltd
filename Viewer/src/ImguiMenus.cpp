@@ -1,6 +1,4 @@
-#pragma once
 #define _USE_MATH_DEFINES
-
 #include "ImguiMenus.h"
 #include "MeshModel.h"
 #include "Utils.h"
@@ -167,7 +165,7 @@ void ShowAddCameraMenu() {
 
 void BuildVectorInput(const char* title, const char* xId, const char* yId, const char* zId, glm::vec3& vector){
     
-    ImGui::Text(title);
+    ImGui::Text("%s", title);
     ImGui::PushItemWidth(80);
     ImGui::SameLine(); ImGui::InputFloat(xId, &vector[0]);
     ImGui::SameLine(); ImGui::Text(",");

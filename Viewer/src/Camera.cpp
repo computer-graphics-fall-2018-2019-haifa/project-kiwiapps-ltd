@@ -17,7 +17,7 @@ nearP(20),
 fovy(0),
 farP(500),
 height(2),
-model(MeshModel(Utils::LoadMeshModel("/Users/davidantoon/git/project-kiwiapps-ltd-copy/Data/camera.obj")))
+model(MeshModel(Utils::LoadMeshModel("/Users/davidantoon/git/project-kiwiapps-ltd/Data/camera.obj")))
 {
 	SetCameraLookAt(eye, at, up);
 }
@@ -76,6 +76,8 @@ void Camera::SetOrthographicProjection(
     this->nearP = near;
     this->farP = far;
     this->projectionType = 0;
+    
+    
 }
 
 void Camera::SetPerspectiveProjection()

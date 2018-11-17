@@ -1,3 +1,4 @@
+#define GLM_ENABLE_EXPERIMENTAL
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "MeshModel.h"
