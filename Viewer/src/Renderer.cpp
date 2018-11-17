@@ -187,16 +187,17 @@ void Renderer::Render(const Scene& scene)
         // draw camera
 	std::vector<Camera> cameras = scene.GetAllCameras();
     Camera activeCamera = scene.GetCameraByIndex(scene.GetActiveCameraIndex());
-
+	int cameraCounter = 0;
 	std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
 	std::shared_ptr<MeshModel> activeModel = scene.GetModelByIndex(scene.GetActiveModelIndex());
 
 	for (std::vector<Camera>::iterator it = cameras.begin(); it < cameras.end(); it++) {
-		if (it->IsActive() == 0) {
+		if (cameraCounter != scene.GetActiveCameraIndex()) {
 			MeshModel model = it->GetModel();
 			glm::mat4 wtMat = it->GetTransformation();
 			glm::mat4 matrix = activeModel->GetWorldTransformation() * activeCamera.GetTransformation() * activeCamera.GetProjection();
 			DrawModel(&model, matrix);
+			cameraCounter++;
 		}
 	}
 

@@ -113,11 +113,6 @@ void Camera::SetPerspectiveProjection(
     this->projectionTransformation = matrix;
 }
 
-void Camera::SetIsActive(int status)
-{
-	this->isActive = status;
-}
-
 const float Camera::GetZoom()
 {
     return this->zoom;
@@ -177,7 +172,3 @@ const MeshModel Camera::GetModel()
     return this->model;
 }
 
-const int Camera::IsActive()
-{
-	return this->isActive;
-}
