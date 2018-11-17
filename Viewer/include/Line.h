@@ -15,5 +15,5 @@ public:
     glm::vec3 point1;
     glm::vec3 point2;
     
-    std::vector<glm::vec3> getPoints();
+    const std::vector<glm::vec3> getPoints() const;
 };

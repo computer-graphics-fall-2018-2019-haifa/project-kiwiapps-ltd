@@ -39,7 +39,7 @@ Face::Face(std::istream& issLine)
 
 Face::~Face()
 {
-
+    
 }
 
 const int Face::GetVertexByIndex(int index)

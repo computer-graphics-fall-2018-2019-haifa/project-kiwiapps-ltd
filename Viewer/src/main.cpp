@@ -22,13 +22,9 @@ void StartFrame();
 void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& io);
 void Cleanup(GLFWwindow* window);
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+void WindowResizeCallback(GLFWwindow* window, int viewportWidth, int viewportHeight);
 
-void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
-	
-	// Handle mouse scrolling here...
-}
+Renderer* rendererP;
 
 int main(int argc, char **argv)
 {
@@ -49,11 +45,15 @@ int main(int argc, char **argv)
 
 	// Create the renderer and the scene
 	Renderer renderer = Renderer(frameBufferWidth, frameBufferHeight);
+    rendererP = &renderer;
 	Scene scene = Scene();
 
 	// Setup ImGui
 	ImGuiIO& io = SetupDearImgui(window);
 
+    // Register window resize callback
+    glfwSetWindowSizeCallback(window, WindowResizeCallback);
+    
 	// Register a mouse scroll-wheel callback
 	glfwSetScrollCallback(window, ScrollCallback);
 
@@ -155,4 +155,14 @@ void Cleanup(GLFWwindow* window)
 	ImGui::DestroyContext();
 	glfwDestroyWindow(window);
 	glfwTerminate();
+}
+
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+}
+
+void WindowResizeCallback(GLFWwindow* window, int viewportWidth, int viewportHeight)
+{
+    (*rendererP).SetViewport(viewportWidth, viewportHeight);
 }

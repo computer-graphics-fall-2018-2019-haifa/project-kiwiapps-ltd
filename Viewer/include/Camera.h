@@ -14,30 +14,57 @@
 class Camera
 {
 private:
+    glm::vec3 eye;
+    glm::vec3 at;
+    glm::vec3 up;
+    // 0 => orth , 1 => perspective
+    int projectionType;
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
 	float zoom;
+    float aspectRatio;
+    float near;
+    float fovy;
+    float far;
+    float height;
+    MeshModel model;
 
 public:
 	Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	~Camera();
 
-    void SetTransformation(const  glm::mat4x4&  transform);
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float zoom);
-    void SetProjection(const  glm::mat4x4&  projection);
 
+    void SetOrthographicProjection();
 	void SetOrthographicProjection(
 		const float height,
 		const float aspectRatio,
 		const float near,
 		const float far);
 
+    void SetPerspectiveProjection();
 	void SetPerspectiveProjection(
 		const float fovy,
 		const float aspect,
 		const float near,
 		const float far);
 
-	void SetZoom(const float zoom);
+    const glm::mat4 GetTransformation();
+    const glm::mat4 GetProjection();
+    
+    const float GetZoom();
+    void SetZoom(const float zoom);
+    
+    const glm::vec3 GetEye();
+    const glm::vec3 GetAt();
+    const glm::vec3 GetUp();
+    const float GetAspectRatio();
+    const float GetNear();
+    const float GetFovy();
+    const float GetFar();
+    const float GetHeight();
+    const float Camera::GetProjectionType();
+    const MeshModel GetModel();
+    
 };
