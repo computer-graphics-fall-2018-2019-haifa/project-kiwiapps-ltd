@@ -42,6 +42,6 @@ public:
     void DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::vec3& color);
     void DrawFace(MeshModel model, Face face, const bool drawNormals, const glm::vec3& color);
     void DrawModel(MeshModel* model, glm::mat4 transformMatrix);
-	void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix)
+    void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix);
 
 };

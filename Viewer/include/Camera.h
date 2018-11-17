@@ -64,7 +64,7 @@ public:
     const float GetFovy();
     const float GetFar();
     const float GetHeight();
-    const float Camera::GetProjectionType();
+    const float GetProjectionType();
     const MeshModel GetModel();
     
 };

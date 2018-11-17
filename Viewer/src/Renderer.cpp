@@ -111,16 +111,11 @@ void Renderer::DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::v
 // get face triangle vertices, compute face normals
 void Renderer::DrawFace(MeshModel model, Face face, const bool drawNormals, const glm::vec3& color)
 {
-	std::list<int> verticesIndex;
-	for (int i = 0; i < 3; i++) {
-		verticesIndex.push_back(face.GetVertexByIndex(i));
-	}
-
 	std::vector<glm::vec3> vertices;
 	
-	vertices.push_back(model.GetVertexByIndex(verticesIndex.pop_front));
-	vertices.push_back(model.GetVertexByIndex(verticesIndex.pop_front));
-	vertices.push_back(model.GetVertexByIndex(verticesIndex.pop_front));
+	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(0)));
+	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(1)));
+	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(2)));
 
 	//draw face
 	DrawTriangle(vertices, color);
@@ -139,7 +134,7 @@ void Renderer::DrawFace(MeshModel model, Face face, const bool drawNormals, cons
 void Renderer::DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix) {
 	std::vector<Line> boundingBox = model->GetBoundingBox();
 
-	for (std::vector<Line>::iterator it = boundingBox.begin; it < boundingBox.end; it++) {
+	for (std::vector<Line>::iterator it = boundingBox.begin(); it < boundingBox.end(); it++) {
 		glm::vec4 p1 = transformMatrix * glm::vec4(it->point1, 1);
 		glm::vec4 p2 = transformMatrix * glm::vec4(it->point2, 1);
 
