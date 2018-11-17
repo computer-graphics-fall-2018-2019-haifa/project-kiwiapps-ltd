@@ -4,6 +4,8 @@
 #include <memory>
 #include "Face.h"
 #include "Line.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 /*
  * MeshModel class.
@@ -70,5 +72,9 @@ public:
 
 	const glm::vec3& GetVisibilityOptions();
 	void SetVcisibilityOptions(const glm::vec3& visibilityOptions);
+
+	glm::mat4 CalculateScaleMatrix();
+	glm::mat4 CalculateTranslationMatrix();
+	glm::mat4 CalculateRotationMatrix();
 
 };

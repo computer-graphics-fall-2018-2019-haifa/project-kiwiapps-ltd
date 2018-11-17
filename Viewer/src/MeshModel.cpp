@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 MeshModel::MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& textures, const std::string& modelName) :
 faces(faces),
@@ -200,6 +202,52 @@ const glm::vec3 & MeshModel::GetVisibilityOptions()
 void MeshModel::SetVcisibilityOptions(const glm::vec3 & visibilityOptions)
 {
 	this->visibilityOptions = visibilityOptions;
+}
+
+glm::mat4 MeshModel::CalculateScaleMatrix()
+{
+	return glm::scale(this->scale);
+}
+
+glm::mat4 MeshModel::CalculateTranslationMatrix()
+{
+	return glm::translate(this->translate); // C11
+}
+
+glm::mat4 MeshModel::CalculateRotationMatrix()
+{
+	/*
+	glm::vec3 myRotationAxis = glm::vec3(
+		this->rotate.x * 3.14 / 180,
+		this->rotate.y * 3.14 / 180,
+		this->rotate.z * 3.14 / 180);
+
+	return glm::rotate*/
+	float xRotation = this->rotate.x * 3.14 / 180,
+		  yRotation = this->rotate.y * 3.14 / 180,
+		  zRotation = this->rotate.z * 3.14 / 180;
+
+	glm::mat4 xRotationMatrix = glm::mat4(
+		1, 0				  , 0						  , 0,
+		0, glm::cos(xRotation), glm::sin(xRotation) * (-1), 0,
+		0, glm::sin(xRotation), glm::cos(xRotation)		  , 0,
+		0, 0				  , 0						  , 1
+	);
+
+	glm::mat4 yRotationMatrix = glm::mat4(
+		glm::cos(yRotation), 0, glm::sin(yRotation), 0,
+		0				   , 1, 0				   , 0,
+		glm::sin(yRotation) * (-1), 0, glm::cos(yRotation), 0,
+		0						  , 0, 0				  , 1
+	);
+	glm::mat4 zRotationMatirx = glm::mat4(
+		glm::cos(zRotation), glm::sin(zRotation) * (-1), 0, 0,
+		glm::sin(zRotation), glm::cos(zRotation)	   , 0, 0,
+		0				   , 0						   , 1, 0,
+		0				   , 0						   , 0, 1
+	);
+
+	return xRotationMatrix * yRotationMatrix * zRotationMatirx;
 }
 
 

@@ -199,7 +199,7 @@ void Renderer::Render(const Scene& scene)
 			DrawModel(&model, matrix);
 		}
 	}
-    
+
     // loop over models
         // calcualte foreach model the transform matrix
         // loop over model faces
@@ -207,6 +207,15 @@ void Renderer::Render(const Scene& scene)
             // draw face normal
         // highlight active model
     
+	std::vector<std::shared_ptr<MeshModel>>::iterator it;
+	for (it = models.begin(); it < models.end(); it++) {
+		glm::mat4 translateionMatrix = (*it)->CalculateTranslationMatrix();
+		glm::mat4 scaleMatrix = (*it)->CalculateScaleMatrix();
+		glm::mat4 rotationMatrix = (*it)->CalculateRotationMatrix();
+
+		glm::mat4 matrix = glm::transpose(translateionMatrix) * scaleMatrix	* rotationMatrix;
+		DrawModel(&(*(*it)), matrix);
+	}
 //    scene.models.at(10);
     
 }
