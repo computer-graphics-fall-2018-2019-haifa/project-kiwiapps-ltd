@@ -19,13 +19,15 @@ private:
     glm::vec3 up;
     // 0 => orth , 1 => perspective
     int projectionType;
+	int isActive;
+
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
 	float zoom;
     float aspectRatio;
-    float near;
+    float nearP;
     float fovy;
-    float far;
+    float farP;
     float height;
     MeshModel model;
 
@@ -40,15 +42,16 @@ public:
 	void SetOrthographicProjection(
 		const float height,
 		const float aspectRatio,
-		const float near,
-		const float far);
+		const float nearP,
+		const float farP);
 
     void SetPerspectiveProjection();
 	void SetPerspectiveProjection(
 		const float fovy,
 		const float aspect,
-		const float near,
-		const float far);
+		const float nearP,
+		const float farP);
+	void SetIsActive(int status);
 
     const glm::mat4 GetTransformation();
     const glm::mat4 GetProjection();
@@ -66,5 +69,5 @@ public:
     const float GetHeight();
     const float GetProjectionType();
     const MeshModel GetModel();
-    
+	const int IsActive();
 };

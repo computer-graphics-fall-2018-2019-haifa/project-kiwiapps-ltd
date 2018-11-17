@@ -13,9 +13,9 @@ up(up),
 projectionType(0),
 zoom(1.0),
 aspectRatio(1),
-near(20),
+nearP(20),
 fovy(0),
-far(500),
+farP(500),
 height(2),
 model(MeshModel(Utils::LoadMeshModel("/Users/davidantoon/git/project-kiwiapps-ltd-copy/Data/camera.obj")))
 {
@@ -61,7 +61,7 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
 
 void Camera::SetOrthographicProjection()
 {
-    SetOrthographicProjection(this->height, this->aspectRatio, this->near, this->far);
+    SetOrthographicProjection(this->height, this->aspectRatio, this->nearP, this->farP);
 }
 
 void Camera::SetOrthographicProjection(
@@ -72,14 +72,14 @@ void Camera::SetOrthographicProjection(
 {
     this->height = height;
     this->aspectRatio = aspectRatio;
-    this->near = near;
-    this->far = far;
+    this->nearP = near;
+    this->farP = far;
     this->projectionType = 0;
 }
 
 void Camera::SetPerspectiveProjection()
 {
-    SetPerspectiveProjection(this->fovy, this->aspectRatio, this->near, this->far);
+    SetPerspectiveProjection(this->fovy, this->aspectRatio, this->nearP, this->farP);
 }
 
 void Camera::SetPerspectiveProjection(
@@ -90,8 +90,8 @@ void Camera::SetPerspectiveProjection(
 {
     this->fovy = fovy;
     this->aspectRatio = aspectRatio;
-    this->near = near;
-    this->far = far;
+    this->nearP = near;
+    this->farP = far;
     this->projectionType = 1;
     
     float nearHeight = (far - near) * tan(fovy * M_PI);
@@ -108,6 +108,11 @@ void Camera::SetPerspectiveProjection(
     glm::vec4 r4 = glm::vec4(0, 0, -1, 0);
     glm::mat4 matrix = glm::mat4(r1, r2, r3, r4);
     this->projectionTransformation = matrix;
+}
+
+void Camera::SetIsActive(int status)
+{
+	this->isActive = status;
 }
 
 const float Camera::GetZoom()
@@ -146,7 +151,7 @@ const float Camera::GetAspectRatio()
 }
 const float Camera::GetNear()
 {
-    return this->near;
+    return this->nearP;
 }
 const float Camera::GetFovy()
 {
@@ -154,7 +159,7 @@ const float Camera::GetFovy()
 }
 const float Camera::GetFar()
 {
-    return this->far;
+    return this->farP;
 }
 const float Camera::GetHeight()
 {
@@ -167,4 +172,9 @@ const float Camera::GetProjectionType()
 const MeshModel Camera::GetModel()
 {
     return this->model;
+}
+
+const int Camera::IsActive()
+{
+	return this->isActive;
 }

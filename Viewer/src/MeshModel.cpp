@@ -192,5 +192,15 @@ void MeshModel::SetTranslate(const glm::vec3& translate)
     this->translate = translate;
 }
 
+const glm::vec3 & MeshModel::GetVisibilityOptions()
+{
+	return this->visibilityOptions;
+}
+
+void MeshModel::SetVcisibilityOptions(const glm::vec3 & visibilityOptions)
+{
+	this->visibilityOptions = visibilityOptions;
+}
+
 
 

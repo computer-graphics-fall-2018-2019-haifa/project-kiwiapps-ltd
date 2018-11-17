@@ -68,4 +68,7 @@ public:
     const glm::vec3& GetTranslate() const;
     void SetTranslate(const glm::vec3& translate);
 
+	const glm::vec3& GetVisibilityOptions();
+	void SetVcisibilityOptions(const glm::vec3& visibilityOptions);
+
 };

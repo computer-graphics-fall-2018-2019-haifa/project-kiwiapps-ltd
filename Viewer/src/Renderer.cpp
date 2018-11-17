@@ -147,19 +147,33 @@ void Renderer::DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix)
 // loop over model faces
 // build face vertics from model vertices positions
 // draw bounding box
-void DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
+void Renderer::DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
     
     // get model faces
     // get model vertics
     // get model normals
     // get model color by checking if is active model -> green else darkGray
     
+	std::vector<Face> faces = model->GetFaces();
+	std::vector<glm::vec3> vertices = model->GetVertices();
+	std::vector<glm::vec3> normals = model->GetNormals();
+	glm::vec3 modelColor = glm::vec3(model->GetColor().x, model->GetColor().y, model->GetColor().z);
+
     // call draw bounding box if requested
-    
+	if (model->GetVisibilityOptions.x == 1) {
+		DrawModelBoundingBox(model, transformMatrix);
+	}
     // loop over faces and draw each face by calling the DrawFace function
         // use the provided transformMatrix when drawing the Faces
         // check if draw face normals requested
-    
+
+	for (std::vector<Face>::iterator it = faces.begin(); it < faces.end(); it++) {
+		bool drawNormal = false;
+		if (model->GetVisibilityOptions.z == 1) {
+			drawNormal = 1;
+		}
+		DrawFace(*model, *it, drawNormal, modelColor);
+	}
 }
 
 void Renderer::Render(const Scene& scene)
@@ -171,6 +185,20 @@ void Renderer::Render(const Scene& scene)
         // calcualte foreach camera the transform matrix
         // skip drawing active camera
         // draw camera
+	std::vector<Camera> cameras = scene.GetAllCameras();
+	Camera activeCamera = scene.GetCameraByIndex(scene.GetActiveCameraIndex);
+
+	std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
+	std::shared_ptr<MeshModel> activeModel = scene.GetModelByIndex(scene.GetActiveModelIndex());
+
+	for (std::vector<Camera>::iterator it = cameras.begin(); it < cameras.end(); it++) {
+		if (it->IsActive() == 0) {
+			MeshModel model = it->GetModel();
+			glm::mat4 wtMat = it->GetTransformation();
+			glm::mat4 matrix = activeModel->GetWorldTransformation() * activeCamera.GetTransformation() * activeCamera.GetProjection();
+			DrawModel(&model, matrix);
+		}
+	}
     
     // loop over models
         // calcualte foreach model the transform matrix
