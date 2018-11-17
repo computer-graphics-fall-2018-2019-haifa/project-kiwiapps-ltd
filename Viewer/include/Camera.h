@@ -19,7 +19,6 @@ private:
     glm::vec3 up;
     // 0 => orth , 1 => perspective
     int projectionType;
-	int isActive;
 
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
@@ -51,7 +50,6 @@ public:
 		const float aspect,
 		const float nearP,
 		const float farP);
-	void SetIsActive(int status);
 
     const glm::mat4 GetTransformation();
     const glm::mat4 GetProjection();
@@ -69,5 +67,4 @@ public:
     const float GetHeight();
     const float GetProjectionType();
     const MeshModel GetModel();
-	const int IsActive();
 };
