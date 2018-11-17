@@ -1,9 +1,12 @@
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include "MeshModel.h"
 #include "Utils.h"
 #include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include <sstream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
