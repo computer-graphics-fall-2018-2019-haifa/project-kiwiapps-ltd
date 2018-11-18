@@ -16,16 +16,17 @@ eye(eye),
 at(at),
 up(up),
 projectionType(0),
-zoom(100),
+zoom(10),
 aspectRatio(1),
 nearP(10),
 fovy(45),
 farP(1000),
-height(2.5f), // height(2),
+height(2),
 model(MeshModel(Utils::LoadMeshModel(GetCameraPath())))
 {
 	SetCameraLookAt(eye, at, up);
     SetOrthographicProjection();
+    model.scale = {1, 1, 1};
 }
 
 Camera::~Camera()

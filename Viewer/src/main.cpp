@@ -139,7 +139,7 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	renderer.ClearColorBuffer(GetClearColor());
 
     if(scene.GetAllCameras().size() == 0 && GetCameraPath() != ""){
-        Camera* newCam = new Camera(glm::vec3(350, 350, 350), glm::vec3(0), glm::vec3(0, 1, 0));
+        Camera* newCam = new Camera(glm::vec3(400, 400, 400), glm::vec3(0), glm::vec3(0, 1, 0));
         scene.AddCamera(newCam);
     }
 	// Render the scene

@@ -168,15 +168,29 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         Camera* activeCamera = cameras.at(scene.activeCameraIndex);
         char** cameraNames = new char*[cameras.size()];
         for (int i = 0; i < cameras.size(); i++){
-            std::ostringstream o;
-            o << "Caemra " << (i + 1);
-            cameraNames[i] = const_cast<char*>(o.str().c_str());
+            cameraNames[i] = const_cast<char*>(cameras.at(i)->GetModel().GetModelName().c_str());
         }
         
         ImGui::Text("Selected Camera:");
         ImGui::SameLine();
         ImGui::Combo("##selectedCamera", &scene.activeCameraIndex, cameraNames, cameras.size());
         
+        
+        ImGui::Text("Zooming: ");
+        ImGui::SameLine();
+        ImGui::SliderFloat("##cameraZoom", &(activeCamera->zoom), 0.100f, 50.0f, "%.2f", 10.0f);
+        activeCamera->SetCameraLookAt();
+        
+        bool isOrth = activeCamera->GetProjectionType() == 0;
+        ImGui::SliderFloat(isOrth ? "Height": "Fovy", isOrth ? &(activeCamera->height) : &(activeCamera->fovy), 1.0f, 100.0f);
+        ImGui::SliderFloat("Aspect Ratio", &(activeCamera->aspectRatio), 0.1f, 2.0f);
+        ImGui::SliderFloat("Near", &(activeCamera->nearP), 1.0f, 100.0f);
+        ImGui::SliderFloat("Far", &(activeCamera->farP), 1.0f, 100.0f);
+        if(isOrth){
+            activeCamera->SetOrthographicProjection();
+        } else {
+            activeCamera->SetPerspectiveProjection();
+        }
         
         int colSize = ((mainMenuWidth - 82)/3)/3;
         ImGui::Text("\n|       Eye       |        Up       |        At       |");
@@ -198,11 +212,11 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         ImGui::PushID(1);
         ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(0, 200, 0));
         ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor(255, 255, 255));
-        ImGui::VSliderFloat("##upX", ImVec2(colSize, 100), &(activeCamera->up.x), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::VSliderFloat("##upX", ImVec2(colSize, 100), &(activeCamera->up.x), -100,100, "%.0f", incrementalSizeConfig);
         ImGui::SameLine();
-        ImGui::VSliderFloat("##upY", ImVec2(colSize, 100), &(activeCamera->up.y), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::VSliderFloat("##upY", ImVec2(colSize, 100), &(activeCamera->up.y), -100,100, "%.0f", incrementalSizeConfig);
         ImGui::SameLine();
-        ImGui::VSliderFloat("##upZ", ImVec2(colSize, 100), &(activeCamera->up.z), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::VSliderFloat("##upZ", ImVec2(colSize, 100), &(activeCamera->up.z), -100,100, "%.0f", incrementalSizeConfig);
         ImGui::SameLine();
         ImGui::PopStyleColor(2);
         ImGui::PopID();
@@ -218,6 +232,7 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         ImGui::SameLine();
         ImGui::PopStyleColor(2);
         ImGui::PopID();
+        
     }
     
     

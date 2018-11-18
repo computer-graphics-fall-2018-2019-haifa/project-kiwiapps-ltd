@@ -19,12 +19,6 @@ private:
 
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
-	float zoom;
-    float aspectRatio;
-    float nearP;
-    float fovy;
-    float farP;
-    float height;
     MeshModel model;
 
 public:
@@ -34,6 +28,12 @@ public:
     glm::vec3 eye;
     glm::vec3 at;
     glm::vec3 up;
+    float zoom;
+    float aspectRatio;
+    float nearP;
+    float fovy;
+    float farP;
+    float height;
 
     void SetCameraLookAt();
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);

@@ -103,7 +103,8 @@ glm::mat4 Scene::CalculateTransformationMatrix() const
     glm::mat4
         projectionTrans = camera->GetProjection(),
         viewTrans = camera->GetTransformation(),
-        worldTrans = glm::mat4(1);
+        worldTrans = camera->CalculateWorldTransformation();
+//        worldTrans = glm::mat4(1);
     
     return projectionTrans * viewTrans * worldTrans;
 }

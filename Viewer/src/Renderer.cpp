@@ -144,13 +144,10 @@ void Renderer::DrawFaceNormal(const std::vector<glm::vec3>& vertices)
 void Renderer::DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix) {
 	std::vector<Line> boundingBox = model->GetBoundingBox();
 
-	for (std::vector<Line>::iterator it = boundingBox.begin(); it < boundingBox.end(); it++) {
-		glm::vec4 p1 = transformMatrix * glm::vec4(it->point1, 1);
-		glm::vec4 p2 = transformMatrix * glm::vec4(it->point2, 1);
-
-		DrawLine(glm::vec3(p1.x, p1.y, p1.z), glm::vec3(p2.x, p2.y, p2.z), glm::vec3(1, 0, 0));
-
-	}
+    for(int i=0; i<boundingBox.size(); i++)
+    {
+        DrawLine(boundingBox.at(i), transformMatrix, glm::vec3(1, 0, 0));
+    }
 }
 
 
