@@ -151,13 +151,13 @@ void BuildToolbar(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, 
                 if(ImGui::MenuItem("Orthographic", "" , projectionTypeConfig == 0))
                 {
                     projectionTypeConfig = 0;
-                    Camera camera = scene.GetAllCameras().at(scene.GetActiveCameraIndex());
-                    camera.SetOrthographicProjection();
+                    Camera* camera = scene.GetAllCameras().at(scene.GetActiveCameraIndex());
+                    camera->SetOrthographicProjection();
                 }
                 if(ImGui::MenuItem("Perspective", "" , projectionTypeConfig == 1)) {
                     projectionTypeConfig = 1;
-                    Camera camera = scene.GetAllCameras().at(scene.GetActiveCameraIndex());
-                    camera.SetPerspectiveProjection();
+                    Camera* camera = scene.GetAllCameras().at(scene.GetActiveCameraIndex());
+                    camera->SetPerspectiveProjection();
                 }
                 ImGui::EndMenu();
             }
@@ -234,8 +234,8 @@ void DisplayAddNewCamera(ImGuiIO& io, Scene& scene, GLFWwindow* window, int disp
     if(newCameraResult){
         newCameraPageVisible = false;
         newCameraResult = false;
-        const Camera* camera = new Camera(eye, at, up);
-        scene.AddCamera(*camera);
+        Camera* camera = new Camera(eye, at, up);
+        scene.AddCamera(camera);
         return;
     }
     

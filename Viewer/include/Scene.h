@@ -15,7 +15,7 @@
 class Scene {
 private:
 	std::vector<std::shared_ptr<MeshModel>> models;
-	std::vector<Camera> cameras;
+	std::vector<Camera*> cameras;
 
 	int activeCameraIndex;
 	int activeModelIndex;
@@ -26,7 +26,7 @@ public:
 	void AddModel(const std::shared_ptr<MeshModel>& model);
 	const int GetModelCount() const;
 
-	void AddCamera(const Camera& camera);
+    void AddCamera(Camera* camera);
 	const int GetCameraCount() const;
 
 	void SetActiveCameraIndex(int index);
@@ -35,10 +35,11 @@ public:
 	void SetActiveModelIndex(int index);
 	const int GetActiveModelIndex() const;
 
-    const std::vector<Camera> GetAllCameras() const;
+    std::vector<Camera*> GetAllCameras() const;
     const std::vector<std::shared_ptr<MeshModel>> GetAllModels() const;
     
-    const Camera GetCameraByIndex(int index) const;
+    const Camera& GetCameraByIndex(int index);
+    const Camera& GetActiveCamera();
     const std::shared_ptr<MeshModel> GetModelByIndex(int index) const;
     
     glm::mat4 CalculateTransformationMatrix() const;

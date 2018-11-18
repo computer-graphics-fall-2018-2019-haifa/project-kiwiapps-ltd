@@ -237,20 +237,18 @@ void Renderer::Render(const Scene& scene)
         // calcualte foreach camera the transform matrix
         // skip drawing active camera
         // draw camera
-	std::vector<Camera> cameras = scene.GetAllCameras();
-    Camera activeCamera = scene.GetCameraByIndex(scene.GetActiveCameraIndex());
+	std::vector<Camera*> cameras = scene.GetAllCameras();
+    int activeCameraIndex = scene.GetActiveCameraIndex();
     
-    int cameraCounter = 0;
-	for (std::vector<Camera>::iterator it = cameras.begin(); it < cameras.end(); it++) {
-		if (cameraCounter != scene.GetActiveCameraIndex()) {
-            Camera camera = *it;
-            MeshModel model = camera.GetModel();
+    for(int i=0; i<cameras.size(); i++){
+        if (i != activeCameraIndex) {
+            Camera* camera = cameras.at(i);
+            MeshModel model = camera->GetModel();
             glm::mat4 matrix = sceneMatrix * model.CalculateWorldTransformation();
-			DrawModel(&model, matrix);
-			cameraCounter++;
-		}
-	}
-
+            DrawModel(&model, matrix);
+        }
+    }
+    
     // loop over models
         // calcualte foreach model the transform matrix
         // loop over model faces

@@ -1,12 +1,13 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include "Camera.h"
-#include "Utils.h"
-#include <vector>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include "Camera.h"
+#include "Utils.h"
+#include <vector>
 #include <iostream>
 #include "ImguiMenus.h"
 
@@ -15,7 +16,7 @@ eye(eye),
 at(at),
 up(up),
 projectionType(0),
-zoom(1.0),
+zoom(15),
 aspectRatio(1),
 nearP(10),
 fovy(45),
@@ -31,9 +32,13 @@ Camera::~Camera()
 {
 }
 
+void Camera::SetCameraLookAt()
+{
+    SetCameraLookAt(eye, at, up, zoom);
+}
 void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) 
 {
-    SetCameraLookAt(eye, at, up, 1.0);
+    SetCameraLookAt(eye, at, up, zoom);
 }
 void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float zoom)
 {
@@ -56,7 +61,9 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
     glm::vec4 t  =  glm::vec4(0.0, 0.0, 0.0, 1.0);
     glm::mat4 c  =  glm::transpose(glm::mat4(x,  y,  z,  t));
     
-    this->viewTransformation = c *  glm::translate(-eye);
+    glm::mat4 translateEye = glm::translate(-eye);
+    
+    this->viewTransformation = c * translateEye;
 }
 
 
@@ -110,19 +117,21 @@ void Camera::SetPerspectiveProjection(
     this->farP = far;
     this->projectionType = 1;
     
-    float nearHeight = (far - near) * tan(fovy * M_PI);
+    float nearHeight = (far - near) * tan(fovy * M_PI / 180);
     float nearWidth = nearHeight * aspectRatio;
     
-    float top = near * nearHeight;
+    float top = 0.5 * nearHeight;
     float bottom = -top;
-    float right = near * nearWidth;
+    float right = 0.5 * nearWidth;
     float left = -right;
     
-    glm::vec4 r1 = glm::vec4((2 * near) / nearWidth, 0, (right + left) / (right - left), 0);
-    glm::vec4 r2 = glm::vec4(0, -(2 * near) / nearHeight, (top + bottom) / (top - bottom), 0);
+    glm::vec4 r1 = glm::vec4((2 * near) / (right - left), 0, (right + left) / (right - left), 0);
+    glm::vec4 r2 = glm::vec4(0, (2 * near) / (top - bottom), (top + bottom) / (top - bottom), 0);
     glm::vec4 r3 = glm::vec4(0, 0, -(far + near) / (far - near), -(2 * far * near) / (far - near));
     glm::vec4 r4 = glm::vec4(0, 0, -1, 0);
+    
     glm::mat4 matrix = glm::mat4(r1, r2, r3, r4);
+    matrix = glm::transpose(glm::inverse(matrix));
     this->projectionTransformation = matrix;
 }
 
@@ -148,7 +157,11 @@ const glm::mat4 Camera::CalculateWorldTransformation()
 {
     glm::mat4 scaleMat = glm::scale(glm::vec3(zoom));
     glm::mat4 rotateMat = CalculateRotationMatrix();
-    glm::mat4 translateMat = glm::translate(eye);
+    glm::mat4 translateMat = glm::mat4(1, 0, 0, eye.x,
+                                       0, 1, 0, eye.y,
+                                       0, 0, 1, eye.z,
+                                       0, 0, 0, 1
+                                       );
     
     return glm::transpose(translateMat) * rotateMat * scaleMat;
 }
@@ -156,7 +169,7 @@ const glm::mat4 Camera::CalculateWorldTransformation()
 
 const glm::mat4 Camera::CalculateRotationMatrix()
 {
-    
+    glm::vec3 rotationAngle = glm::vec3(glm::angle(this->at, this->eye));
     glm::vec3 rotation = this->up * glm::vec3(M_PI / 180);
     
     glm::mat4 xRotationMatrix = glm::mat4(

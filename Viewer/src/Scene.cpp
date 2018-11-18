@@ -18,9 +18,9 @@ const int Scene::GetModelCount() const
 	return models.size();
 }
 
-void Scene::AddCamera(const Camera& camera)
+void Scene::AddCamera(Camera* camera)
 {
-	cameras.push_back(camera);
+    cameras.push_back(camera);
     activeCameraIndex = cameras.size() - 1;
 }
 
@@ -57,7 +57,7 @@ const int Scene::GetActiveModelIndex() const
 	return activeModelIndex;
 }
 
-const std::vector<Camera> Scene::GetAllCameras() const
+std::vector<Camera*> Scene::GetAllCameras() const
 {
     return cameras;
 }
@@ -68,16 +68,20 @@ const std::vector<std::shared_ptr<MeshModel>> Scene::GetAllModels() const
 }
 
 
-const Camera Scene::GetCameraByIndex(int index) const
+const Camera& Scene::GetCameraByIndex(int index)
 {
     if(index >= 0 && index < cameras.size())
     {
-        return cameras.at(index);
+        return *cameras.at(index);
     } else {
         std::cerr << "Failed to get camera, please check index " << index << std::endl;
         throw "Failed to get camera, please check index " + std::to_string(index);
     }
 }
+const Camera& Scene::GetActiveCamera() {
+    return *cameras.at(activeCameraIndex);
+}
+
 const std::shared_ptr<MeshModel> Scene::GetModelByIndex(int index) const
 {
     if(index >= 0 && index < models.size())
@@ -92,11 +96,12 @@ const std::shared_ptr<MeshModel> Scene::GetModelByIndex(int index) const
 
 glm::mat4 Scene::CalculateTransformationMatrix() const
 {
-    Camera camera = this->cameras.at(activeCameraIndex);
+    Camera* camera = this->cameras.at(activeCameraIndex);
+    camera->SetCameraLookAt();
 
     glm::mat4
-        projectionTrans = camera.GetProjection(),
-        viewTrans = camera.GetTransformation(),
+        projectionTrans = camera->GetProjection(),
+        viewTrans = camera->GetTransformation(),
         worldTrans = glm::mat4(1);
     
     return projectionTrans * viewTrans * worldTrans;

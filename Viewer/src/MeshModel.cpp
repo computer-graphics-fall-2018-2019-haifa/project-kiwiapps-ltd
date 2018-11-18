@@ -221,7 +221,11 @@ glm::mat4 MeshModel::CalculateScaleMatrix()
 
 glm::mat4 MeshModel::CalculateTranslationMatrix()
 {
-	return glm::translate(this->translate); // C11
+    return glm::mat4(1, 0, 0, translate.x,
+                     0, 1, 0, translate.y,
+                     0, 0, 1, translate.z,
+                     0, 0, 0, 1
+                     );
 }
 
 glm::mat4 MeshModel::CalculateRotationMatrix()
