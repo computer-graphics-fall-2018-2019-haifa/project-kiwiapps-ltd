@@ -277,28 +277,23 @@ void DisplayAddNewCamera(ImGuiIO& io, Scene& scene, GLFWwindow* window, int disp
 
 void DrawImguiMenus(ImGuiIO& io, Scene& scene, GLFWwindow* window)
 {
-	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-	if (showDemoWindow)
-	{
-		ImGui::ShowDemoWindow(&showDemoWindow);
-	}
-    
     int display_w = 0 , display_h = 0;
     glfwPollEvents();
     glfwGetFramebufferSize( window , &display_w , &display_h);
-    
     
     if(cameraObjPath == "")
     {
         DisplayAlertCameraObj(io, scene, window, display_w, display_h);
         return;
     }
+    
     BuildToolbar(io, scene, window, display_w, display_h);
     buildMainMenu(io, scene, window, display_w, display_h);
     if(aboutPageVisible) BuildAboutPage(io, scene, window, display_w, display_h);
     if(settingsPageVisible) BuildSettingsPage(io, scene, window, display_w, display_h);
     if(displayFPSConfig) DisplayFPSPage(io, scene, window, display_w, display_h);
     if(newCameraPageVisible) DisplayAddNewCamera(io, scene, window, display_w, display_h);
+    if(showDemoWindow) ImGui::ShowDemoWindow(&showDemoWindow);
     
 }
 
