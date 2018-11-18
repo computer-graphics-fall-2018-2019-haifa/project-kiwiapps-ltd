@@ -51,24 +51,24 @@ void MeshModel::CalculateBoundingBox()
     this->boundingBox.clear();
     
     //  square 1
-    //      maxX, maxY, minZ -> maxX, minY, minZ
-    //      maxX, maxY, minZ -> minX, maxY, minZ
+    //      minX, minY, minZ -> maxX, minY, minZ
+    //      minX, minY, minZ -> minX, maxY, minZ
     //      maxX, maxY, minZ -> maxX, minY, minZ
     //      maxX, maxY, minZ -> minX, maxY, minZ
     
-    this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, minZ), glm::vec3(maxX, minY, minZ)));
-    this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, minZ), glm::vec3(minX, maxY, minZ)));
+    this->boundingBox.push_back(Line(glm::vec3(minX, minY, minZ), glm::vec3(maxX, minY, minZ)));
+    this->boundingBox.push_back(Line(glm::vec3(minX, minY, minZ), glm::vec3(minX, maxY, minZ)));
     this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, minZ), glm::vec3(maxX, minY, minZ)));
     this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, minZ), glm::vec3(minX, maxY, minZ)));
     
     //  square 2
-    //      maxX, maxY, maxZ -> maxX, minY, maxZ
-    //      maxX, maxY, maxZ -> minX, maxY, maxZ
+    //      minX, minY, maxZ -> maxX, minY, maxZ
+    //      minX, minY, maxZ -> minX, maxY, maxZ
     //      maxX, maxY, maxZ -> maxX, minY, maxZ
     //      maxX, maxY, maxZ -> minX, maxY, maxZ
     
-    this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, maxZ), glm::vec3(maxX, minY, maxZ)));
-    this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, maxZ), glm::vec3(minX, maxY, maxZ)));
+    this->boundingBox.push_back(Line(glm::vec3(minX, minY, maxZ), glm::vec3(maxX, minY, maxZ)));
+    this->boundingBox.push_back(Line(glm::vec3(minX, minY, maxZ), glm::vec3(minX, maxY, maxZ)));
     this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, maxZ), glm::vec3(maxX, minY, maxZ)));
     this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, maxZ), glm::vec3(minX, maxY, maxZ)));
     

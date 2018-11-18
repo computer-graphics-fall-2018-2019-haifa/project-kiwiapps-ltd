@@ -64,6 +64,8 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
     
     glm::mat4 translateEye = glm::translate(-eye);
     
+    this->model.SetTranslate(eye);
+    this->model.SetRotate(up);
     this->viewTransformation = c * translateEye;
 }
 
