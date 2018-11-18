@@ -245,12 +245,12 @@ void Renderer::Render(const Scene& scene)
         // highlight active model
 
     std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
-	std::vector<std::shared_ptr<MeshModel>>::iterator it;
-	for (it = models.begin(); it < models.end(); it++) {
-        MeshModel model = *(*it);
-        glm::mat4 matrix = sceneMatrix * model.CalculateWorldTransformation();
-		DrawModel(&model, matrix);
-	}
+    for(int i=0; i<models.size(); i++){
+        MeshModel* model = &(*models.at(i));
+        glm::mat4 matrix = sceneMatrix * (*model).CalculateWorldTransformation();
+        DrawModel(model, matrix);
+    }
+    
 }
 
 
