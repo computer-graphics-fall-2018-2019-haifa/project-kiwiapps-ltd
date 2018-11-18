@@ -74,7 +74,12 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 	createOpenGLBuffer();
 }
 
-void Renderer::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color) {
+void Renderer::DrawLine(const Line& line, const glm::vec3& color)
+{
+    DrawLine(line.point1, line.point2, color);
+}
+void Renderer::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color)
+{
     // Bresenham’s Line Drawing Algorithm
 
     // init points per vec
@@ -88,7 +93,7 @@ void Renderer::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec
     int err = (dx>dy ? dx : -dy)/2, e2;
     
     while(true){
-        putPixel(x0,y0, glm::vec3(1, 0, 0));
+        putPixel(x0,y0, color);
         if (x0==x1 && y0==y1) break;
         e2 = err;
         if (e2 >-dx) { err -= dy; x0 += sx; }
@@ -176,10 +181,43 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
 	}
 }
 
+
+glm::vec3 MultiplyMatVec3(glm::mat4 mat, glm::vec3 vec3)
+{
+    glm::vec4 vec4 = mat * glm::vec4(vec3, 1);
+    if (vec4.w == 0){
+        vec4.w = 1;
+    }
+    return glm::vec3(vec4.x / vec4.w, vec4.y / vec4.w, vec4.z / vec4.w);
+}
+
 void Renderer::Render(const Scene& scene)
 {
 	
+    const glm::vec3 redColor = glm::vec3(1, 0, 0);
+    const glm::vec3 greenColor = glm::vec3(0, 1, 0);
+    const glm::vec3 blueColor = glm::vec3(0, 0, 1);
+    const glm::vec3 blackColor = glm::vec3(0, 0, 0);
+    const glm::vec3 greyColor = glm::vec3(0.4, 0.4, 0.4);
+    
+    const int centerWidth = (int)(viewportWidth / 2);
+    const int centerHeight = (int)(viewportHeight / 2);
+    const glm::vec3 halfAxesV3 = glm::vec3(centerWidth, centerHeight, 0);
+    glm::mat4 sceneMatrix = scene.CalculateTransformationMatrix();
+    
     // draw axes
+    float length = (viewportWidth > viewportHeight ? viewportHeight : viewportWidth) * 0.6;
+    glm::vec3
+        AxesXFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(-length, 0, 0)) + halfAxesV3,
+        AxesXTo = MultiplyMatVec3(sceneMatrix, glm::vec3(length, 0, 0)) + halfAxesV3,
+        AxesYFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(0, -length, 0)) + halfAxesV3,
+        AxesYTo = MultiplyMatVec3(sceneMatrix, glm::vec3(0, length, 0)) + halfAxesV3,
+        AxesZFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(0, 0, -length)) + halfAxesV3,
+        AxesZTo = MultiplyMatVec3(sceneMatrix, glm::vec3(0, 0, length)) + halfAxesV3;
+    
+    DrawLine(Line(AxesXFrom, AxesXTo), redColor);
+    DrawLine(Line(AxesYFrom, AxesYTo), greenColor);
+    DrawLine(Line(AxesZFrom, AxesZTo), blueColor);
     
     // loop over cameras
         // calcualte foreach camera the transform matrix
@@ -187,15 +225,13 @@ void Renderer::Render(const Scene& scene)
         // draw camera
 	std::vector<Camera> cameras = scene.GetAllCameras();
     Camera activeCamera = scene.GetCameraByIndex(scene.GetActiveCameraIndex());
-	int cameraCounter = 0;
-	std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
-	std::shared_ptr<MeshModel> activeModel = scene.GetModelByIndex(scene.GetActiveModelIndex());
-
+    
+    int cameraCounter = 0;
 	for (std::vector<Camera>::iterator it = cameras.begin(); it < cameras.end(); it++) {
 		if (cameraCounter != scene.GetActiveCameraIndex()) {
-			MeshModel model = it->GetModel();
-			glm::mat4 wtMat = it->GetTransformation();
-			glm::mat4 matrix = activeModel->GetWorldTransformation() * activeCamera.GetTransformation() * activeCamera.GetProjection();
+            Camera camera = *it;
+            MeshModel model = camera.GetModel();
+            glm::mat4 matrix = sceneMatrix * model.CalculateWorldTransformation();
 			DrawModel(&model, matrix);
 			cameraCounter++;
 		}
@@ -207,18 +243,14 @@ void Renderer::Render(const Scene& scene)
             // draw face triangle
             // draw face normal
         // highlight active model
-    
+
+    std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
 	std::vector<std::shared_ptr<MeshModel>>::iterator it;
 	for (it = models.begin(); it < models.end(); it++) {
-		glm::mat4 translateionMatrix = (*it)->CalculateTranslationMatrix();
-		glm::mat4 scaleMatrix = (*it)->CalculateScaleMatrix();
-		glm::mat4 rotationMatrix = (*it)->CalculateRotationMatrix();
-
-		glm::mat4 matrix = glm::transpose(translateionMatrix) * scaleMatrix	* rotationMatrix;
-		DrawModel(&(*(*it)), matrix);
+        MeshModel model = *(*it);
+        glm::mat4 matrix = sceneMatrix * model.CalculateWorldTransformation();
+		DrawModel(&model, matrix);
 	}
-//    scene.models.at(10);
-    
 }
 
 
