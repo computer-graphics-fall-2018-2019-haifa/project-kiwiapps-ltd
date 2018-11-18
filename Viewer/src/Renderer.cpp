@@ -114,25 +114,26 @@ void Renderer::DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::v
 }
 
 // get face triangle vertices, compute face normals
-void Renderer::DrawFace(MeshModel model, Face face, const bool drawNormals, const glm::vec3& color)
+void Renderer::DrawFace(MeshModel model, Face face, const glm::vec3& color)
 {
 	std::vector<glm::vec3> vertices;
 	
-	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(0)));
-	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(1)));
-	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(2)));
+	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(0) - 1));
+	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(1) - 1));
+	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(2) - 1));
 
 	//draw face
 	DrawTriangle(vertices, color);
+}
 
-	if (drawNormals) {
-		std::vector<glm::vec3> normals = model.GetNormals();
-		for (std::vector<glm::vec3>::iterator it = normals.begin(); it != normals.end(); it++) {
-			glm::vec3 normal = model.CalculateFaceNormal(face);
-			DrawLine(vertices[0], normal, color);
-		}
-	}
-
+void Renderer::DrawFaceNormal(const std::vector<glm::vec3>& vertices)
+{
+	glm::vec3
+		mid = (vertices[0] + vertices[1] + vertices[2]) / glm::vec3(3, 3, 3),
+		normal = glm::cross((vertices[1] - vertices[0]), (vertices[2] - vertices[0])),
+		startPoint = mid - (normal * glm::vec3(0.2)),
+		endPoint = mid + (normal * glm::vec3(0.2));
+	DrawLine(startPoint, endPoint, glm::vec3(1, 1, 1));
 }
 
 // draw each line by the provided transformation matrix
@@ -162,7 +163,6 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
 	std::vector<Face> faces = model->GetFaces();
 	std::vector<glm::vec3> vertices = model->GetVertices();
 	std::vector<glm::vec3> normals = model->GetNormals();
-	glm::vec3 modelColor = glm::vec3(model->GetColor().x, model->GetColor().y, model->GetColor().z);
 
     // call draw bounding box if requested
     if (model->GetVisibilityOptions().x == 1) {
@@ -172,12 +172,20 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
         // use the provided transformMatrix when drawing the Faces
         // check if draw face normals requested
 
-	for (std::vector<Face>::iterator it = faces.begin(); it < faces.end(); it++) {
+
+
+	for (int i = 0; i < faces.size(); i++) {
 		bool drawNormal = false;
+		std::vector<glm::vec3> vertices;
+		Face face = faces.at(i);
+		vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(0) - 1));
+		vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(1) - 1));
+		vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(2) - 1));
+
         if (model->GetVisibilityOptions().z == 1) {
-			drawNormal = 1;
+			DrawFaceNormal(vertices);
 		}
-		DrawFace(*model, *it, drawNormal, modelColor);
+		DrawTriangle(vertices, glm::vec3(1, 1, 1));
 	}
 }
 

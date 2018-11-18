@@ -41,7 +41,8 @@ public:
     void DrawLine(const Line& line, const glm::vec3& color);
     void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color);
     void DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::vec3& color);
-    void DrawFace(MeshModel model, Face face, const bool drawNormals, const glm::vec3& color);
+    void DrawFace(MeshModel model, Face face, const glm::vec3& color);
+    void DrawFaceNormal(const std::vector<glm::vec3>& vertices);
     void DrawModel(MeshModel* model, glm::mat4 transformMatrix);
     void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix);
 
