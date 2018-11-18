@@ -40,4 +40,7 @@ public:
     
     const Camera GetCameraByIndex(int index) const;
     const std::shared_ptr<MeshModel> GetModelByIndex(int index) const;
+    
+    glm::mat4 CalculateTransformationMatrix() const;
+    
 };

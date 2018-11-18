@@ -29,7 +29,7 @@ bool showAnotherWindow = false;
 bool drawNormalVertex = false;
 bool drawNormalFace = false;
 
-glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
+glm::vec4 clearColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.00f);
 
 const glm::vec4& GetClearColor()
 {

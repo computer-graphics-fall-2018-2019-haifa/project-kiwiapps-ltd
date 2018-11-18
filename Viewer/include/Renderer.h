@@ -38,6 +38,7 @@ public:
 	void ClearColorBuffer(const glm::vec3& color);
 	void SetViewport(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 
+    void DrawLine(const Line& line, const glm::vec3& color);
     void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color);
     void DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::vec3& color);
     void DrawFace(MeshModel model, Face face, const bool drawNormals, const glm::vec3& color);

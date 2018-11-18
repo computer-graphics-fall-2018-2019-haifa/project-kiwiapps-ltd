@@ -53,8 +53,9 @@ public:
     const glm::vec3 GetNormalByIndex(int index) const;
     const std::vector<Line> GetBoundingBox() const;
     
+    const glm::mat4 CalculateWorldTransformation();
+    
     // getter setters
-	void SetWorldTransformation(const glm::mat4x4& worldTransform);
 	const glm::mat4x4& GetWorldTransformation() const;
 
 	const glm::vec4& GetColor() const;
