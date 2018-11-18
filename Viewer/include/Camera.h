@@ -53,6 +53,8 @@ public:
 
     const glm::mat4 GetTransformation();
     const glm::mat4 GetProjection();
+    const glm::mat4 CalculateWorldTransformation();
+    const glm::mat4 CalculateRotationMatrix();
     
     const float GetZoom();
     void SetZoom(const float zoom);
@@ -66,5 +68,5 @@ public:
     const float GetFar();
     const float GetHeight();
     const float GetProjectionType();
-    const MeshModel GetModel();
+    MeshModel GetModel();
 };

@@ -1,9 +1,12 @@
+#define GLM_ENABLE_EXPERIMENTAL
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "Camera.h"
 #include "Utils.h"
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 #include <iostream>
 
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
@@ -13,13 +16,14 @@ up(up),
 projectionType(0),
 zoom(1.0),
 aspectRatio(1),
-nearP(20),
-fovy(0),
-farP(500),
-height(2),
+nearP(10),
+fovy(45),
+farP(1000),
+height(2.5f), // height(2),
 model(MeshModel(Utils::LoadMeshModel("/Users/davidantoon/git/project-kiwiapps-ltd/Data/camera.obj")))
 {
 	SetCameraLookAt(eye, at, up);
+    SetOrthographicProjection();
 }
 
 Camera::~Camera()
@@ -44,19 +48,14 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
     glm::vec4 z  =  normalize(glm::vec4(eye, 1)  - glm::vec4(at, 1));
     glm::vec3 z3 = glm::vec3(z.x, z.y, z.z);
     glm::vec3 x3 = glm::normalize(glm::cross(up, z3));
-    glm::vec3 y3 = glm::normalize(glm::cross(z3, z3));
+    glm::vec3 y3 = glm::normalize(glm::cross(z3, x3));
     
-    glm::vec4 x  =  glm::vec4(x3, 1);
-    glm::vec4 y  =  glm::vec4(y3, 1);
+    glm::vec4 x  =  glm::vec4(x3, 0);
+    glm::vec4 y  =  glm::vec4(y3, 0);
     glm::vec4 t  =  glm::vec4(0.0, 0.0, 0.0, 1.0);
-    glm::mat4 c  =  glm::mat4(x,  y,  z,  t);
+    glm::mat4 c  =  glm::transpose(glm::mat4(x,  y,  z,  t));
     
-    glm::mat4 traslateMat = glm::mat4(1, 0, 0, 0,
-                                      0, 1, 0, 0,
-                                      0, 0, 1, 0,
-                                      -eye[0],-eye[1],-eye[2], 1);
-    
-    this->viewTransformation = c *  traslateMat;
+    this->viewTransformation = c *  glm::translate(-eye);
 }
 
 
@@ -77,7 +76,20 @@ void Camera::SetOrthographicProjection(
     this->farP = far;
     this->projectionType = 0;
     
+    float nearWidth = height * aspectRatio;
     
+    float top = 0.5 * height;
+    float bottom = -top;
+    float right = 0.5 * nearWidth;
+    float left = -right;
+    
+    this->projectionTransformation =
+    glm::mat4(
+       2 / (right - left)               , 0                                , 0                            , 0,
+       0                                , 2 / (top - bottom)               , 0                            , 0,
+       0                                , 0                                , 2 / (near - far)             , 0,
+       -(right + left) / (right - left) , -(top + bottom) / (top - bottom) , -(far + near) / (far - near) , 1
+   );
 }
 
 void Camera::SetPerspectiveProjection()
@@ -131,6 +143,46 @@ const glm::mat4 Camera::GetProjection()
     return this->projectionTransformation;
 }
 
+const glm::mat4 Camera::CalculateWorldTransformation()
+{
+    glm::mat4 scaleMat = glm::scale(glm::vec3(zoom));
+    glm::mat4 rotateMat = CalculateRotationMatrix();
+    glm::mat4 translateMat = glm::translate(eye);
+    
+    return glm::transpose(translateMat) * rotateMat * scaleMat;
+}
+
+
+const glm::mat4 Camera::CalculateRotationMatrix()
+{
+    
+    glm::vec3 rotation = this->up * glm::vec3(M_PI / 180);
+    
+    glm::mat4 xRotationMatrix = glm::mat4(
+                                          1, 0                   , 0                          , 0,
+                                          0, glm::cos(rotation.x), glm::sin(rotation.x) * (-1), 0,
+                                          0, glm::sin(rotation.x), glm::cos(rotation.x)       , 0,
+                                          0, 0                   , 0                          , 1
+                                          );
+    
+    glm::mat4 yRotationMatrix = glm::mat4(
+                                          glm::cos(rotation.y)       , 0, glm::sin(rotation.y), 0,
+                                          0                          , 1, 0                   , 0,
+                                          glm::sin(rotation.y) * (-1), 0, glm::cos(rotation.y), 0,
+                                          0                          , 0, 0                   , 1
+                                          );
+    glm::mat4 zRotationMatirx = glm::mat4(
+                                          glm::cos(rotation.z), glm::sin(rotation.z) * (-1) , 0, 0,
+                                          glm::sin(rotation.z), glm::cos(rotation.z)        , 0, 0,
+                                          0                   , 0                           , 1, 0,
+                                          0                   , 0                           , 0, 1
+                                          );
+    
+    return xRotationMatrix * yRotationMatrix * zRotationMatirx;
+}
+
+
+
 const glm::vec3 Camera::GetEye()
 {
     return this->eye;
@@ -167,7 +219,7 @@ const float Camera::GetProjectionType()
 {
     return this->projectionType;
 }
-const MeshModel Camera::GetModel()
+MeshModel Camera::GetModel()
 {
     return this->model;
 }
