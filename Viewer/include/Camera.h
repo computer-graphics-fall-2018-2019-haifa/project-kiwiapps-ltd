@@ -14,9 +14,6 @@
 class Camera
 {
 private:
-    glm::vec3 eye;
-    glm::vec3 at;
-    glm::vec3 up;
     // 0 => orth , 1 => perspective
     int projectionType;
 
@@ -33,6 +30,10 @@ private:
 public:
 	Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	~Camera();
+    
+    glm::vec3 eye;
+    glm::vec3 at;
+    glm::vec3 up;
 
     void SetCameraLookAt();
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);

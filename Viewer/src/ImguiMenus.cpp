@@ -41,6 +41,10 @@ static glm::vec3 eye = glm::vec3(0.0f, 0.0f, 0.0f);
 static glm::vec3 at = glm::vec3(0.0f, 0.0f, 0.0f);
 static glm::vec3 up = glm::vec3(0.0f, 0.0f, 0.0f);
 
+// others
+bool lockScale = true;
+bool lockRotate = true;
+bool lockTranslate = true;
 
 const glm::vec4& GetClearColor()
 {
@@ -75,15 +79,147 @@ void DisplayAlertCameraObj(ImGuiIO& io, Scene& scene, GLFWwindow* window, int di
 
 void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, int display_h)
 {
+    std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
+    std::vector<Camera*> cameras = scene.GetAllCameras();
+    
     ImGui::Begin("", 0 , ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove );
     ImGui::SetWindowSize(ImVec2((float)mainMenuWidth, (float)display_h - 22));
     ImGui::SetWindowPos(ImVec2(2, 20));
     
-    ImGui::Checkbox("Demo Window", &showDemoWindow);
-    ImGui::Text("OBJ settings:");
-    ImGui::Checkbox("Draw OBJ normal-per-vertex", &drawNormalVertex);
-    ImGui::Checkbox("Draw OBJ normal-per-face", &drawNormalFace);
-    ImGui::Text("");
+    if(models.size() == 0){
+        ImGui::Text("\n           *** No loaded models yet! ***\n");
+        ImGui::Text("              Load model by going to \n            Insert -> Load model from file...\n");
+        ImGui::Text("");
+    } else if (ImGui::CollapsingHeader("Models")) {
+        std::shared_ptr<MeshModel> activeModel = models.at(scene.activeModelIndex);
+        char** modelNames = new char*[models.size()];
+        for (int i = 0; i < models.size(); i++)
+        {
+            modelNames[i] = const_cast<char*>((*models[i]).GetModelName().c_str());
+        }
+        
+        ImGui::Text("Selected Model:");
+        ImGui::SameLine();
+        ImGui::Combo("##selectedModel", &scene.activeModelIndex, modelNames, models.size());
+        delete [] modelNames;
+        
+        
+        ImGui::Text("Model Color:");
+        ImGui::SameLine();
+        ImGui::ColorEdit3("##modelColor", (float*)&(activeModel->color));
+        
+        ImGui::Text("Draw Options:");
+        ImGui::Text("Draw Vertices Normals:");
+        ImGui::SameLine();
+        ImGui::Checkbox("##vn", &(activeModel->verticesNoramlVisibility));
+        ImGui::Text("Draw Faces Normals:");
+        ImGui::SameLine();
+        ImGui::Checkbox("##fn", &(activeModel->faceNoramlVisibility));
+        ImGui::Text("Draw Bounding Box:");
+        ImGui::SameLine();
+        ImGui::Checkbox("##boundBox", &(activeModel->boundingBoxVisibility));
+        
+        ImGui::Separator();
+        
+        ImGui::Text("Lock Scale:");
+        ImGui::SameLine();
+        ImGui::Checkbox("##lockScaleCheckbox", &lockScale);
+        ImGui::Text("Scale X:");
+        ImGui::SameLine();
+        ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleX", &(activeModel->scale.x), 1.0f, 500.0f);
+        ImGui::Text("Scale Y:");
+        ImGui::SameLine();
+        ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleY", &(activeModel->scale.y), 1.0f, 500.0f);
+        ImGui::Text("Scale Z:");
+        ImGui::SameLine();
+        ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleZ", &(activeModel->scale.z), 1.0f, 500.0f);
+    
+        ImGui::Separator();
+        
+        ImGui::Text("Lock Rotate:");
+        ImGui::SameLine();
+        ImGui::Checkbox("##lockRotateCheckbox", &lockRotate);
+        ImGui::Text("Rotate X:");
+        ImGui::SameLine();
+        ImGui::SliderFloat(lockRotate ? "##lockedRotate" : "##RotateX", &(activeModel->rotate.x), -360.0f, 360.0f);
+        ImGui::Text("Rotate Y:");
+        ImGui::SameLine();
+        ImGui::SliderFloat(lockRotate ? "##lockedRotate" : "##RotateY", &(activeModel->rotate.y), -360.0f, 360.0f);
+        ImGui::Text("Rotate Z:");
+        ImGui::SameLine();
+        ImGui::SliderFloat(lockRotate ? "##lockedRotate" : "##RotateZ", &(activeModel->rotate.z), -360.0f, 360.0f);
+        
+        ImGui::Separator();
+    
+        ImGui::Text("Translation X:");
+        ImGui::SameLine();
+        ImGui::SliderFloat("##TranslationX", &(activeModel->translate.x), -1000.0f, 1000.0f);
+        ImGui::Text("Translation Y:");
+        ImGui::SameLine();
+        ImGui::SliderFloat("##TranslationY", &(activeModel->translate.y), -1000.0f, 1000.0f);
+        ImGui::Text("Translation Z:");
+        ImGui::SameLine();
+        ImGui::SliderFloat("##TranslationZ", &(activeModel->translate.z), -1000.0f, 1000.0f);
+
+    }
+    
+    
+    if (ImGui::CollapsingHeader("Cameras")) {
+        Camera* activeCamera = cameras.at(scene.activeCameraIndex);
+        char** cameraNames = new char*[cameras.size()];
+        for (int i = 0; i < cameras.size(); i++){
+            std::ostringstream o;
+            o << "Caemra " << (i + 1);
+            cameraNames[i] = const_cast<char*>(o.str().c_str());
+        }
+        
+        ImGui::Text("Selected Camera:");
+        ImGui::SameLine();
+        ImGui::Combo("##selectedCamera", &scene.activeCameraIndex, cameraNames, cameras.size());
+        
+        
+        int colSize = ((mainMenuWidth - 82)/3)/3;
+        ImGui::Text("\n|       Eye       |        Up       |        At       |");
+        ImGui::Text(  "|   X    Y    Z   |   X    Y    Z   |   X    Y    Z   |\n");
+        
+        ImGui::PushID(0);
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(200, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor(255, 255, 255));
+
+        ImGui::VSliderFloat("##eyeX", ImVec2(colSize, 100), &(activeCamera->eye.x), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::VSliderFloat("##eyeY", ImVec2(colSize, 100), &(activeCamera->eye.y), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::VSliderFloat("##eyeZ", ImVec2(colSize, 100), &(activeCamera->eye.z), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::PopStyleColor(2);
+        ImGui::PopID();
+        
+        ImGui::PushID(1);
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(0, 200, 0));
+        ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor(255, 255, 255));
+        ImGui::VSliderFloat("##upX", ImVec2(colSize, 100), &(activeCamera->up.x), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::VSliderFloat("##upY", ImVec2(colSize, 100), &(activeCamera->up.y), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::VSliderFloat("##upZ", ImVec2(colSize, 100), &(activeCamera->up.z), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::PopStyleColor(2);
+        ImGui::PopID();
+        
+        ImGui::PushID(2);
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(0, 0, 200));
+        ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor(255, 255, 255));
+        ImGui::VSliderFloat("##atX", ImVec2(colSize, 100), &(activeCamera->at.x), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::VSliderFloat("##atY", ImVec2(colSize, 100), &(activeCamera->at.y), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::VSliderFloat("##atZ", ImVec2(colSize, 100), &(activeCamera->at.z), -2000,2000, "%.0f", incrementalSizeConfig);
+        ImGui::SameLine();
+        ImGui::PopStyleColor(2);
+        ImGui::PopID();
+    }
+    
     
     ImGui::End();
 }
@@ -163,6 +299,7 @@ void BuildToolbar(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, 
             }
             ImGui::EndMenu();
         }
+        ImGui::MenuItem("Help", "", &showDemoWindow);
         ImGui::EndMainMenuBar();
     }
 }

@@ -169,7 +169,7 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4& transformMatrix) {
 	std::vector<glm::vec3> normals = model->GetNormals();
 
     // call draw bounding box if requested
-    if (model->GetVisibilityOptions().x == 1) {
+    if (model->boundingBoxVisibility) {
 		DrawModelBoundingBox(model, transformMatrix);
     }
     // loop over faces and draw each face by calling the DrawFace function
@@ -183,7 +183,7 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4& transformMatrix) {
             vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(j) - 1));
         }
 
-        if (model->GetVisibilityOptions().z == 1) {
+        if (model->faceNoramlVisibility == 1) {
 			DrawFaceNormal(vertices);
 		}
 		DrawTriangle(vertices, transformMatrix, model->GetColor());

@@ -17,11 +17,14 @@ faces(faces),
 vertices(vertices),
 normals(normals),
 textures(textures),
-scale({ 1,1,1}),
+//scale({ 1,1,1}),
+scale({100, 100, 100}),
 rotate({ 0,0,0 }),
 translate({ 0,0,0 }),
-visibilityOptions({ 0,0,0 }),
 worldTransform(glm::mat4x4(1)),
+boundingBoxVisibility(false),
+verticesNoramlVisibility(false),
+faceNoramlVisibility(false),
 modelName(modelName)
 {
     CalculateBoundingBox();
@@ -207,16 +210,6 @@ const glm::vec3& MeshModel::GetTranslate() const
 void MeshModel::SetTranslate(const glm::vec3& translate)
 {
     this->translate = translate;
-}
-
-const glm::vec3 & MeshModel::GetVisibilityOptions()
-{
-	return this->visibilityOptions;
-}
-
-void MeshModel::SetVcisibilityOptions(const glm::vec3 & visibilityOptions)
-{
-	this->visibilityOptions = visibilityOptions;
 }
 
 glm::mat4 MeshModel::CalculateScaleMatrix()
