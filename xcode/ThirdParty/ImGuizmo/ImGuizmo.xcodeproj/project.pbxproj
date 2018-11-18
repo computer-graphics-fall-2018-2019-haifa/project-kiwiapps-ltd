@@ -1,0 +1,807 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		86B96A272363478692CC211D /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = EB8C06314A5946699C8457E2 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				E3AC867838B14B138C6FB119 /* CMake Rules */,
+			);
+			dependencies = (
+				85FD0C02F7E14BC99B6F048F /* PBXTargetDependency */,
+				CAE444DA6F5B4A6B9501B297 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		AE95FD2726DE43A99A0E61F6 /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 7B6A2EB015DD49518ECBBE01 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				4F149DB389C54465BDE45599 /* CMake Rules */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+		C3A07715696B4ED3968C141B /* install */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C5FBD22880FD48209E6FDABA /* Build configuration list for PBXAggregateTarget "install" */;
+			buildPhases = (
+				C41382318901475E9A84B7E8 /* CMake PostBuild Rules */,
+			);
+			dependencies = (
+				D4496133BB244912ADA95536 /* PBXTargetDependency */,
+			);
+			name = install;
+			productName = install;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		4812D2CB74DB44AEB21B1C88 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.cpp */ = {isa = PBXBuildFile; fileRef = 1E5BC1D17B044621B678A6A7 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.cpp */; };
+		5BF6B0FF185E43919E7702DE /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.cpp */ = {isa = PBXBuildFile; fileRef = 97073E53550A4B6794803A9B /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.cpp */; };
+		879CCC80A5894D0B8D2A9D39 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = DA29F98A2E6F461B9161FFDE /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/CMakeLists.txt */; };
+		928C9F43076D4B0C898604C9 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.h */ = {isa = PBXBuildFile; fileRef = 318ECDD5E8CC4C519274BD66 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.h */; };
+		F9BDF5CDC9FA443B9FAC88A8 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.h */ = {isa = PBXBuildFile; fileRef = EB968E8E6DD94AC89669CAF1 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		0DFC2D668A534CBAB97C0C5D /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+		3A77BECFBC294A50B3A80815 /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+		875431C71A0A44439490C06B /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		970585D823CE4177806C168A /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		3BA159BE63D749C2B7DEF6C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7556769535944C74B5F92853 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 86B96A272363478692CC211D;
+			remoteInfo = ALL_BUILD;
+		};
+		402F091D5C244310AF94949B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7556769535944C74B5F92853 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2569E5FA95E647AFB917DB2A;
+			remoteInfo = ImGuizmo;
+		};
+		8FC7AF91ABD241F1AE80830A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7556769535944C74B5F92853 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AE95FD2726DE43A99A0E61F6;
+			remoteInfo = ZERO_CHECK;
+		};
+		C522F1B3D55345838E3691C6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7556769535944C74B5F92853 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AE95FD2726DE43A99A0E61F6;
+			remoteInfo = ZERO_CHECK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1E5BC1D17B044621B678A6A7 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ImGuizmo.cpp; path = ImGuizmo/ImGuizmo.cpp; sourceTree = SOURCE_ROOT; };
+		318ECDD5E8CC4C519274BD66 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ImSequencer.h; path = ImGuizmo/ImSequencer.h; sourceTree = SOURCE_ROOT; };
+		97073E53550A4B6794803A9B /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ImSequencer.cpp; path = ImGuizmo/ImSequencer.cpp; sourceTree = SOURCE_ROOT; };
+		C40A3F17EB5B4BCFB13846C6 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		C955AC9F6A1C4F198DD627DD /* ImGuizmo */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libImGuizmo.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA29F98A2E6F461B9161FFDE /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		EB968E8E6DD94AC89669CAF1 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ImGuizmo.h; path = ImGuizmo/ImGuizmo.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0FE322967FBC426EABBEBA16 /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				B8D73910C9024D18B7E863F0 /* CMake Rules */,
+				C40A3F17EB5B4BCFB13846C6 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		3FC8134F28C240E296B622DE /* ImGuizmo */ = {
+			isa = PBXGroup;
+			children = (
+				FC3F7C99F7CE4563BFE91357 /* Source Files */,
+				7A4573180E7442E4BE812BC5 /* Header Files */,
+				DA29F98A2E6F461B9161FFDE /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/CMakeLists.txt */,
+			);
+			name = ImGuizmo;
+			sourceTree = "<group>";
+		};
+		679DA7A080214014BDDB1C15 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C955AC9F6A1C4F198DD627DD /* ImGuizmo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		77FF6EF22D4B4E3AA9E7D3B3 = {
+			isa = PBXGroup;
+			children = (
+				E42733936EC941E79056F862 /* ImGuizmo */,
+				0FE322967FBC426EABBEBA16 /* ALL_BUILD */,
+				679DA7A080214014BDDB1C15 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7A4573180E7442E4BE812BC5 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				EB968E8E6DD94AC89669CAF1 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.h */,
+				318ECDD5E8CC4C519274BD66 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		B8D73910C9024D18B7E863F0 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		E42733936EC941E79056F862 /* ImGuizmo */ = {
+			isa = PBXGroup;
+			children = (
+				3FC8134F28C240E296B622DE /* ImGuizmo */,
+			);
+			name = ImGuizmo;
+			sourceTree = "<group>";
+		};
+		FC3F7C99F7CE4563BFE91357 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				1E5BC1D17B044621B678A6A7 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.cpp */,
+				97073E53550A4B6794803A9B /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2569E5FA95E647AFB917DB2A /* ImGuizmo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 697B1EBBBD984A6895FB3C71 /* Build configuration list for PBXNativeTarget "ImGuizmo" */;
+			buildPhases = (
+				D3F8C0A9446C4DC8BE4B3227 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				95FFC2E934E64D97B759D4AE /* PBXTargetDependency */,
+			);
+			name = ImGuizmo;
+			productName = ImGuizmo;
+			productReference = C955AC9F6A1C4F198DD627DD /* ImGuizmo */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7556769535944C74B5F92853 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1000;
+			};
+			buildConfigurationList = F6CCD6ADE7264F56B5B3C7CE /* Build configuration list for PBXProject "ImGuizmo" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				970585D823CE4177806C168A /* Debug */,
+				875431C71A0A44439490C06B /* Release */,
+				0DFC2D668A534CBAB97C0C5D /* MinSizeRel */,
+				3A77BECFBC294A50B3A80815 /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = 77FF6EF22D4B4E3AA9E7D3B3;
+			projectDirPath = ../../../ThirdParty/ImGuizmo;
+			projectRoot = "";
+			targets = (
+				86B96A272363478692CC211D /* ALL_BUILD */,
+				2569E5FA95E647AFB917DB2A /* ImGuizmo */,
+				AE95FD2726DE43A99A0E61F6 /* ZERO_CHECK */,
+				C3A07715696B4ED3968C141B /* install */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4F149DB389C54465BDE45599 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo -f /Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		7A2F5C5688844D309B66BADB = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		B244C416BAF0466F8E6A98E8 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		C41382318901475E9A84B7E8 /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo -f /Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo/CMakeScripts/install_postBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		D84174B4C0F240978D3490E7 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		E3AC867838B14B138C6FB119 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo -f /Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D3F8C0A9446C4DC8BE4B3227 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4812D2CB74DB44AEB21B1C88 /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImGuizmo.cpp */,
+				5BF6B0FF185E43919E7702DE /* /Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo/ImSequencer.cpp */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		85FD0C02F7E14BC99B6F048F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AE95FD2726DE43A99A0E61F6 /* ZERO_CHECK */;
+			targetProxy = C522F1B3D55345838E3691C6 /* PBXContainerItemProxy */;
+		};
+		95FFC2E934E64D97B759D4AE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AE95FD2726DE43A99A0E61F6 /* ZERO_CHECK */;
+			targetProxy = 8FC7AF91ABD241F1AE80830A /* PBXContainerItemProxy */;
+		};
+		CAE444DA6F5B4A6B9501B297 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2569E5FA95E647AFB917DB2A /* ImGuizmo */;
+			targetProxy = 402F091D5C244310AF94949B /* PBXContainerItemProxy */;
+		};
+		D4496133BB244912ADA95536 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 86B96A272363478692CC211D /* ALL_BUILD */;
+			targetProxy = 3BA159BE63D749C2B7DEF6C4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0434145D253B44A8AD3C510E /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		0AF214A163194B0CBB937C43 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		0FCDB661DC6E4EFF9553D7B9 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		1CEAFFEB7CE44C6DBC8A37EB /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo/build";
+			};
+			name = RelWithDebInfo;
+		};
+		20D800B515EC497AB50E54FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo/build";
+			};
+			name = Debug;
+		};
+		225375D4C1DD45F1BE96604B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		2F873DDD90854DD3849CA7AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		3EB65E45655E429495A7900A /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		431D8E221E504B00B85177D2 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		4579AC1D5BFC4CA88EF52CAA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		50EFA4D870FE4D728B146F02 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		7A778C5AF3BC4F76A0E66159 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo/build";
+			};
+			name = MinSizeRel;
+		};
+		835FA9E013F44169A929AF49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo","/Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/imgui/imgui");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ImGuizmo;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		9248AD2FBCF74CC8A62CA748 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		AA4D080C572F43BBA0CA74E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo/build";
+			};
+			name = Release;
+		};
+		B08CFDD02EA24645997C9C0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		D23071EED8574562B316EF03 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		D3DA41AD584F43BAAA243DF4 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo","/Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/imgui/imgui");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "       -DNDEBUG  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ImGuizmo;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		E05734C125E942E5BC860236 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo","/Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/imgui/imgui");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "    ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ImGuizmo;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		FB2146E16A3247C3885715C9 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/ImGuizmo/ImGuizmo","/Users/davidantoon/git/project-kiwiapps-ltd/ThirdParty/imgui/imgui");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = "    -DNDEBUG  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ImGuizmo;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/davidantoon/git/project-kiwiapps-ltd/build/ThirdParty/ImGuizmo";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		697B1EBBBD984A6895FB3C71 /* Build configuration list for PBXNativeTarget "ImGuizmo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E05734C125E942E5BC860236 /* Debug */,
+				835FA9E013F44169A929AF49 /* Release */,
+				FB2146E16A3247C3885715C9 /* MinSizeRel */,
+				D3DA41AD584F43BAAA243DF4 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7B6A2EB015DD49518ECBBE01 /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F873DDD90854DD3849CA7AC /* Debug */,
+				B08CFDD02EA24645997C9C0E /* Release */,
+				0434145D253B44A8AD3C510E /* MinSizeRel */,
+				D23071EED8574562B316EF03 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C5FBD22880FD48209E6FDABA /* Build configuration list for PBXAggregateTarget "install" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9248AD2FBCF74CC8A62CA748 /* Debug */,
+				0AF214A163194B0CBB937C43 /* Release */,
+				0FCDB661DC6E4EFF9553D7B9 /* MinSizeRel */,
+				50EFA4D870FE4D728B146F02 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EB8C06314A5946699C8457E2 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				225375D4C1DD45F1BE96604B /* Debug */,
+				4579AC1D5BFC4CA88EF52CAA /* Release */,
+				3EB65E45655E429495A7900A /* MinSizeRel */,
+				431D8E221E504B00B85177D2 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F6CCD6ADE7264F56B5B3C7CE /* Build configuration list for PBXProject "ImGuizmo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				20D800B515EC497AB50E54FD /* Debug */,
+				AA4D080C572F43BBA0CA74E3 /* Release */,
+				7A778C5AF3BC4F76A0E66159 /* MinSizeRel */,
+				1CEAFFEB7CE44C6DBC8A37EB /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7556769535944C74B5F92853 /* Project object */;
+}
