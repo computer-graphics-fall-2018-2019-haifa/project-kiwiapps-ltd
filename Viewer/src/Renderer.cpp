@@ -75,14 +75,11 @@ void Renderer::SetViewport(int viewportWidth, int viewportHeight, int viewportX,
 	createOpenGLBuffer();
 }
 
-void Renderer::DrawLine(const Line& line, const glm::vec3& color)
-{
-    DrawLine(line.point1, line.point2, color);
-}
+
 void Renderer::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec3& color)
 {
     // Bresenham’s Line Drawing Algorithm
-
+    
     // init points per vec
     int x0 = p1.x;
     int y0 = p1.y;
@@ -103,28 +100,34 @@ void Renderer::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const glm::vec
 }
 
 
+glm::vec3 Renderer::MultiplyMatVec3(glm::mat4 mat, glm::vec3 vec3)
+{
+    glm::vec4 vec4 = mat * glm::vec4(vec3, 1);
+    if (vec4.w == 0){
+        vec4.w = 1;
+    }
+    return glm::vec3(vec4.x / vec4.w, vec4.y / vec4.w, vec4.z / vec4.w);
+}
+
+glm::vec3 halfAxesV3Global = glm::vec3(0);
+
+void Renderer::DrawLine(const Line& line, glm::mat4& transMatrix, const glm::vec3& color)
+{
+    glm::vec3 p1 = MultiplyMatVec3(transMatrix, line.point1) + halfAxesV3Global;
+    glm::vec3 p2 = MultiplyMatVec3(transMatrix, line.point2) + halfAxesV3Global;
+    DrawLine(p1, p2, color);
+}
+
 // draw triangle by calling drawLine foreach rib
-void Renderer::DrawTriangle(const std::vector<glm::vec3>& vertices, const glm::vec3& color)
+void Renderer::DrawTriangle(const std::vector<glm::vec3>& vertices, glm::mat4& transMatrix, const glm::vec3& color)
 {
     if(vertices.size() != 3){
         throw "Triangle must have three vertices";
     }
-    DrawLine(vertices[0], vertices[1], color);
-    DrawLine(vertices[0], vertices[2], color);
-    DrawLine(vertices[1], vertices[2], color);
-}
-
-// get face triangle vertices, compute face normals
-void Renderer::DrawFace(MeshModel model, Face face, const glm::vec3& color)
-{
-	std::vector<glm::vec3> vertices;
-	
-	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(0) - 1));
-	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(1) - 1));
-	vertices.push_back(model.GetVertexByIndex(face.GetVertexByIndex(2) - 1));
-
-	//draw face
-	DrawTriangle(vertices, color);
+    
+    DrawLine(Line(vertices[0], vertices[1]), transMatrix, color);
+    DrawLine(Line(vertices[0], vertices[2]), transMatrix, color);
+    DrawLine(Line(vertices[1], vertices[2]), transMatrix, color);
 }
 
 void Renderer::DrawFaceNormal(const std::vector<glm::vec3>& vertices)
@@ -154,7 +157,7 @@ void Renderer::DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix)
 // loop over model faces
 // build face vertics from model vertices positions
 // draw bounding box
-void Renderer::DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
+void Renderer::DrawModel(MeshModel* model, glm::mat4& transformMatrix) {
     
     // get model faces
     // get model vertics
@@ -168,36 +171,23 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4 transformMatrix) {
     // call draw bounding box if requested
     if (model->GetVisibilityOptions().x == 1) {
 		DrawModelBoundingBox(model, transformMatrix);
-	}
+    }
     // loop over faces and draw each face by calling the DrawFace function
         // use the provided transformMatrix when drawing the Faces
         // check if draw face normals requested
 
-
-
 	for (int i = 0; i < faces.size(); i++) {
-		bool drawNormal = false;
 		std::vector<glm::vec3> vertices;
 		Face face = faces.at(i);
-		vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(0) - 1));
-		vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(1) - 1));
-		vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(2) - 1));
+        for(int j=0; j<3; j++){
+            vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(j) - 1));
+        }
 
         if (model->GetVisibilityOptions().z == 1) {
 			DrawFaceNormal(vertices);
 		}
-		DrawTriangle(vertices, glm::vec3(1, 1, 1));
+		DrawTriangle(vertices, transformMatrix, model->GetColor());
 	}
-}
-
-
-glm::vec3 MultiplyMatVec3(glm::mat4 mat, glm::vec3 vec3)
-{
-    glm::vec4 vec4 = mat * glm::vec4(vec3, 1);
-    if (vec4.w == 0){
-        vec4.w = 1;
-    }
-    return glm::vec3(vec4.x / vec4.w, vec4.y / vec4.w, vec4.z / vec4.w);
 }
 
 void Renderer::Render(const Scene& scene)
@@ -214,23 +204,16 @@ void Renderer::Render(const Scene& scene)
     
     const int centerWidth = (int)(viewportWidth / 2);
     const int centerHeight = (int)(viewportHeight / 2);
-    const glm::vec3 halfAxesV3 = glm::vec3(centerWidth, centerHeight, 0);
+    halfAxesV3Global = glm::vec3(centerWidth, centerHeight, 0);
     glm::mat4 sceneMatrix = scene.CalculateTransformationMatrix();
     
     if(ShouldDisplayAxes()){
         // draw axes
         float length = (viewportWidth > viewportHeight ? viewportHeight : viewportWidth) * 0.6;
-        glm::vec3
-            AxesXFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(-length, 0, 0)) + halfAxesV3,
-            AxesXTo = MultiplyMatVec3(sceneMatrix, glm::vec3(length, 0, 0)) + halfAxesV3,
-            AxesYFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(0, -length, 0)) + halfAxesV3,
-            AxesYTo = MultiplyMatVec3(sceneMatrix, glm::vec3(0, length, 0)) + halfAxesV3,
-            AxesZFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(0, 0, -length)) + halfAxesV3,
-            AxesZTo = MultiplyMatVec3(sceneMatrix, glm::vec3(0, 0, length)) + halfAxesV3;
-        
-        DrawLine(Line(AxesXFrom, AxesXTo), redColor);
-        DrawLine(Line(AxesYFrom, AxesYTo), greenColor);
-        DrawLine(Line(AxesZFrom, AxesZTo), blueColor);
+
+        DrawLine(Line(glm::vec3(-length, 0, 0), glm::vec3(length, 0, 0)), sceneMatrix, redColor);
+        DrawLine(Line(glm::vec3(0, -length, 0), glm::vec3(0, length, 0)), sceneMatrix, greenColor);
+        DrawLine(Line(glm::vec3(0, 0, -length), glm::vec3(0, 0, length)), sceneMatrix, blueColor);
     }
     
     // loop over cameras

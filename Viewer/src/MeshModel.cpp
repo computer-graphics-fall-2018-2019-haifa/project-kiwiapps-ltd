@@ -25,6 +25,11 @@ worldTransform(glm::mat4x4(1)),
 modelName(modelName)
 {
     CalculateBoundingBox();
+    color = glm::vec4(0);
+    color.x = static_cast<float>(rand()) / RAND_MAX / 1.2; // dark colors
+    color.y = static_cast<float>(rand()) / RAND_MAX / 1.2;
+    color.z = static_cast<float>(rand()) / RAND_MAX / 1.2;
+    color.w = 1.0f;
 }
 
 MeshModel::~MeshModel()
