@@ -11,6 +11,7 @@ Scene::Scene() :
 void Scene::AddModel(const std::shared_ptr<MeshModel>& model)
 {
 	models.push_back(model);
+    activeModelIndex = models.size() - 1;
 }
 
 const int Scene::GetModelCount() const

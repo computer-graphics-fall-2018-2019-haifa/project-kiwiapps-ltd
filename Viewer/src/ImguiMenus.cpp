@@ -307,3 +307,8 @@ const bool ShouldDisplayAxes()
 {
     return displayAxesConfig;
 }
+
+const bool ShouldSelectOnlyActiveModel()
+{
+    return displaySelectedModelOnlyConfig;
+}

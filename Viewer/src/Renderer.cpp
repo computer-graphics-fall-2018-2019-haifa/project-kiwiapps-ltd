@@ -241,9 +241,11 @@ void Renderer::Render(const Scene& scene)
 
     std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
     for(int i=0; i<models.size(); i++){
-        MeshModel* model = &(*models.at(i));
-        glm::mat4 matrix = sceneMatrix * (*model).CalculateWorldTransformation();
-        DrawModel(model, matrix);
+        if(!ShouldSelectOnlyActiveModel() || scene.GetActiveModelIndex() == i){
+            MeshModel* model = &(*models.at(i));
+            glm::mat4 matrix = sceneMatrix * (*model).CalculateWorldTransformation();
+            DrawModel(model, matrix);
+        }
     }
     
 }
