@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 #include <iostream>
+#include "ImguiMenus.h"
 
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
 eye(eye),
@@ -20,7 +21,7 @@ nearP(10),
 fovy(45),
 farP(1000),
 height(2.5f), // height(2),
-model(MeshModel(Utils::LoadMeshModel("/Users/davidantoon/git/project-kiwiapps-ltd/Data/camera.obj")))
+model(MeshModel(Utils::LoadMeshModel(GetCameraPath())))
 {
 	SetCameraLookAt(eye, at, up);
     SetOrthographicProjection();

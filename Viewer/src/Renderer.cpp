@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "InitShader.h"
 #include "MeshModel.h"
+#include "ImguiMenus.h"
 #include <imgui/imgui.h>
 #include <vector>
 #include <cmath>
@@ -202,6 +203,9 @@ glm::vec3 MultiplyMatVec3(glm::mat4 mat, glm::vec3 vec3)
 void Renderer::Render(const Scene& scene)
 {
 	
+    if(scene.GetAllCameras().size() == 0){
+        return;
+    }
     const glm::vec3 redColor = glm::vec3(1, 0, 0);
     const glm::vec3 greenColor = glm::vec3(0, 1, 0);
     const glm::vec3 blueColor = glm::vec3(0, 0, 1);
@@ -213,19 +217,21 @@ void Renderer::Render(const Scene& scene)
     const glm::vec3 halfAxesV3 = glm::vec3(centerWidth, centerHeight, 0);
     glm::mat4 sceneMatrix = scene.CalculateTransformationMatrix();
     
-    // draw axes
-    float length = (viewportWidth > viewportHeight ? viewportHeight : viewportWidth) * 0.6;
-    glm::vec3
-        AxesXFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(-length, 0, 0)) + halfAxesV3,
-        AxesXTo = MultiplyMatVec3(sceneMatrix, glm::vec3(length, 0, 0)) + halfAxesV3,
-        AxesYFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(0, -length, 0)) + halfAxesV3,
-        AxesYTo = MultiplyMatVec3(sceneMatrix, glm::vec3(0, length, 0)) + halfAxesV3,
-        AxesZFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(0, 0, -length)) + halfAxesV3,
-        AxesZTo = MultiplyMatVec3(sceneMatrix, glm::vec3(0, 0, length)) + halfAxesV3;
-    
-    DrawLine(Line(AxesXFrom, AxesXTo), redColor);
-    DrawLine(Line(AxesYFrom, AxesYTo), greenColor);
-    DrawLine(Line(AxesZFrom, AxesZTo), blueColor);
+    if(ShouldDisplayAxes()){
+        // draw axes
+        float length = (viewportWidth > viewportHeight ? viewportHeight : viewportWidth) * 0.6;
+        glm::vec3
+            AxesXFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(-length, 0, 0)) + halfAxesV3,
+            AxesXTo = MultiplyMatVec3(sceneMatrix, glm::vec3(length, 0, 0)) + halfAxesV3,
+            AxesYFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(0, -length, 0)) + halfAxesV3,
+            AxesYTo = MultiplyMatVec3(sceneMatrix, glm::vec3(0, length, 0)) + halfAxesV3,
+            AxesZFrom = MultiplyMatVec3(sceneMatrix, glm::vec3(0, 0, -length)) + halfAxesV3,
+            AxesZTo = MultiplyMatVec3(sceneMatrix, glm::vec3(0, 0, length)) + halfAxesV3;
+        
+        DrawLine(Line(AxesXFrom, AxesXTo), redColor);
+        DrawLine(Line(AxesYFrom, AxesYTo), greenColor);
+        DrawLine(Line(AxesZFrom, AxesZTo), blueColor);
+    }
     
     // loop over cameras
         // calcualte foreach camera the transform matrix
