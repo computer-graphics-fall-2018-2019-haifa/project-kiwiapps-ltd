@@ -184,8 +184,8 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         bool isOrth = activeCamera->GetProjectionType() == 0;
         ImGui::SliderFloat(isOrth ? "Height": "Fovy", isOrth ? &(activeCamera->height) : &(activeCamera->fovy), 1.0f, 100.0f);
         ImGui::SliderFloat("Aspect Ratio", &(activeCamera->aspectRatio), 0.1f, 2.0f);
-        ImGui::SliderFloat("Near", &(activeCamera->nearP), 1.0f, 100.0f);
-        ImGui::SliderFloat("Far", &(activeCamera->farP), 1.0f, 100.0f);
+        ImGui::SliderFloat("Near", &(activeCamera->nearP), 1.0f, 1000.0f);
+        ImGui::SliderFloat("Far", &(activeCamera->farP), 1.0f, 1000.0f);
         if(isOrth){
             activeCamera->SetOrthographicProjection();
         } else {
@@ -212,11 +212,11 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         ImGui::PushID(1);
         ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(0, 200, 0));
         ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor(255, 255, 255));
-        ImGui::VSliderFloat("##upX", ImVec2(colSize, 100), &(activeCamera->up.x), -100,100, "%.0f", incrementalSizeConfig);
+        ImGui::VSliderFloat("##upX", ImVec2(colSize, 100), &(activeCamera->up.x), -10,10, "%.0f", incrementalSizeConfig);
         ImGui::SameLine();
-        ImGui::VSliderFloat("##upY", ImVec2(colSize, 100), &(activeCamera->up.y), -100,100, "%.0f", incrementalSizeConfig);
+        ImGui::VSliderFloat("##upY", ImVec2(colSize, 100), &(activeCamera->up.y), 0.1,10, "%.0f", incrementalSizeConfig);
         ImGui::SameLine();
-        ImGui::VSliderFloat("##upZ", ImVec2(colSize, 100), &(activeCamera->up.z), -100,100, "%.0f", incrementalSizeConfig);
+        ImGui::VSliderFloat("##upZ", ImVec2(colSize, 100), &(activeCamera->up.z), -10,10, "%.0f", incrementalSizeConfig);
         ImGui::SameLine();
         ImGui::PopStyleColor(2);
         ImGui::PopID();
@@ -409,7 +409,7 @@ void DisplayAddNewCamera(ImGuiIO& io, Scene& scene, GLFWwindow* window, int disp
         newCameraResult = false;
         eye = glm::vec3(0.0f, 0.0f, 0.0f);
         at = glm::vec3(0.0f, 0.0f, 0.0f);
-        up = glm::vec3(0.0f, 0.0f, 0.0f);
+        up = glm::vec3(0.0f, 1.0f, 0.0f);
     }
     ImGui::SameLine();
     if (ImGui::Button("Add")){

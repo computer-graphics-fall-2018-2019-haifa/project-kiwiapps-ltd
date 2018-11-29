@@ -27,6 +27,7 @@ model(MeshModel(Utils::LoadMeshModel(GetCameraPath())))
 	SetCameraLookAt(eye, at, up);
     SetOrthographicProjection();
     model.scale = {1, 1, 1};
+//    model.modelName =
 }
 
 Camera::~Camera()
@@ -51,14 +52,16 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
     this->eye = eye;
     this->at = at;
     this->up = up;
+    
+//    up4 = rotationMatrix * up4;
 
-    glm::vec4 z  =  normalize(glm::vec4(eye, 1)  - glm::vec4(at, 1));
+    glm::vec4 z  =  normalize(glm::vec4(eye,1.0f)  - glm::vec4(at, eye.z));
     glm::vec3 z3 = glm::vec3(z.x, z.y, z.z);
     glm::vec3 x3 = glm::normalize(glm::cross(up, z3));
     glm::vec3 y3 = glm::normalize(glm::cross(z3, x3));
     
-    glm::vec4 x  =  glm::vec4(x3, 0);
-    glm::vec4 y  =  glm::vec4(y3, 0);
+    glm::vec4 x  =  glm::vec4(x3, 1.0f);
+    glm::vec4 y  =  glm::vec4(y3, 1.0f);
     glm::vec4 t  =  glm::vec4(0.0, 0.0, 0.0, 1.0);
     glm::mat4 c  =  glm::transpose(glm::mat4(x,  y,  z,  t));
     
@@ -66,7 +69,7 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
     
     this->model.SetTranslate(eye);
     this->model.SetRotate(up);
-    this->viewTransformation = c * translateEye;
+    this->viewTransformation = c * translateEye * glm::scale(glm::vec3(zoom));
 }
 
 
@@ -240,4 +243,9 @@ MeshModel Camera::GetModel()
 {
     return this->model;
 }
+void Camera::SetModelName(std::string name)
+{
+    this->model.modelName = name;
+}
+                                                             
 

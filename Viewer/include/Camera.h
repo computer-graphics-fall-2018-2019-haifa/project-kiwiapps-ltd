@@ -71,4 +71,6 @@ public:
     const float GetHeight();
     const float GetProjectionType();
     MeshModel GetModel();
+    
+    void SetModelName(std::string name);
 };

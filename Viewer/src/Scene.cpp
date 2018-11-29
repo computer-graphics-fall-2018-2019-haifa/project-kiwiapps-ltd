@@ -23,6 +23,10 @@ void Scene::AddCamera(Camera* camera)
 {
     cameras.push_back(camera);
     activeCameraIndex = cameras.size() - 1;
+    
+    for(int i=0; i < cameras.size(); i++){
+        cameras.at(i)->SetModelName("Camera_" + std::to_string(i+1));
+    }
 }
 
 const int Scene::GetCameraCount() const
@@ -102,11 +106,12 @@ glm::mat4 Scene::CalculateTransformationMatrix() const
 
     glm::mat4
         projectionTrans = camera->GetProjection(),
-        viewTrans = camera->GetTransformation(),
-        worldTrans = camera->CalculateWorldTransformation();
+        viewTrans = camera->GetTransformation();
+
+//        worldTrans = camera->CalculateWorldTransformation();
 //        worldTrans = glm::mat4(1);
     
-    return projectionTrans * viewTrans * worldTrans;
+    return projectionTrans * viewTrans;
 }
 
 

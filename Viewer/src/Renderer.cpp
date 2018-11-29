@@ -130,14 +130,16 @@ void Renderer::DrawTriangle(const std::vector<glm::vec3>& vertices, glm::mat4& t
     DrawLine(Line(vertices[1], vertices[2]), transMatrix, color);
 }
 
-void Renderer::DrawFaceNormal(const std::vector<glm::vec3>& vertices)
+void Renderer::DrawFaceNormal(const std::vector<glm::vec3>& vertices, glm::mat4& transformMatrix)
 {
 	glm::vec3
 		mid = (vertices[0] + vertices[1] + vertices[2]) / glm::vec3(3, 3, 3),
 		normal = glm::cross((vertices[1] - vertices[0]), (vertices[2] - vertices[0])),
 		startPoint = mid - (normal * glm::vec3(0.2)),
-		endPoint = mid + (normal * glm::vec3(0.2));
-	DrawLine(startPoint, endPoint, glm::vec3(1, 1, 1));
+		endPoint = mid + (normal * glm::vec3(2));
+    
+    Line line = Line(startPoint, endPoint);
+	DrawLine(line, transformMatrix, glm::vec3(1, 0, 0));
 }
 
 // draw each line by the provided transformation matrix
@@ -169,6 +171,7 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4& transformMatrix) {
     if (model->boundingBoxVisibility) {
 		DrawModelBoundingBox(model, transformMatrix);
     }
+    
     // loop over faces and draw each face by calling the DrawFace function
         // use the provided transformMatrix when drawing the Faces
         // check if draw face normals requested
@@ -181,8 +184,11 @@ void Renderer::DrawModel(MeshModel* model, glm::mat4& transformMatrix) {
         }
 
         if (model->faceNoramlVisibility == 1) {
-			DrawFaceNormal(vertices);
+			DrawFaceNormal(vertices, transformMatrix);
 		}
+        if(model->verticesNoramlVisibility) {
+            
+        }
 		DrawTriangle(vertices, transformMatrix, model->GetColor());
 	}
 }
@@ -206,7 +212,7 @@ void Renderer::Render(const Scene& scene)
     
     if(ShouldDisplayAxes()){
         // draw axes
-        float length = (viewportWidth > viewportHeight ? viewportHeight : viewportWidth) * 0.6;
+        float length = (viewportWidth > viewportHeight ? viewportHeight : viewportWidth) * 0.8;
 
         DrawLine(Line(glm::vec3(-length, 0, 0), glm::vec3(length, 0, 0)), sceneMatrix, redColor);
         DrawLine(Line(glm::vec3(0, -length, 0), glm::vec3(0, length, 0)), sceneMatrix, greenColor);

@@ -42,7 +42,7 @@ public:
     glm::vec3 MultiplyMatVec3(glm::mat4 mat, glm::vec3 vec3);
     void DrawLine(const Line& line, glm::mat4& transMatrix, const glm::vec3& color);
     void DrawTriangle(const std::vector<glm::vec3>& vertices, glm::mat4& transMatrix, const glm::vec3& color);
-    void DrawFaceNormal(const std::vector<glm::vec3>& vertices);
+    void DrawFaceNormal(const std::vector<glm::vec3>& vertices, glm::mat4& transformMatrix);
     void DrawModel(MeshModel* model, glm::mat4& transformMatrix);
     void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix);
 

@@ -21,7 +21,6 @@ private:
     std::vector<Line> boundingBox;
     
 	glm::mat4x4 worldTransform;
-	std::string modelName;
 
     void CalculateBoundingBox();
 
@@ -39,6 +38,7 @@ public:
     glm::vec3 scale;
     glm::vec3 rotate;
     glm::vec3 translate;
+    std::string modelName;
     
     //get minimum index value in all the verticses
     // 0 -> x, 1 -> y, 2 -> z
