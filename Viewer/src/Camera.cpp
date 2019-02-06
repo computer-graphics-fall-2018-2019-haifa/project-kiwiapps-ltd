@@ -16,7 +16,7 @@ eye(eye),
 at(at),
 up(up),
 projectionType(0),
-zoom(10),
+zoom(1),
 aspectRatio(1),
 nearP(10),
 fovy(45),
@@ -27,7 +27,6 @@ model(MeshModel(Utils::LoadMeshModel(GetCameraPath())))
 	SetCameraLookAt(eye, at, up);
     SetOrthographicProjection();
     model.scale = {1, 1, 1};
-//    model.modelName =
 }
 
 Camera::~Camera()
@@ -81,13 +80,13 @@ void Camera::SetOrthographicProjection()
 void Camera::SetOrthographicProjection(
 	const float height,
 	const float aspectRatio,
-	const float near,
-	const float far)
+	const float nearP,
+	const float farP)
 {
     this->height = height;
     this->aspectRatio = aspectRatio;
-    this->nearP = near;
-    this->farP = far;
+    this->nearP = nearP;
+    this->farP = farP;
     this->projectionType = 0;
     
     float nearWidth = height * aspectRatio;
@@ -101,8 +100,8 @@ void Camera::SetOrthographicProjection(
     glm::mat4(
        2 / (right - left)               , 0                                , 0                            , 0,
        0                                , 2 / (top - bottom)               , 0                            , 0,
-       0                                , 0                                , 2 / (near - far)             , 0,
-       -(right + left) / (right - left) , -(top + bottom) / (top - bottom) , -(far + near) / (far - near) , 1
+       0                                , 0                                , 2 / (nearP - farP)             , 0,
+       -(right + left) / (right - left) , -(top + bottom) / (top - bottom) , -(farP + nearP) / (farP - nearP) , 1
    );
 }
 
@@ -114,16 +113,16 @@ void Camera::SetPerspectiveProjection()
 void Camera::SetPerspectiveProjection(
 	const float fovy,
 	const float aspectRatio,
-	const float near,
-	const float far)
+	const float nearP,
+	const float farP)
 {
     this->fovy = fovy;
     this->aspectRatio = aspectRatio;
-    this->nearP = near;
-    this->farP = far;
+    this->nearP = nearP;
+    this->farP = farP;
     this->projectionType = 1;
     
-    float nearHeight = (far - near) * tan(fovy * M_PI / 180);
+    float nearHeight = (farP - nearP) * tan(fovy * M_PI / 180);
     float nearWidth = nearHeight * aspectRatio;
     
     float top = 0.5 * nearHeight;
@@ -131,9 +130,9 @@ void Camera::SetPerspectiveProjection(
     float right = 0.5 * nearWidth;
     float left = -right;
     
-    glm::vec4 r1 = glm::vec4((2 * near) / (right - left), 0, (right + left) / (right - left), 0);
-    glm::vec4 r2 = glm::vec4(0, (2 * near) / (top - bottom), (top + bottom) / (top - bottom), 0);
-    glm::vec4 r3 = glm::vec4(0, 0, -(far + near) / (far - near), -(2 * far * near) / (far - near));
+    glm::vec4 r1 = glm::vec4((2 * nearP) / (right - left), 0, (right + left) / (right - left), 0);
+    glm::vec4 r2 = glm::vec4(0, (2 * nearP) / (top - bottom), (top + bottom) / (top - bottom), 0);
+    glm::vec4 r3 = glm::vec4(0, 0, -(farP + nearP) / (farP - nearP), -(2 * farP * nearP) / (farP - nearP));
     glm::vec4 r4 = glm::vec4(0, 0, -1, 0);
     
     glm::mat4 matrix = glm::mat4(r1, r2, r3, r4);
