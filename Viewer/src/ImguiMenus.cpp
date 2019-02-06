@@ -81,6 +81,7 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
 {
     std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
     std::vector<Camera*> cameras = scene.GetAllCameras();
+	Camera* activeCamera = cameras.at(scene.activeCameraIndex);
     
     ImGui::Begin("", 0 , ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove );
     ImGui::SetWindowSize(ImVec2((float)mainMenuWidth, (float)display_h - 22));
@@ -119,6 +120,9 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         ImGui::SameLine();
         ImGui::Checkbox("##boundBox", &(activeModel->boundingBoxVisibility));
         
+		if (ImGui::Button("Focus")) {
+			activeCamera->at = activeModel->translate;
+		}
         ImGui::Separator();
         
         ImGui::Text("Lock Scale:");
@@ -165,7 +169,6 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
     
     
     if (ImGui::CollapsingHeader("Cameras")) {
-        Camera* activeCamera = cameras.at(scene.activeCameraIndex);
         char** cameraNames = new char*[cameras.size()];
         for (int i = 0; i < cameras.size(); i++){
             cameraNames[i] = const_cast<char*>(cameras.at(i)->GetModel().GetModelName().c_str());
