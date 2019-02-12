@@ -34,6 +34,7 @@ bool displaySelectedModelOnlyConfig = false;
 int projectionTypeConfig = 0;
 float incrementalSizeConfig = 1.0f;
 std::string cameraObjPath = "";
+std::string lightObjPath = "";
 
 // new camera page
 bool newCameraResult = false;
@@ -51,12 +52,12 @@ const glm::vec4& GetClearColor()
 	return clearColor;
 }
 
-void DisplayAlertCameraObj(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, int display_h)
+void DisplayAlertCameraObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
     ImGui::Begin("Welcome to MeshModel Viewer", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::SetWindowSize(ImVec2(std::min(400, display_w), std::min(300, display_h)));
     ImGui::SetWindowPos(ImVec2((display_w - std::min(400, display_w))/2, 100));
-    ImGui::Text("Assigment No. : 1");
+    ImGui::Text("Assigment No. : 3");
     ImGui::Text("");
     ImGui::Text("Students:");
     ImGui::Text("   - David Antoon (204489470)");
@@ -77,11 +78,39 @@ void DisplayAlertCameraObj(ImGuiIO& io, Scene& scene, GLFWwindow* window, int di
     ImGui::End();
 }
 
-void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, int display_h)
+void DisplayAlertLightObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
-    std::vector<std::shared_ptr<MeshModel>> models = scene.GetAllModels();
-    std::vector<Camera*> cameras = scene.GetAllCameras();
-	Camera* activeCamera = cameras.at(scene.activeCameraIndex);
+    ImGui::Begin("Welcome to MeshModel Viewer", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::SetWindowSize(ImVec2(std::min(600, display_w), std::min(300, display_h)));
+    ImGui::SetWindowPos(ImVec2((display_w - std::min(600, display_w))/2, 100));
+    ImGui::Text("Assigment No. : 3");
+    ImGui::Text("");
+    ImGui::Text("Students:");
+    ImGui::Text("   - David Antoon (204489470)");
+    ImGui::Text("   - Ameer Dow    (203844956)");
+    ImGui::Text("");
+    
+    ImGui::Text("Selected Camera Path: \"%s\".\n", GetCameraPath().c_str());
+    
+    ImGui::Text("Please provide the light Model object file path also:");
+    ImGui::Text("");
+    if(ImGui::Button("Browse")){
+        nfdchar_t *outPath = NULL;
+        nfdresult_t result = NFD_OpenDialog("obj;", NULL, &outPath);
+        if (result == NFD_OKAY) {
+            printf("DisplayAlertLightObj() light obj Loaded\n");
+            lightObjPath = outPath;
+            free(outPath);
+        }
+    }
+    ImGui::End();
+}
+
+void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
+{
+    std::vector<std::shared_ptr<MeshModel>> models = scene->GetAllModels();
+    std::vector<Camera*> cameras = scene->GetAllCameras();
+	Camera* activeCamera = cameras.at(scene->activeCameraIndex);
     
     ImGui::Begin("", 0 , ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove );
     ImGui::SetWindowSize(ImVec2((float)mainMenuWidth, (float)display_h - 22));
@@ -92,7 +121,7 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         ImGui::Text("              Load model by going to \n            Insert -> Load model from file...\n");
         ImGui::Text("");
     } else if (ImGui::CollapsingHeader("Models")) {
-        std::shared_ptr<MeshModel> activeModel = models.at(scene.activeModelIndex);
+        std::shared_ptr<MeshModel> activeModel = models.at(scene->activeModelIndex);
         char** modelNames = new char*[models.size()];
         for (int i = 0; i < models.size(); i++)
         {
@@ -101,7 +130,7 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         
         ImGui::Text("Selected Model:");
         ImGui::SameLine();
-        ImGui::Combo("##selectedModel", &scene.activeModelIndex, modelNames, models.size());
+        ImGui::Combo("##selectedModel", &(scene->activeModelIndex), modelNames, models.size());
         delete [] modelNames;
         
         
@@ -176,7 +205,7 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
         
         ImGui::Text("Selected Camera:");
         ImGui::SameLine();
-        ImGui::Combo("##selectedCamera", &scene.activeCameraIndex, cameraNames, cameras.size());
+        ImGui::Combo("##selectedCamera", &(scene->activeCameraIndex), cameraNames, cameras.size());
         
         
         ImGui::Text("Zooming: ");
@@ -242,7 +271,7 @@ void buildMainMenu(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w,
     ImGui::End();
 }
 
-void BuildToolbar(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, int display_h)
+void BuildToolbar(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -270,7 +299,7 @@ void BuildToolbar(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, 
                 nfdresult_t result = NFD_OpenDialog("obj;png,jpg", NULL, &outPath);
                 if (result == NFD_OKAY) {
                     printf("Load_Model obj Loaded\n");
-                    scene.AddModel(std::make_shared<MeshModel>(Utils::LoadMeshModel(outPath)));
+                    scene->AddModel(std::make_shared<MeshModel>(Utils::LoadMeshModel(outPath)));
                     free(outPath);
                 }
                 else if (result == NFD_CANCEL) {
@@ -305,12 +334,12 @@ void BuildToolbar(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, 
                 if(ImGui::MenuItem("Orthographic", "" , projectionTypeConfig == 0))
                 {
                     projectionTypeConfig = 0;
-                    Camera* camera = scene.GetAllCameras().at(scene.GetActiveCameraIndex());
+                    Camera* camera = scene->GetAllCameras().at(scene->GetActiveCameraIndex());
                     camera->SetOrthographicProjection();
                 }
                 if(ImGui::MenuItem("Perspective", "" , projectionTypeConfig == 1)) {
                     projectionTypeConfig = 1;
-                    Camera* camera = scene.GetAllCameras().at(scene.GetActiveCameraIndex());
+                    Camera* camera = scene->GetAllCameras().at(scene->GetActiveCameraIndex());
                     camera->SetPerspectiveProjection();
                 }
                 ImGui::EndMenu();
@@ -322,7 +351,7 @@ void BuildToolbar(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, 
     }
 }
 
-void BuildAboutPage(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, int display_h)
+void BuildAboutPage(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
     ImGui::Begin("About", &aboutPageVisible, ImGuiWindowFlags_NoCollapse);
     ImGui::SetWindowSize(ImVec2(300, 200));
@@ -339,7 +368,7 @@ void BuildAboutPage(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w
     ImGui::End();
 }
 
-void BuildSettingsPage(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, int display_h)
+void BuildSettingsPage(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
     ImGui::Begin("Settings", &settingsPageVisible, ImGuiWindowFlags_NoCollapse);
     ImGui::SetWindowSize(ImVec2(std::min(600, display_w), std::min(300, display_h)));
@@ -361,7 +390,7 @@ void BuildSettingsPage(ImGuiIO& io, Scene& scene, GLFWwindow* window, int displa
     ImGui::End();
 }
 
-void DisplayFPSPage(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, int display_h)
+void DisplayFPSPage(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
     ImGui::Begin("FPS Stats", &displayFPSConfig, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::SetWindowSize(ImVec2(200, 70));
@@ -384,13 +413,13 @@ void BuildVectorInput(const char* title, const char* xId, const char* yId, const
     ImGui::PopItemWidth();
 }
 
-void DisplayAddNewCamera(ImGuiIO& io, Scene& scene, GLFWwindow* window, int display_w, int display_h)
+void DisplayAddNewCamera(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
     if(newCameraResult){
         newCameraPageVisible = false;
         newCameraResult = false;
-        Camera* camera = new Camera(eye, at, up);
-        scene.AddCamera(camera);
+        Camera* camera = new Camera(eye, at, up, scene->GetActiveCamera().aspectRatio);
+        scene->AddCamera(camera);
         return;
     }
     
@@ -430,17 +459,24 @@ void DisplayAddNewCamera(ImGuiIO& io, Scene& scene, GLFWwindow* window, int disp
     ImGui::End();
 }
 
-void DrawImguiMenus(ImGuiIO& io, Scene& scene, GLFWwindow* window)
+void DrawImguiMenus(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window)
 {
     int display_w = 0 , display_h = 0;
-    glfwPollEvents();
-    glfwGetFramebufferSize( window , &display_w , &display_h);
+    glfwGetWindowSize(window, &display_w, &display_h);
     
     if(cameraObjPath == "")
     {
         DisplayAlertCameraObj(io, scene, window, display_w, display_h);
         return;
     }
+    
+    if(lightObjPath == "")
+    {
+        DisplayAlertLightObj(io, scene, window, display_w, display_h);
+        return;
+    }
+    
+    
     
     BuildToolbar(io, scene, window, display_w, display_h);
     buildMainMenu(io, scene, window, display_w, display_h);
@@ -452,10 +488,14 @@ void DrawImguiMenus(ImGuiIO& io, Scene& scene, GLFWwindow* window)
     
 }
 
-
 const std::string GetCameraPath()
 {
     return cameraObjPath;
+}
+
+const std::string GetLightPath()
+{
+    return lightObjPath;
 }
 
 const bool ShouldDisplayAxes()
