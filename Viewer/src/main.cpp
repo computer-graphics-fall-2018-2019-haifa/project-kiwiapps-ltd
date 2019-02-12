@@ -15,113 +15,119 @@
 #include "ImguiMenus.h"
 #include "Light.h"
 
-// Function declarations
-static void GlfwErrorCallback(int error, const char* description);
-GLFWwindow* SetupGlfwWindow(int w, int h, const char* window_name);
-ImGuiIO& SetupDearImgui(GLFWwindow* window);
-void StartFrame();
-void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& io);
-void Cleanup(GLFWwindow* window);
-void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-void WindowResizeCallback(GLFWwindow* window, int viewportWidth, int viewportHeight);
+// Global declarations
+ImGuiIO* imgui;
+GLFWwindow* window;
+double zoomFactor = 1;
+int windowWidth = 1280;
+int windowHeight = 720;
+const char* windowTitle = "Mesh Viewer";
+bool zoomChanged = false;
+bool cameraAndLightsInitialized = false;
+std::shared_ptr<Scene> scene;
 
-char* windowTitle = "OpenGL Demo";
-glm::vec4 clearColor1 = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
-const glm::vec3& defaultEye = glm::vec3(0,0,5);
-const glm::vec3& defaultAt = glm::vec3(0, 0, -1);
+const glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
+const glm::vec3& defaultEye = glm::vec3(0, 0, 10);
+const glm::vec3& defaultAt = glm::vec3(0, 0, 0);
 const glm::vec3& defaultUp = glm::vec3(0, 1, 0);
+
+// Function declarations
+GLFWwindow* SetupGlfwWindow(int w, int h, const char* window_name);
+ImGuiIO& SetupImgui(GLFWwindow* window);
+bool Setup(int windowWidth, int windowHeight, const char* windowName);
+void Cleanup();
+
+static void GlfwErrorCallback(int error, const char* description);
+void StartFrame();
+void RenderFrame();
+
+void glfw_OnMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
+void glfw_OnFramebufferSize(GLFWwindow* window, int width, int height);
+
+float GetAspectRatio();
+//void HandleImguiInput();
 
 Renderer* rendererP;
 
 int main(int argc, char **argv)
 {
 	// Create GLFW window
-	int windowWidth = 1280, windowHeight = 720;
-	GLFWwindow* window = SetupGlfwWindow(windowWidth, windowHeight, "Mesh Viewer");
-	if (!window)
-	{
-		return 1;
-	}
-
-    
-    glm::vec4 clearColor = GetClearColor();
-    glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-    glEnable(GL_DEPTH_TEST);
-    
-	// Move OpenGL context to the newly created window
-	glfwMakeContextCurrent(window);
-
-	// Get the current width/height of the frame buffer
-	int frameBufferWidth, frameBufferHeight;
-	glfwGetFramebufferSize(window, &frameBufferWidth, &frameBufferHeight);
-
-	// Create the renderer and the scene
-//    Renderer renderer = Renderer(frameBufferWidth, frameBufferHeight);
-    Renderer renderer;
-    rendererP = &renderer;
-	Scene scene = Scene();
-
-    renderer.LoadShaders();
-    
-    // Add default Camera and Light
-    Camera *c = new Camera(defaultEye,defaultAt, defaultUp);
-    scene.AddCamera(c);
-    Light *l = new Light();
-    scene.AddLight(l);
-    
-	// Setup ImGui
-	ImGuiIO& io = SetupDearImgui(window);
-
-    // Register window resize callback
-    glfwSetWindowSizeCallback(window, WindowResizeCallback);
-    
-	// Register a mouse scroll-wheel callback
-	glfwSetScrollCallback(window, ScrollCallback);
-
-	// This is the main game loop..
-    while (!glfwWindowShouldClose(window))
+    if (!Setup(windowWidth, windowHeight, windowTitle))
     {
-        glfwPollEvents();
-		StartFrame();
-
-		// Here we build the menus for the next frame. Feel free to pass more arguments to this function call
-		DrawImguiMenus(io, scene, window);
-
-		// Render the next frame
-		RenderFrame(window, scene, renderer, io);
+        std::cerr << "Setup failed" << std::endl;
+        return -1;
     }
 
-	// If we're here, then we're done. Cleanup memory.
-	Cleanup(window);
-    return 0;
-}
+    scene = std::make_shared<Scene>();
+    
+    // setup renderer
+    Renderer renderer;
+    renderer.LoadShaders();
+    renderer.LoadTextures();
 
-static void GlfwErrorCallback(int error, const char* description)
-{
-	fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+    while (!glfwWindowShouldClose(window))
+    {
+        // Poll and process events
+        glfwPollEvents();
+        
+        StartFrame();
+        
+        // Imgui stuff
+        DrawImguiMenus(*imgui, scene, window);
+        
+        RenderFrame();
+    }
+    
+	// If we're here, then we're done. Cleanup memory.
+	Cleanup();
+    return 0;
 }
 
 GLFWwindow* SetupGlfwWindow(int w, int h, const char* window_name)
 {
-	glfwSetErrorCallback(GlfwErrorCallback);
-	if (!glfwInit())
-		return NULL;
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // Intialize GLFW
+    if (!glfwInit())
+    {
+        // An error occured
+        std::cerr << "GLFW initialization failed" << std::endl;
+        return nullptr;
+    }
+    
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 #if __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    // forward compatible with newer versions of OpenGL as they become available but not backward compatible (it will not run on devices that do not support OpenGL 3.3
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-	GLFWwindow* window = glfwCreateWindow(w, h, window_name, NULL, NULL);
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1); // Enable vsync
-						 // very importent!! initialization of glad
-						 // https://stackoverflow.com/questions/48582444/imgui-with-the-glad-opengl-loader-throws-segmentation-fault-core-dumped
-	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	return window;
+
+    // Create an OpenGL 3.3 core, forward compatible context window
+    window = glfwCreateWindow(windowWidth, windowHeight, windowTitle, NULL, NULL);
+    if (window == NULL)
+    {
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return nullptr;
+    }
+    
+    // Move OpenGL context to the newly created window
+    glfwMakeContextCurrent(window);
+    
+    // Setup window events callbacks
+    glfwSetFramebufferSizeCallback(window, glfw_OnFramebufferSize);
+    
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        // An error occured
+        std::cerr << "GLAD initialization failed" << std::endl;
+        return nullptr;
+    }
+    
+    return window;
 }
 
-ImGuiIO& SetupDearImgui(GLFWwindow* window)
+ImGuiIO& SetupImgui(GLFWwindow* window)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -133,9 +139,38 @@ ImGuiIO& SetupDearImgui(GLFWwindow* window)
 
 	// Setup style
     ImGui::StyleColorsDark();
-	//ImGui::StyleColorsClassic();
-
 	return io;
+}
+
+bool Setup(int windowWidth, int windowHeight, const char* windowName)
+{
+    GLFWwindow* window = SetupGlfwWindow(windowWidth, windowHeight, windowName);
+    if (!window)
+    {
+        std::cerr << "Window setup failed" << std::endl;
+        return false;
+    }
+    
+    imgui = &SetupImgui(window);
+    
+    glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+    glEnable(GL_DEPTH_TEST);
+    
+    return true;
+}
+
+void Cleanup()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
+static void GlfwErrorCallback(int error, const char* description)
+{
+    fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
 void StartFrame()
@@ -145,50 +180,58 @@ void StartFrame()
 	ImGui::NewFrame();
 }
 
-void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& io)
+void RenderFrame()
 {
 	// Render the menus
 	ImGui::Render();
-
-	// That's how you get the current width/height of the frame buffer (for example, after the window was resized)
-	int frameBufferWidth, frameBufferHeight;
-	glfwGetFramebufferSize(window, &frameBufferWidth, &frameBufferHeight);
-
-	// Resize handling here... (a suggestion)
-
-	// Clear the frame buffer
+//    HandleImguiInput();
+    
+    // Clear the screen and depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//    renderer.ClearColorBuffer(GetClearColor());
+    
 
-    if(scene.GetAllCameras().size() == 0 && GetCameraPath() != ""){
-        Camera* newCam = new Camera(glm::vec3(350, 350, 350), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-        scene.AddCamera(newCam);
+    if(!cameraAndLightsInitialized){
+        if(GetCameraPath() != "" && GetLightPath() != ""){
+            cameraAndLightsInitialized = true;
+            
+            // add default camera after getting the absolute .obj path
+            Camera* defaultCam = new Camera(defaultEye, defaultAt, defaultUp, GetAspectRatio());
+            scene->AddCamera(defaultCam);
+            
+            // add default light after getting the absolute .obj path
+//            Light* defaultLight = new Light();
+//            scene->AddLight(defaultLight);
+        }
     }
 	// Render the scene
-	renderer.Render(scene);
+    rendererP->Render(scene, window);
 
-	// Swap buffers
-//    renderer.SwapBuffers();
-
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	glfwSwapBuffers(window);
+    // Imgui stuff
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    // Swap front and back buffers
+    glfwSwapBuffers(window);
 }
 
-void Cleanup(GLFWwindow* window)
+//-----------------------------------------------------------------------------
+// Is called when the window is resized
+//-----------------------------------------------------------------------------
+void glfw_OnFramebufferSize(GLFWwindow* window, int width, int height)
 {
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-	glfwDestroyWindow(window);
-	glfwTerminate();
+    windowWidth = width;
+    windowHeight = height;
+    glViewport(0, 0, windowWidth, windowHeight);
+    // TODO: create set aspect ratio function
+    // scene->GetActiveCamera().SetAspectRatio(GetAspectRatio());
 }
 
-void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+void glfw_OnMouseScroll(GLFWwindow* window, double xoffset, double yoffset)
 {
     ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+    zoomFactor = glm::pow(1.1, -yoffset);
+    zoomChanged = true;
 }
 
-void WindowResizeCallback(GLFWwindow* window, int viewportWidth, int viewportHeight)
+float GetAspectRatio()
 {
-    (*rendererP).SetViewport(viewportWidth, viewportHeight);
+    return static_cast<float>(windowWidth) / static_cast<float>(windowHeight);
 }
