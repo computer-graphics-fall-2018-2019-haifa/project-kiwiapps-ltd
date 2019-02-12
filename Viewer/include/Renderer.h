@@ -1,11 +1,14 @@
 #pragma once
 #include "Scene.h"
+#include "ShaderProgram.h"
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
 #include <list>
+#include <memory>
+#include "Texture2D.h"
 
 /*
  * Renderer class.
@@ -28,8 +31,14 @@ private:
 
 	void createOpenGLBuffer();
 	void initOpenGLRendering();
+    
+    //homework 3
+    ShaderProgram lightShader;
+    ShaderProgram colorShader;
+    Texture2D texture1;
 
 public:
+    Renderer();
 	Renderer(int viewportWidth, int viewportHeight, int viewportX = 0, int viewportY = 0);
 	~Renderer();
 
@@ -46,4 +55,8 @@ public:
     void DrawModel(MeshModel* model, glm::mat4& transformMatrix);
     void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix);
 
+    //homework 3
+    void LoadShaders();
+    void LoadTextures();
+    
 };

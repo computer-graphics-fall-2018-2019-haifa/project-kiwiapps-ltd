@@ -3,12 +3,15 @@
 #include "Renderer.h"
 #include "InitShader.h"
 #include "MeshModel.h"
+#include "ShaderProgram.h"
 #include "ImguiMenus.h"
 #include <imgui/imgui.h>
 #include <vector>
 #include <cmath>
 #include <iostream>
 #include <list>
+#include <memory>
+#include <algorithm>
 
 #define INDEX(width,x,y,c) ((x)+(y)*(width))*3+(c)
 
@@ -20,6 +23,10 @@ Renderer::Renderer(int viewportWidth, int viewportHeight, int viewportX, int vie
 	SetViewport(viewportWidth, viewportHeight, viewportX, viewportY);
 }
 
+Renderer::Renderer()
+{
+    
+}
 Renderer::~Renderer()
 {
 	if (colorBuffer)
@@ -253,6 +260,18 @@ void Renderer::Render(const Scene& scene)
     
 }
 
+void Renderer::LoadShaders()
+{
+    colorShader.loadShaders("vshader_color.glsl", "fshader_color.glsl");
+}
+
+void Renderer::LoadTextures()
+{
+    //if (!texture1.loadTexture("bin\\Debug\\crate.jpg", true))
+    {
+        //  texture1.loadTexture("bin\\Release\\crate.jpg", true);
+    }
+}
 
 //##############################
 //##OpenGL stuff. Don't touch.##

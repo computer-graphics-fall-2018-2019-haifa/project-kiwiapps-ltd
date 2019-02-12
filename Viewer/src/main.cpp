@@ -13,6 +13,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "ImguiMenus.h"
+#include "Light.h"
 
 // Function declarations
 static void GlfwErrorCallback(int error, const char* description);
@@ -23,6 +24,12 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 void Cleanup(GLFWwindow* window);
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 void WindowResizeCallback(GLFWwindow* window, int viewportWidth, int viewportHeight);
+
+char* windowTitle = "OpenGL Demo";
+glm::vec4 clearColor1 = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
+const glm::vec3& defaultEye = glm::vec3(0,0,5);
+const glm::vec3& defaultAt = glm::vec3(0, 0, -1);
+const glm::vec3& defaultUp = glm::vec3(0, 1, 0);
 
 Renderer* rendererP;
 
@@ -36,6 +43,11 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
+    
+    glm::vec4 clearColor = GetClearColor();
+    glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+    glEnable(GL_DEPTH_TEST);
+    
 	// Move OpenGL context to the newly created window
 	glfwMakeContextCurrent(window);
 
@@ -44,10 +56,19 @@ int main(int argc, char **argv)
 	glfwGetFramebufferSize(window, &frameBufferWidth, &frameBufferHeight);
 
 	// Create the renderer and the scene
-	Renderer renderer = Renderer(frameBufferWidth, frameBufferHeight);
+//    Renderer renderer = Renderer(frameBufferWidth, frameBufferHeight);
+    Renderer renderer;
     rendererP = &renderer;
 	Scene scene = Scene();
 
+    renderer.LoadShaders();
+    
+    // Add default Camera and Light
+    Camera *c = new Camera(defaultEye,defaultAt, defaultUp);
+    scene.AddCamera(c);
+    Light *l = new Light();
+    scene.AddLight(l);
+    
 	// Setup ImGui
 	ImGuiIO& io = SetupDearImgui(window);
 
@@ -136,7 +157,8 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	// Resize handling here... (a suggestion)
 
 	// Clear the frame buffer
-	renderer.ClearColorBuffer(GetClearColor());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//    renderer.ClearColorBuffer(GetClearColor());
 
     if(scene.GetAllCameras().size() == 0 && GetCameraPath() != ""){
         Camera* newCam = new Camera(glm::vec3(350, 350, 350), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
@@ -146,7 +168,7 @@ void RenderFrame(GLFWwindow* window, Scene& scene, Renderer& renderer, ImGuiIO& 
 	renderer.Render(scene);
 
 	// Swap buffers
-	renderer.SwapBuffers();
+//    renderer.SwapBuffers();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(window);

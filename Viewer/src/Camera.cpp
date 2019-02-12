@@ -69,6 +69,7 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
     this->model.SetTranslate(eye);
     this->model.SetRotate(up);
     this->viewTransformation = c * translateEye * glm::scale(glm::vec3(zoom));
+    
 }
 
 
@@ -96,13 +97,15 @@ void Camera::SetOrthographicProjection(
     float right = 0.5 * nearWidth;
     float left = -right;
     
-    this->projectionTransformation =
-    glm::mat4(
-       2 / (right - left)               , 0                                , 0                            , 0,
-       0                                , 2 / (top - bottom)               , 0                            , 0,
-       0                                , 0                                , 2 / (nearP - farP)             , 0,
-       -(right + left) / (right - left) , -(top + bottom) / (top - bottom) , -(farP + nearP) / (farP - nearP) , 1
-   );
+//    this->projectionTransformation =
+//    glm::mat4(
+//       2 / (right - left)               , 0                                , 0                            , 0,
+//       0                                , 2 / (top - bottom)               , 0                            , 0,
+//       0                                , 0                                , 2 / (nearP - farP)             , 0,
+//       -(right + left) / (right - left) , -(top + bottom) / (top - bottom) , -(farP + nearP) / (farP - nearP) , 1
+//   );
+    
+    this->projectionTransformation = glm::ortho(left, right, bottom, top, nearP, farP);
 }
 
 void Camera::SetPerspectiveProjection()
@@ -126,17 +129,17 @@ void Camera::SetPerspectiveProjection(
     float nearWidth = nearHeight * aspectRatio;
     
     float top = 0.5 * nearHeight;
-    float bottom = -top;
+//    float bottom = -top;
     float right = 0.5 * nearWidth;
-    float left = -right;
+//    float left = -right;
     
-    glm::vec4 r1 = glm::vec4((2 * nearP) / (right - left), 0, (right + left) / (right - left), 0);
-    glm::vec4 r2 = glm::vec4(0, (2 * nearP) / (top - bottom), (top + bottom) / (top - bottom), 0);
-    glm::vec4 r3 = glm::vec4(0, 0, -(farP + nearP) / (farP - nearP), -(2 * farP * nearP) / (farP - nearP));
-    glm::vec4 r4 = glm::vec4(0, 0, -1, 0);
+//    glm::vec4 r1 = glm::vec4((2 * nearP) / (right - left), 0, (right + left) / (right - left), 0);
+//    glm::vec4 r2 = glm::vec4(0, (2 * nearP) / (top - bottom), (top + bottom) / (top - bottom), 0);
+//    glm::vec4 r3 = glm::vec4(0, 0, -(farP + nearP) / (farP - nearP), -(2 * farP * nearP) / (farP - nearP));
+//    glm::vec4 r4 = glm::vec4(0, 0, -1, 0);
     
-    glm::mat4 matrix = glm::mat4(r1, r2, r3, r4);
-    matrix = glm::transpose(glm::inverse(matrix));
+//    glm::mat4 matrix = glm::mat4(r1, r2, r3, r4);
+    glm::mat4 matrix = glm::perspective(fovy, aspectRatio, nearP, farP);
     this->projectionTransformation = matrix;
 }
 

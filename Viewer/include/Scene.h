@@ -7,6 +7,7 @@
 #include <memory>
 #include "MeshModel.h"
 #include "Camera.h"
+#include "Light.h"
 
 /*
  * Scene class.
@@ -16,6 +17,7 @@ class Scene {
 private:
 	std::vector<std::shared_ptr<MeshModel>> models;
 	std::vector<Camera*> cameras;
+    std::vector<Light*> lights;
 public:
 	Scene();
 
@@ -27,7 +29,9 @@ public:
 
     void AddCamera(Camera* camera);
 	const int GetCameraCount() const;
-
+    
+    void AddLight(Light * light);
+    
 	void SetActiveCameraIndex(int index);
 	const int GetActiveCameraIndex() const;
 
