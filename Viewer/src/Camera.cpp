@@ -11,18 +11,18 @@
 #include <iostream>
 #include "ImguiMenus.h"
 
-Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up) :
+Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float aspectRatio) :
+projectionType(0),
+model(MeshModel(Utils::LoadMeshModel(GetCameraPath()))),
 eye(eye),
 at(at),
 up(up),
-projectionType(0),
 zoom(1),
-aspectRatio(1),
+aspectRatio(aspectRatio),
 nearP(10),
 fovy(45),
 farP(1000),
-height(2),
-model(MeshModel(Utils::LoadMeshModel(GetCameraPath())))
+height(2)
 {
 	SetCameraLookAt(eye, at, up);
     SetOrthographicProjection();

@@ -22,7 +22,7 @@ private:
     MeshModel model;
 
 public:
-	Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
+    Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float aspectRatio);
 	~Camera();
     
     glm::vec3 eye;
