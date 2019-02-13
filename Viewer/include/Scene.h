@@ -40,6 +40,7 @@ public:
 
     std::vector<Camera*> GetAllCameras() const;
     const std::vector<std::shared_ptr<MeshModel>> GetAllModels() const;
+    std::vector<Light*> GetAllLights() const;
     
     const Camera& GetCameraByIndex(int index);
     const Camera& GetActiveCamera();

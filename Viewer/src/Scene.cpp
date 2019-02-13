@@ -72,6 +72,10 @@ const std::vector<std::shared_ptr<MeshModel>> Scene::GetAllModels() const
     return models;
 }
 
+std::vector<Light*> Scene::GetAllLights() const
+{
+    return lights;
+}
 
 const Camera& Scene::GetCameraByIndex(int index)
 {
