@@ -138,108 +138,97 @@ Renderer::~Renderer()
 //}
 
 //
-//// loop over model faces
-//// build face vertics from model vertices positions
-//// draw bounding box
-//void Renderer::DrawModel(MeshModel* model, glm::mat4& transformMatrix) {
-//
-//    // get model faces
-//    // get model vertics
-//    // get model normals
-//    // get model color by checking if is active model -> green else darkGray
-//
-//    std::vector<Face> faces = model->GetFaces();
-//    std::vector<glm::vec3> vertices = model->GetVertices();
-//    std::vector<glm::vec3> normals = model->GetNormals();
-//
-//    // call draw bounding box if requested
-//    if (model->boundingBoxVisibility) {
+// loop over model faces
+// build face vertics from model vertices positions
+// draw bounding box
+void Renderer::DrawModel(std::shared_ptr<MeshModel> model, const std::shared_ptr<Scene>& scene) {
+
+    // get model faces
+    // get model vertics
+    // get model normals
+    // get model color by checking if is active model -> green else darkGray
+
+    std::vector<Face> faces = model->GetFaces();
+    std::vector<glm::vec3> vertices = model->GetVertices();
+    std::vector<glm::vec3> normals = model->GetNormals();
+
+    // call draw bounding box if requested
+    if (model->boundingBoxVisibility) {
 //        DrawModelBoundingBox(model, transformMatrix);
-//    }
-//
-//    // loop over faces and draw each face by calling the DrawFace function
-//        // use the provided transformMatrix when drawing the Faces
-//        // check if draw face normals requested
-//
-//    for (int i = 0; i < faces.size(); i++) {
-//        std::vector<glm::vec3> vertices;
-//        Face face = faces.at(i);
-//        for(int j=0; j<3; j++){
-//            vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(j) - 1));
-//        }
-//
-//        if (model->faceNoramlVisibility == 1) {
+    }
+
+    // loop over faces and draw each face by calling the DrawFace function
+        // use the provided transformMatrix when drawing the Faces
+        // check if draw face normals requested
+
+    for (int i = 0; i < faces.size(); i++) {
+        std::vector<glm::vec3> vertices;
+        Face face = faces.at(i);
+        for(int j=0; j<3; j++){
+            vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(j) - 1));
+        }
+
+        if (model->faceNoramlVisibility == 1) {
 //            DrawFaceNormal(vertices, transformMatrix);
-//        }
-//        if(model->verticesNoramlVisibility) {
-//
-//        }
+        }
+        if(model->verticesNoramlVisibility) {
+
+        }
 //        DrawTriangle(vertices, transformMatrix, model->GetColor());
-//    }
-//}
+    }
+}
 
 void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
 {
+    if (!scene->GetCameraCount()) {
+        return;
+    }
     
-	
-//    if(scene->GetAllCameras().size() == 0){
-//        return;
-//    }
-//    const glm::vec3 redColor = glm::vec3(1, 0, 0);
-//    const glm::vec3 greenColor = glm::vec3(0, 1, 0);
-//    const glm::vec3 blueColor = glm::vec3(0, 0, 1);
-//    const glm::vec3 blackColor = glm::vec3(0, 0, 0);
-//    const glm::vec3 greyColor = glm::vec3(0.4, 0.4, 0.4);
-//
-//    int viewportWidth = 0 , viewportHeight = 0;
-//    glfwGetWindowSize(window, &viewportWidth, &viewportHeight);
-//
-//    const int centerWidth = (int)(viewportWidth / 2);
-//    const int centerHeight = (int)(viewportHeight / 2);
-//    halfAxesV3Global = glm::vec3(centerWidth, centerHeight, 0);
-//    glm::mat4 sceneMatrix = scene->CalculateTransformationMatrix();
-//
-//    if(ShouldDisplayAxes()){
-//        // draw axes
-//        float length = (viewportWidth > viewportHeight ? viewportHeight : viewportWidth) * 0.8;
-//
-//        DrawLine(Line(glm::vec3(-length, 0, 0), glm::vec3(length, 0, 0)), sceneMatrix, redColor);
-//        DrawLine(Line(glm::vec3(0, -length, 0), glm::vec3(0, length, 0)), sceneMatrix, greenColor);
-//        DrawLine(Line(glm::vec3(0, 0, -length), glm::vec3(0, 0, length)), sceneMatrix, blueColor);
-//    }
-//
-//    // loop over cameras
-//        // calcualte foreach camera the transform matrix
-//        // skip drawing active camera
-//        // draw camera
-//    std::vector<Camera*> cameras = scene->GetAllCameras();
-//    int activeCameraIndex = scene->GetActiveCameraIndex();
-//
-//    for(int i=0; i<cameras.size(); i++){
-//        if (i != activeCameraIndex) {
-//            Camera* camera = cameras.at(i);
-//            MeshModel model = camera->GetModel();
-//            glm::mat4 matrix = sceneMatrix * model.CalculateWorldTransformation();
-//            DrawModel(&model, matrix);
-//        }
-//    }
-//
-//    // loop over models
-//        // calcualte foreach model the transform matrix
-//        // loop over model faces
-//            // draw face triangle
-//            // draw face normal
-//        // highlight active model
-//
-//    std::vector<std::shared_ptr<MeshModel>> models = scene->GetAllModels();
-//    for(int i=0; i<models.size(); i++){
-//        if(!ShouldSelectOnlyActiveModel() || scene->GetActiveModelIndex() == i){
-//            MeshModel* model = &(*models.at(i));
-//            glm::mat4 matrix = sceneMatrix * (*model).CalculateWorldTransformation();
-//            DrawModel(model, matrix);
-//        }
-//    }
+    std::vector<std::shared_ptr<MeshModel> > models = scene->GetAllModels();
+    std::vector<Camera*> cameras = scene->GetAllCameras();
+    std::vector<Light*> lights = scene->GetAllLights();
     
+    Camera activeCamera = scene->GetActiveCamera();
+    glm::mat4 viewMat = activeCamera.GetTransformation();
+    glm::mat4 objMat = activeCamera.CalculateWorldTransformation();
+    glm::mat4 projMat = activeCamera.GetProjection();
+    glm::vec4 lightColors[5] = { glm::vec4(0) };
+    glm::vec4 lightLocations[5] = { glm::vec4(0) };
+    
+    for (int i = 0; i < 5; i++) {
+        if (i < lights.size()) {
+            Light* light = lights.at(i);
+            lightColors[i] = glm::vec4(light->GetColor(), 1);
+//            lightLocations[i] = glm::vec4(light->GetLocation(), 1);
+        }
+    }
+    
+    colorShader.use();
+    
+    // camera params
+    colorShader.setUniform("view", viewMat * objMat);
+    colorShader.setUniform("projection", projMat);
+    colorShader.setUniform("lightColors", *lightColors);
+    colorShader.setUniform("lightLocations", *lightLocations);
+    
+    // draw models
+    for (std::shared_ptr<MeshModel> model : models) {
+        model->CalculateWorldTransformation();
+        DrawModel(model, scene);
+    }
+    
+    // draw cameras
+    for (int i = 0; i < scene->GetCameraCount(); i++) {
+        if (scene->GetActiveCameraIndex() == i)
+            continue;
+        MeshModel* camera = cameras.at(i);
+        camera->scale = glm::vec3(0.1);
+        camera->CalculateWorldTransformation();
+        //TODO: Draw Camera
+        //DrawModel(camera, scene);
+    }
+    
+    //TODO : Draw lights
 }
 
 void Renderer::LoadShaders()
