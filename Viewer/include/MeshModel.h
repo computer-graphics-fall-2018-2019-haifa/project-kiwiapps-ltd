@@ -5,6 +5,16 @@
 #include "Face.h"
 #include "Line.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "Texture2D.h"
+
+
+struct openGLVertex
+{
+    glm::vec3 vertex;
+    glm::vec3 normal;
+    glm::vec2 texCoords;
+    //https://www.khronos.org/opengl/wiki/VBO_-_just_examples
+};
 
 /*
  * MeshModel class.
@@ -19,6 +29,8 @@ private:
 	std::vector<glm::vec3> normals;
     std::vector<glm::vec2> textures;
     std::vector<Line> boundingBox;
+    std::vector<openGLVertex> allVertex;
+    
     
 	glm::mat4x4 worldTransform;
 
@@ -40,6 +52,10 @@ public:
     glm::vec3 rotate;
     glm::vec3 translate;
     std::string modelName;
+    
+    GLuint vao; // vertex array object
+    GLuint vbo; // vertex buffers object
+
     
     //get minimum index value in all the verticses
     // 0 -> x, 1 -> y, 2 -> z
@@ -76,5 +92,11 @@ public:
 	glm::mat4 CalculateScaleMatrix();
 	glm::mat4 CalculateTranslationMatrix();
 	glm::mat4 CalculateRotationMatrix();
+
+    void initializeOpenGL();
+    GLuint GetVAO() const;
+    GLuint GetVBO() const;
+    const std::vector<openGLVertex>& GetAllVertex();
+
 
 };
