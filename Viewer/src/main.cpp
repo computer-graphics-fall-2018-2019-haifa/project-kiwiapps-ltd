@@ -47,7 +47,7 @@ void glfw_OnFramebufferSize(GLFWwindow* window, int width, int height);
 float GetAspectRatio();
 //void HandleImguiInput();
 
-Renderer* rendererP;
+Renderer renderer;
 
 int main(int argc, char **argv)
 {
@@ -61,12 +61,25 @@ int main(int argc, char **argv)
     scene = std::make_shared<Scene>();
     
     // setup renderer
-    Renderer renderer;
     renderer.LoadShaders();
-    renderer.LoadTextures();
-
+    
     while (!glfwWindowShouldClose(window))
     {
+        if(!cameraAndLightsInitialized){
+            if(GetCameraPath() != "" && GetLightPath() != "" && GetTexturePath() != ""){
+                cameraAndLightsInitialized = true;
+                renderer.LoadTextures();
+                
+                // add default camera after getting the absolute .obj path
+                Camera* defaultCam = new Camera(defaultEye, defaultAt, defaultUp, GetAspectRatio());
+                scene->AddCamera(defaultCam);
+                
+                // add default light after getting the absolute .obj path
+                Light* defaultLight = new Light();
+                //            scene->AddLight(defaultLight);
+            }
+        }
+        
         // Poll and process events
         glfwPollEvents();
         
@@ -182,29 +195,15 @@ void StartFrame()
 
 void RenderFrame()
 {
-	// Render the menus
-	ImGui::Render();
-//    HandleImguiInput();
+    // Render the menus
+    ImGui::Render();
+    //    HandleImguiInput();
     
     // Clear the screen and depth buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-
-    if(!cameraAndLightsInitialized){
-        if(GetCameraPath() != "" && GetLightPath() != ""){
-            cameraAndLightsInitialized = true;
-            
-            // add default camera after getting the absolute .obj path
-            Camera* defaultCam = new Camera(defaultEye, defaultAt, defaultUp, GetAspectRatio());
-            scene->AddCamera(defaultCam);
-            
-            // add default light after getting the absolute .obj path
-            Light* defaultLight = new Light();
-//            scene->AddLight(defaultLight);
-        }
-    }
 	// Render the scene
-    rendererP->Render(scene, window);
+    renderer.Render(scene, window);
 
     // Imgui stuff
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

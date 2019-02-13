@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <iostream>
 #include <glm/glm.hpp>
 #include "MeshModel.h"
 
@@ -11,7 +12,7 @@
  * Make the Camera class be a subclass of MeshModel, so you can easily and elegantly render 
  * the cameras you have added to the scene.
  */
-class Camera : public MeshModel
+class Camera
 {
 private:
     // 0 => orth , 1 => perspective
@@ -19,7 +20,7 @@ private:
 
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
-    MeshModel model;
+    std::shared_ptr<MeshModel> model;
 
 public:
     Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float aspectRatio);
@@ -70,7 +71,7 @@ public:
     const float GetFar();
     const float GetHeight();
     const float GetProjectionType();
-    MeshModel GetModel();
+    std::shared_ptr<MeshModel> GetModel();
     
     void SetModelName(std::string name);
 };

@@ -250,11 +250,11 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
     for (int i = 0; i < scene->GetCameraCount(); i++) {
         if (scene->GetActiveCameraIndex() == i)
             continue;
-        MeshModel* camera = cameras.at(i);
-        camera->scale = glm::vec3(0.1);
-        camera->CalculateWorldTransformation();
+        std::shared_ptr<MeshModel> cameraModel = cameras.at(i)->GetModel();
+        cameraModel->scale = glm::vec3(0.1);
+        cameraModel->CalculateWorldTransformation();
         //TODO: Draw Camera
-//        DrawModel(camera, scene);
+        DrawModel(cameraModel, scene);
     }
     
     //TODO : Draw lights
@@ -267,8 +267,8 @@ void Renderer::LoadShaders()
 
 void Renderer::LoadTextures()
 {
-    if (GetCrateTexturePath() != "" && !texture1.loadTexture(GetCrateTexturePath(), true))
+    if (GetTexturePath() != "" && !texture1.loadTexture(GetTexturePath(), true))
     {
-        texture1.loadTexture(GetCrateTexturePath(), true);
+        texture1.loadTexture(GetTexturePath(), true);
     }
 }

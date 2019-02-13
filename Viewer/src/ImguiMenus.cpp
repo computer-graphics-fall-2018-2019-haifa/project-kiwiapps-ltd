@@ -35,7 +35,7 @@ int projectionTypeConfig = 0;
 float incrementalSizeConfig = 1.0f;
 std::string cameraObjPath = "";
 std::string lightObjPath = "";
-std::string crateTextureObjPath = "";
+std::string textureObjPath = "";
 
 // new camera page
 bool newCameraResult = false;
@@ -107,7 +107,7 @@ void DisplayAlertLightObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFW
     ImGui::End();
 }
 
-void DisplayAlertCrateTextureObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
+void DisplayAlertTextureImage(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
     ImGui::Begin("Welcome to MeshModel Viewer", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     ImGui::SetWindowSize(ImVec2(std::min(600, display_w), std::min(300, display_h)));
@@ -126,10 +126,10 @@ void DisplayAlertCrateTextureObj(ImGuiIO& io, const std::shared_ptr<Scene>& scen
     ImGui::Text("");
     if(ImGui::Button("Browse")){
         nfdchar_t *outPath = NULL;
-        nfdresult_t result = NFD_OpenDialog("obj;", NULL, &outPath);
+        nfdresult_t result = NFD_OpenDialog("jpg;jpeg;png;", NULL, &outPath);
         if (result == NFD_OKAY) {
-            printf("DisplayAlertCrateTextureObj() light obj Loaded\n");
-            crateTextureObjPath = outPath;
+            printf("DisplayAlertTextureObj() light obj Loaded\n");
+            textureObjPath = outPath;
             free(outPath);
         }
     }
@@ -231,7 +231,7 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
     if (ImGui::CollapsingHeader("Cameras")) {
         char** cameraNames = new char*[cameras.size()];
         for (int i = 0; i < cameras.size(); i++){
-            cameraNames[i] = const_cast<char*>(cameras.at(i)->GetModel().GetModelName().c_str());
+            cameraNames[i] = const_cast<char*>(cameras.at(i)->GetModel()->GetModelName().c_str());
         }
         
         ImGui::Text("Selected Camera:");
@@ -507,9 +507,9 @@ void DrawImguiMenus(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow
         return;
     }
     
-    if(crateTextureObjPath == "")
+    if(textureObjPath == "")
     {
-        DisplayAlertCrateTextureObj(io, scene, window, display_w, display_h);
+        DisplayAlertTextureImage(io, scene, window, display_w, display_h);
         return;
     }
     
@@ -535,9 +535,9 @@ const std::string GetLightPath()
     return lightObjPath;
 }
 
-const std::string GetCrateTexturePath()
+const std::string GetTexturePath()
 {
-    return crateTextureObjPath;
+    return textureObjPath;
 }
 
 const bool ShouldDisplayAxes()

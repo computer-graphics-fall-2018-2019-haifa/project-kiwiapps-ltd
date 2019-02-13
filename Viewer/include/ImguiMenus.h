@@ -9,6 +9,6 @@ void BuildVectorInput(const char* title, const char* xId, const char* yId, const
 
 const std::string GetCameraPath();
 const std::string GetLightPath();
-const std::string GetCrateTexturePath();
+const std::string GetTexturePath();
 const bool ShouldDisplayAxes();
 const bool ShouldSelectOnlyActiveModel();

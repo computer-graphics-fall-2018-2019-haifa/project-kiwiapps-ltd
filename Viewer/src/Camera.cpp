@@ -13,7 +13,6 @@
 
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float aspectRatio) :
 projectionType(0),
-model(MeshModel(Utils::LoadMeshModel(GetCameraPath()))),
 eye(eye),
 at(at),
 up(up),
@@ -24,9 +23,9 @@ fovy(45),
 farP(1000),
 height(2)
 {
+    this->model = std::make_shared<MeshModel>(Utils::LoadMeshModel(GetCameraPath()));
 	SetCameraLookAt(eye, at, up);
     SetOrthographicProjection();
-    model.scale = {1, 1, 1};
 }
 
 Camera::~Camera()
@@ -66,8 +65,8 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
     
     glm::mat4 translateEye = glm::translate(-eye);
     
-    this->model.SetTranslate(eye);
-    this->model.SetRotate(up);
+    this->model->SetTranslate(eye);
+    this->model->SetRotate(up);
     this->viewTransformation = c * translateEye * glm::scale(glm::vec3(zoom));
     
 }
@@ -241,13 +240,13 @@ const float Camera::GetProjectionType()
 {
     return this->projectionType;
 }
-MeshModel Camera::GetModel()
+std::shared_ptr<MeshModel> Camera::GetModel()
 {
     return this->model;
 }
 void Camera::SetModelName(std::string name)
 {
-    this->model.modelName = name;
+    this->model->modelName = name;
 }
                                                              
 
