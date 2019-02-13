@@ -166,8 +166,8 @@ void Renderer::DrawModel(std::shared_ptr<MeshModel> model, const std::shared_ptr
 //    if (model->showWire) {
         // Drag our model's faces (triangles) in line mode (wireframe)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//        glBindVertexArray(model->GetVAO());
-//        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)model->GetModelVertices().size());
+        glBindVertexArray(model->GetVAO());
+        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)model->GetAllVertex().size());
         glBindVertexArray(0);
 //    }
     
@@ -246,6 +246,7 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
     }
     
     // draw cameras
+    std::logic_error("need to check this!!! maybe change the impl remove inherit");
     for (int i = 0; i < scene->GetCameraCount(); i++) {
         if (scene->GetActiveCameraIndex() == i)
             continue;
@@ -253,7 +254,7 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
         camera->scale = glm::vec3(0.1);
         camera->CalculateWorldTransformation();
         //TODO: Draw Camera
-        //DrawModel(camera, scene);
+//        DrawModel(camera, scene);
     }
     
     //TODO : Draw lights
