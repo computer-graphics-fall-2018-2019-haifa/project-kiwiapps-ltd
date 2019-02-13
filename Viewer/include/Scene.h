@@ -30,7 +30,7 @@ public:
     void AddCamera(Camera* camera);
 	const int GetCameraCount() const;
     
-    void AddLight(Light * light);
+//    void AddLight(Light * light);
     
 	void SetActiveCameraIndex(int index);
 	const int GetActiveCameraIndex() const;

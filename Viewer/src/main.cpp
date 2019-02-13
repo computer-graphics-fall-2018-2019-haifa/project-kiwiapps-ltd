@@ -200,7 +200,7 @@ void RenderFrame()
             
             // add default light after getting the absolute .obj path
             Light* defaultLight = new Light();
-            scene->AddLight(defaultLight);
+//            scene->AddLight(defaultLight);
         }
     }
 	// Render the scene
