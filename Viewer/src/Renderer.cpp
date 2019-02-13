@@ -180,6 +180,7 @@ Renderer::~Renderer()
 
 void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
 {
+    
 	
 //    if(scene->GetAllCameras().size() == 0){
 //        return;
@@ -189,15 +190,15 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
 //    const glm::vec3 blueColor = glm::vec3(0, 0, 1);
 //    const glm::vec3 blackColor = glm::vec3(0, 0, 0);
 //    const glm::vec3 greyColor = glm::vec3(0.4, 0.4, 0.4);
-//    
+//
 //    int viewportWidth = 0 , viewportHeight = 0;
 //    glfwGetWindowSize(window, &viewportWidth, &viewportHeight);
-//    
+//
 //    const int centerWidth = (int)(viewportWidth / 2);
 //    const int centerHeight = (int)(viewportHeight / 2);
 //    halfAxesV3Global = glm::vec3(centerWidth, centerHeight, 0);
 //    glm::mat4 sceneMatrix = scene->CalculateTransformationMatrix();
-//    
+//
 //    if(ShouldDisplayAxes()){
 //        // draw axes
 //        float length = (viewportWidth > viewportHeight ? viewportHeight : viewportWidth) * 0.8;
@@ -206,14 +207,14 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
 //        DrawLine(Line(glm::vec3(0, -length, 0), glm::vec3(0, length, 0)), sceneMatrix, greenColor);
 //        DrawLine(Line(glm::vec3(0, 0, -length), glm::vec3(0, 0, length)), sceneMatrix, blueColor);
 //    }
-//    
+//
 //    // loop over cameras
 //        // calcualte foreach camera the transform matrix
 //        // skip drawing active camera
 //        // draw camera
 //    std::vector<Camera*> cameras = scene->GetAllCameras();
 //    int activeCameraIndex = scene->GetActiveCameraIndex();
-//    
+//
 //    for(int i=0; i<cameras.size(); i++){
 //        if (i != activeCameraIndex) {
 //            Camera* camera = cameras.at(i);
@@ -222,7 +223,7 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
 //            DrawModel(&model, matrix);
 //        }
 //    }
-//    
+//
 //    // loop over models
 //        // calcualte foreach model the transform matrix
 //        // loop over model faces
@@ -248,8 +249,8 @@ void Renderer::LoadShaders()
 
 void Renderer::LoadTextures()
 {
-    //if (!texture1.loadTexture("bin\\Debug\\crate.jpg", true))
+    if (GetCrateTexturePath() != "" && !texture1.loadTexture(GetCrateTexturePath(), true))
     {
-        //  texture1.loadTexture("bin\\Release\\crate.jpg", true);
+        texture1.loadTexture(GetCrateTexturePath(), true);
     }
 }

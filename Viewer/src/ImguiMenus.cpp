@@ -35,6 +35,7 @@ int projectionTypeConfig = 0;
 float incrementalSizeConfig = 1.0f;
 std::string cameraObjPath = "";
 std::string lightObjPath = "";
+std::string crateTextureObjPath = "";
 
 // new camera page
 bool newCameraResult = false;
@@ -64,7 +65,7 @@ void DisplayAlertCameraObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLF
     ImGui::Text("   - Ameer Dow    (203844956)");
     ImGui::Text("");
     
-    ImGui::Text("In order to start the Viewer, please choose the \nCamera Model object file path:\n(you can always change it by going to File -> Settings)");
+    ImGui::TextWrapped("In order to start the Viewer, you have to provide three objects: Camera, Light and Crate Texture, please choose the Camera Model object file path:\n\nNote: you can always change it by going to File -> Settings");
     ImGui::Text("");
     if(ImGui::Button("Browse")){
         nfdchar_t *outPath = NULL;
@@ -90,10 +91,10 @@ void DisplayAlertLightObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFW
     ImGui::Text("   - Ameer Dow    (203844956)");
     ImGui::Text("");
     
-    ImGui::Text("Selected Camera Path: \"%s\".\n", GetCameraPath().c_str());
+    ImGui::TextWrapped("Selected Camera Path:\n\"%s\"\n", GetCameraPath().c_str());
     
-    ImGui::Text("Please provide the light Model object file path also:");
-    ImGui::Text("");
+    ImGui::TextWrapped("Please provide the light Model object file:");
+    ImGui::TextWrapped("");
     if(ImGui::Button("Browse")){
         nfdchar_t *outPath = NULL;
         nfdresult_t result = NFD_OpenDialog("obj;", NULL, &outPath);
@@ -105,6 +106,36 @@ void DisplayAlertLightObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFW
     }
     ImGui::End();
 }
+
+void DisplayAlertCrateTextureObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
+{
+    ImGui::Begin("Welcome to MeshModel Viewer", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::SetWindowSize(ImVec2(std::min(600, display_w), std::min(300, display_h)));
+    ImGui::SetWindowPos(ImVec2((display_w - std::min(600, display_w))/2, 100));
+    ImGui::Text("Assigment No. : 3");
+    ImGui::Text("");
+    ImGui::Text("Students:");
+    ImGui::Text("   - David Antoon (204489470)");
+    ImGui::Text("   - Ameer Dow    (203844956)");
+    ImGui::Text("");
+    
+    ImGui::TextWrapped("Selected Camera Path:\n\"%s\"\n\n", GetCameraPath().c_str());
+    ImGui::TextWrapped("Selected Light Path:\n\"%s\"\n\n", GetLightPath().c_str());
+    
+    ImGui::TextWrapped("Please provide the Crate Texture object file:");
+    ImGui::Text("");
+    if(ImGui::Button("Browse")){
+        nfdchar_t *outPath = NULL;
+        nfdresult_t result = NFD_OpenDialog("obj;", NULL, &outPath);
+        if (result == NFD_OKAY) {
+            printf("DisplayAlertCrateTextureObj() light obj Loaded\n");
+            crateTextureObjPath = outPath;
+            free(outPath);
+        }
+    }
+    ImGui::End();
+}
+
 
 void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
@@ -358,7 +389,7 @@ void BuildAboutPage(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow
     ImGui::SetWindowPos(ImVec2((display_w - 300)/2, 100));
     
     ImGui::Text("");
-    ImGui::Text("Assigment No. : 1");
+    ImGui::Text("Assigment No. : 3");
     ImGui::Text("");
     ImGui::Text("Students:");
     ImGui::Text("   - David Antoon (204489470)");
@@ -476,6 +507,12 @@ void DrawImguiMenus(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow
         return;
     }
     
+    if(crateTextureObjPath == "")
+    {
+        DisplayAlertCrateTextureObj(io, scene, window, display_w, display_h);
+        return;
+    }
+    
     
     
     BuildToolbar(io, scene, window, display_w, display_h);
@@ -496,6 +533,11 @@ const std::string GetCameraPath()
 const std::string GetLightPath()
 {
     return lightObjPath;
+}
+
+const std::string GetCrateTexturePath()
+{
+    return crateTextureObjPath;
 }
 
 const bool ShouldDisplayAxes()
