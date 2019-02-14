@@ -26,7 +26,6 @@ bool zoomChanged = false;
 bool cameraAndLightsInitialized = false;
 std::shared_ptr<Scene> scene;
 
-const glm::vec4 clearColor = glm::vec4(0.8f, 0.8f, 0.8f, 1.00f);
 const glm::vec3& defaultEye = glm::vec3(0, 0, 10);
 const glm::vec3& defaultAt = glm::vec3(0, 0, 0);
 const glm::vec3& defaultUp = glm::vec3(0, 1, 0);
@@ -166,7 +165,7 @@ bool Setup(int windowWidth, int windowHeight, const char* windowName)
     
     imgui = &SetupImgui(window);
     
-    glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+    glClearColor(GetClearColor().r, GetClearColor().g, GetClearColor().b, GetClearColor().a);
     glEnable(GL_DEPTH_TEST);
     
     return true;

@@ -18,16 +18,12 @@ class Renderer
 private:
 	float *colorBuffer;
 
-//    void putPixel(int x, int y, const glm::vec3& color);
-//    void createBuffers(int viewportWidth, int viewportHeight);
-
 	GLuint glScreenTex;
 	GLuint glScreenVtc;
 
 	void createOpenGLBuffer();
 	void initOpenGLRendering();
     
-    //homework 3
     ShaderProgram lightShader;
     ShaderProgram colorShader;
     Texture2D texture1;
@@ -48,7 +44,6 @@ public:
     void DrawModel(std::shared_ptr<MeshModel> model, const std::shared_ptr<Scene>& scene);
 //    void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix);
 
-    //homework 3
     void LoadShaders();
     void LoadTextures();
     

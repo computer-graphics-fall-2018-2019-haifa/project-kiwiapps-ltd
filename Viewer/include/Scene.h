@@ -58,6 +58,6 @@ public:
     const Light& GetActiveLight();
     std::vector<Light*> GetAllLights() const;
     
-    void CalculateWorldTransformationMatrix();
+    const glm::mat4 CalculateWorldTransformationMatrix();
     glm::mat4 GetWorldTransformationMatrix() const;
 };

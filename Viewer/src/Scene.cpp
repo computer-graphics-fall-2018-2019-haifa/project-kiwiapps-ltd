@@ -152,12 +152,14 @@ std::vector<Light*> Scene::GetAllLights() const
 
 
 // other functions
-void Scene::CalculateWorldTransformationMatrix()
+const glm::mat4 Scene::CalculateWorldTransformationMatrix()
 {
     this->worldTransformation =
         glm::transpose(Utils::CalculateTranslateMatrix(translate)) *
         Utils::CalculateRotateMatrix(rotate) *
         Utils::CalculateScaleMatrix(scale);
+    
+    return this->worldTransformation;
 }
 
 glm::mat4 Scene::GetWorldTransformationMatrix() const

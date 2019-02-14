@@ -405,7 +405,10 @@ void BuildSettingsPage(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwin
     ImGui::SetWindowSize(ImVec2(std::min(600, display_w), std::min(300, display_h)));
     ImGui::SetWindowPos(ImVec2((display_w - std::min(600, display_w))/2, 100));
     ImGui::Text("Background color:");
-    ImGui::ColorEdit3("", (float*) &clearColor);
+    if (ImGui::ColorEdit3("", (float*)&clearColor))
+    {
+        glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+    }
     ImGui::Text("Step size of incremental:");
     ImGui::SliderFloat("", &incrementalSizeConfig, 0.1f, 5.0f);
     ImGui::Text("Camera Path: %s", cameraObjPath.c_str());

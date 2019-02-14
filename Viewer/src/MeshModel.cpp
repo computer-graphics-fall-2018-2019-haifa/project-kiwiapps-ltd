@@ -190,11 +190,10 @@ const std::vector<Line> MeshModel::GetBoundingBox() const
 
 const glm::mat4 MeshModel::CalculateWorldTransformation()
 {
-    glm::mat4 translateionMatrix = CalculateTranslationMatrix();
-    glm::mat4 scaleMatrix = CalculateScaleMatrix();
-    glm::mat4 rotationMatrix = CalculateRotationMatrix();
-    
-    this->worldTransform = glm::transpose(translateionMatrix) * scaleMatrix * rotationMatrix;
+    this->worldTransform =
+        glm::transpose(Utils::CalculateTranslateMatrix(translate)) *
+        Utils::CalculateRotateMatrix(rotate) *
+        Utils::CalculateScaleMatrix(scale);
     
     return this->worldTransform;
 }

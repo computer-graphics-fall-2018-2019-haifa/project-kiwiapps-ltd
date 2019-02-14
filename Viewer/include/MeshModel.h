@@ -97,6 +97,4 @@ public:
     GLuint GetVAO() const;
     GLuint GetVBO() const;
     const std::vector<openGLVertex>& GetAllVertex();
-
-
 };
