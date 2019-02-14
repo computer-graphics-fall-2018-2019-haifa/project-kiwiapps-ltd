@@ -72,7 +72,7 @@ MeshModel Utils::LoadMeshModel(const std::string& filePath)
 
 
 
-glm::mat4 Utils::CalculateScaleMatrix(const glm::vec3 scale) const
+glm::mat4 Utils::CalculateScaleMatrix(const glm::vec3 scale)
 {
     return glm::mat4(scale.x, 0, 0, 0,
                      0, scale.y, 0, 0,
@@ -80,7 +80,7 @@ glm::mat4 Utils::CalculateScaleMatrix(const glm::vec3 scale) const
                      0, 0, 0, 1);
 }
 
-glm::mat4 Utils::CalculateTranslateMatrix(const glm::vec3 translate) const
+glm::mat4 Utils::CalculateTranslateMatrix(const glm::vec3 translate)
 {
     return glm::mat4(1, 0, 0, translate.x,
                      0, 1, 0, translate.y,
@@ -88,7 +88,7 @@ glm::mat4 Utils::CalculateTranslateMatrix(const glm::vec3 translate) const
                      0, 0, 0, 1);
 }
 
-glm::mat4 Utils::CalculateRotateMatrix(const glm::vec3 rotate) const
+glm::mat4 Utils::CalculateRotateMatrix(const glm::vec3 rotate)
 {
     glm::mat3 x, y, z;
     glm::vec3 rotatePI = rotate * glm::vec3(M_PI);
