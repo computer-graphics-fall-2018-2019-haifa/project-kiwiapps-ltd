@@ -35,11 +35,6 @@ void Scene::SetActiveCameraIndex(int index)
     }
 }
 
-const int Scene::GetActiveCameraIndex() const
-{
-    return activeCameraIndex;
-}
-
 const Camera& Scene::GetCameraByIndex(int index)
 {
     if(index >= 0 && index < cameras.size())
@@ -80,11 +75,6 @@ void Scene::SetActiveModelIndex(int index)
     {
         activeModelIndex = index;
     }
-}
-
-const int Scene::GetActiveModelIndex() const
-{
-    return activeModelIndex;
 }
 
 const std::shared_ptr<MeshModel> Scene::GetModelByIndex(int index)
@@ -131,11 +121,6 @@ void Scene::SetActiveLightIndex(int index)
     }
 }
 
-const int Scene::GetActiveLightIndex() const
-{
-    return activeLightIndex;
-}
-
 const Light& Scene::GetLightByIndex(int index)
 {
     if(index >= 0 && index < lights.size())
@@ -157,19 +142,16 @@ std::vector<Light*> Scene::GetAllLights() const
     return lights;
 }
 
-//glm::mat4 Scene::CalculateTransformationMatrix() const
-//{
-//    Camera* camera = this->cameras.at(activeCameraIndex);
-//    camera->SetCameraLookAt();
-//
-//    glm::mat4
-//        projectionTrans = camera->GetProjection(),
-//        viewTrans = camera->GetTransformation();
-//
-////        worldTrans = camera->CalculateWorldTransformation();
-////        worldTrans = glm::mat4(1);
-//
-//    return projectionTrans * viewTrans;
-//}
+glm::mat4 Scene::CalculateWorldTransformationMatrix() const
+{
+    Camera* camera = this->cameras.at(activeCameraIndex);
+    camera->SetCameraLookAt();
+
+    glm::mat4
+        projectionTrans = camera->GetProjection(),
+        viewTrans = camera->GetTransformation();
+
+    return projectionTrans * viewTrans;
+}
 
 

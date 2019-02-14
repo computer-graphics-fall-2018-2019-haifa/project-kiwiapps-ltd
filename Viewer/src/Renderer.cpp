@@ -248,7 +248,7 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
     // draw cameras
     std::logic_error("need to check this!!! maybe change the impl remove inherit");
     for (int i = 0; i < scene->GetCameraCount(); i++) {
-        if (scene->GetActiveCameraIndex() == i)
+        if (scene->activeCameraIndex == i)
             continue;
         std::shared_ptr<MeshModel> cameraModel = cameras.at(i)->GetModel();
         cameraModel->scale = glm::vec3(0.1);

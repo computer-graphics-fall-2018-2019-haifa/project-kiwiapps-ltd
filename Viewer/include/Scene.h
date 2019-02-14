@@ -1,7 +1,9 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL 1
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtx/vector_angle.hpp>
 #include <vector>
 #include <string>
 #include <memory>
@@ -18,18 +20,22 @@ private:
 	std::vector<std::shared_ptr<MeshModel>> models;
 	std::vector<Camera*> cameras;
     std::vector<Light*> lights;
+public:
+	Scene();
+    ~Scene();
     
     int activeCameraIndex;
     int activeModelIndex;
     int activeLightIndex;
-public:
-	Scene();
-
+    
+    glm::vec3 scale;
+    glm::vec3 rotate;
+    glm::vec3 translate;
+    
     // Camera functions
     void AddCamera(Camera* camera);
 	const int GetCameraCount() const;
 	void SetActiveCameraIndex(int index);
-	const int GetActiveCameraIndex() const;
     const Camera& GetCameraByIndex(int index);
     const Camera& GetActiveCamera();
     std::vector<Camera*> GetAllCameras() const;
@@ -38,7 +44,6 @@ public:
     void AddModel(const std::shared_ptr<MeshModel>& model);
     const int GetModelCount() const;
 	void SetActiveModelIndex(int index);
-	const int GetActiveModelIndex() const;
     const std::shared_ptr<MeshModel> GetModelByIndex(int index);
     const std::shared_ptr<MeshModel> getActiveModel();
     const std::vector<std::shared_ptr<MeshModel>> GetAllModels() const;
@@ -47,11 +52,9 @@ public:
     void AddLight(Light* light);
     const int GetLightsCount() const;
     void SetActiveLightIndex(int index);
-    const int GetActiveLightIndex() const;
     const Light& GetLightByIndex(int index);
     const Light& GetActiveLight();
     std::vector<Light*> GetAllLights() const;
     
-//    glm::mat4 CalculateTransformationMatrix() const;
-    
+    glm::mat4 CalculateWorldTransformationMatrix() const;
 };

@@ -365,12 +365,12 @@ void BuildToolbar(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* 
                 if(ImGui::MenuItem("Orthographic", "" , projectionTypeConfig == 0))
                 {
                     projectionTypeConfig = 0;
-                    Camera* camera = scene->GetAllCameras().at(scene->GetActiveCameraIndex());
+                    Camera* camera = scene->GetAllCameras().at(scene->activeCameraIndex);
                     camera->SetOrthographicProjection();
                 }
                 if(ImGui::MenuItem("Perspective", "" , projectionTypeConfig == 1)) {
                     projectionTypeConfig = 1;
-                    Camera* camera = scene->GetAllCameras().at(scene->GetActiveCameraIndex());
+                    Camera* camera = scene->GetAllCameras().at(scene->activeCameraIndex);
                     camera->SetPerspectiveProjection();
                 }
                 ImGui::EndMenu();
