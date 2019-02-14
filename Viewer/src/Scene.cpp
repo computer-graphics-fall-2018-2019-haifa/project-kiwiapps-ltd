@@ -9,6 +9,9 @@ Scene::Scene() :
 {
 }
 
+Scene::~Scene(){
+
+}
 
 
 // Camera functions
