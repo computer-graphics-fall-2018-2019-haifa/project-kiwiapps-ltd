@@ -18,12 +18,13 @@ private:
 	std::vector<std::shared_ptr<MeshModel>> models;
 	std::vector<Camera*> cameras;
     std::vector<Light*> lights;
+    
+    int activeCameraIndex;
+    int activeModelIndex;
+    int activeLightIndex;
 public:
 	Scene();
 
-    int activeCameraIndex;
-    int activeModelIndex;
-    
     // Camera functions
     void AddCamera(Camera* camera);
 	const int GetCameraCount() const;
@@ -38,15 +39,18 @@ public:
     const int GetModelCount() const;
 	void SetActiveModelIndex(int index);
 	const int GetActiveModelIndex() const;
+    const std::shared_ptr<MeshModel> GetModelByIndex(int index);
+    const std::shared_ptr<MeshModel> getActiveModel();
     const std::vector<std::shared_ptr<MeshModel>> GetAllModels() const;
-    const std::shared_ptr<MeshModel> GetModelByIndex(int index) const;
     
     // Lights functions
     void AddLight(Light* light);
     const int GetLightsCount() const;
+    void SetActiveLightIndex(int index);
+    const int GetActiveLightIndex() const;
     const Light& GetLightByIndex(int index);
+    const Light& GetActiveLight();
     std::vector<Light*> GetAllLights() const;
-    
     
 //    glm::mat4 CalculateTransformationMatrix() const;
     

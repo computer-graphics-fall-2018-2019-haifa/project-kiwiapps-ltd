@@ -4,7 +4,8 @@
 
 Scene::Scene() :
 	activeCameraIndex(-1),
-	activeModelIndex(-1)
+	activeModelIndex(-1),
+    activeLightIndex(-1)
 {
 }
 
@@ -75,7 +76,6 @@ const int Scene::GetModelCount() const
 
 void Scene::SetActiveModelIndex(int index)
 {
-    // implementation suggestion...
     if (index >= 0 && index < models.size())
     {
         activeModelIndex = index;
@@ -87,12 +87,7 @@ const int Scene::GetActiveModelIndex() const
     return activeModelIndex;
 }
 
-const std::vector<std::shared_ptr<MeshModel>> Scene::GetAllModels() const
-{
-    return models;
-}
-
-const std::shared_ptr<MeshModel> Scene::GetModelByIndex(int index) const
+const std::shared_ptr<MeshModel> Scene::GetModelByIndex(int index)
 {
     if(index >= 0 && index < models.size())
     {
@@ -103,11 +98,21 @@ const std::shared_ptr<MeshModel> Scene::GetModelByIndex(int index) const
     }
 }
 
+const std::shared_ptr<MeshModel> Scene::getActiveModel()
+{
+    return models.at(activeModelIndex);
+}
+
+const std::vector<std::shared_ptr<MeshModel>> Scene::GetAllModels() const
+{
+    return models;
+}
+
 // Lights functions
 void Scene::AddLight(Light* light)
 {
     lights.push_back(light);
-    
+    activeLightIndex = models.size() - 1;
     for(int i=0; i < lights.size(); i++){
         lights.at(i)->SetModelName("Light_" + std::to_string(i+1));
     }
@@ -116,6 +121,19 @@ void Scene::AddLight(Light* light)
 const int Scene::GetLightsCount() const
 {
     return lights.size();
+}
+
+void Scene::SetActiveLightIndex(int index)
+{
+    if (index >= 0 && index < lights.size())
+    {
+        activeLightIndex = index;
+    }
+}
+
+const int Scene::GetActiveLightIndex() const
+{
+    return activeLightIndex;
 }
 
 const Light& Scene::GetLightByIndex(int index)
@@ -127,6 +145,11 @@ const Light& Scene::GetLightByIndex(int index)
         std::cerr << "Failed to get light, please check index " << index << std::endl;
         throw "Failed to get light, please check index " + std::to_string(index);
     }
+}
+
+const Light& Scene::GetActiveLight()
+{
+    return *lights.at(activeLightIndex);
 }
 
 std::vector<Light*> Scene::GetAllLights() const
@@ -145,7 +168,7 @@ std::vector<Light*> Scene::GetAllLights() const
 //
 ////        worldTrans = camera->CalculateWorldTransformation();
 ////        worldTrans = glm::mat4(1);
-//    
+//
 //    return projectionTrans * viewTrans;
 //}
 
