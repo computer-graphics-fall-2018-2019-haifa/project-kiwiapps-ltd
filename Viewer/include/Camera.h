@@ -17,7 +17,8 @@ class Camera
 private:
     // 0 => orth , 1 => perspective
     int projectionType;
-
+    float zoom;
+    
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
     std::shared_ptr<MeshModel> model;
@@ -29,49 +30,31 @@ public:
     glm::vec3 eye;
     glm::vec3 at;
     glm::vec3 up;
-    float zoom;
     float aspectRatio;
     float nearP;
     float fovy;
     float farP;
     float height;
 
+    const glm::mat4 GetViewTransformation();
+    const glm::mat4 GetProjectionTransformation();
+    
+    void SetOrthographicProjection(const float height, const float aspectRatio, const float nearP, const float farP);
+    void SetPerspectiveProjection(const float fovy, const float aspectRatio, const float nearP, const float farP);
+    
+    void CalculateProjectionMatrix();
+    void SwitchToOrthographic();
+    void SwitchToPrespective();
+    const float GetProjectionType();
+    
+    std::shared_ptr<MeshModel> GetModel();
+    void SetModelName(std::string name);
+    
     void SetCameraLookAt();
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up);
 	void SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float zoom);
-
-    void SetOrthographicProjection();
-	void SetOrthographicProjection(
-		const float height,
-		const float aspectRatio,
-		const float nearP,
-		const float farP);
-
-    void SetPerspectiveProjection();
-	void SetPerspectiveProjection(
-		const float fovy,
-		const float aspect,
-		const float nearP,
-		const float farP);
-
-    const glm::mat4 GetTransformation();
-    const glm::mat4 GetProjection();
-    const glm::mat4 CalculateWorldTransformation();
-    const glm::mat4 CalculateRotationMatrix();
     
     const float GetZoom();
     void SetZoom(const float zoom);
-    
-    const glm::vec3 GetEye();
-    const glm::vec3 GetAt();
-    const glm::vec3 GetUp();
-    const float GetAspectRatio();
-    const float GetNear();
-    const float GetFovy();
-    const float GetFar();
-    const float GetHeight();
-    const float GetProjectionType();
-    std::shared_ptr<MeshModel> GetModel();
-    
-    void SetModelName(std::string name);
+
 };

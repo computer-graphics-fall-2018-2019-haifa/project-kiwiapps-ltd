@@ -212,32 +212,19 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
         return;
     }
     
-    std::vector<std::shared_ptr<MeshModel> > models = scene->GetAllModels();
+    std::vector<std::shared_ptr<MeshModel>> models = scene->GetAllModels();
     std::vector<Camera*> cameras = scene->GetAllCameras();
     std::vector<Light*> lights = scene->GetAllLights();
     
     Camera activeCamera = scene->GetActiveCamera();
-    glm::mat4 viewMat = activeCamera.GetTransformation();
-    glm::mat4 objMat = activeCamera.CalculateWorldTransformation();
-    glm::mat4 projMat = activeCamera.GetProjection();
-    glm::vec4 lightColors[5] = { glm::vec4(0) };
-    glm::vec4 lightLocations[5] = { glm::vec4(0) };
-    
-    for (int i = 0; i < 5; i++) {
-        if (i < lights.size()) {
-            Light* light = lights.at(i);
-            lightColors[i] = glm::vec4(light->GetColor(), 1);
-//            lightLocations[i] = glm::vec4(light->GetLocation(), 1);
-        }
-    }
     
     colorShader.use();
     
     // camera params
-    colorShader.setUniform("view", viewMat * objMat);
-    colorShader.setUniform("projection", projMat);
-    colorShader.setUniform("lightColors", *lightColors);
-    colorShader.setUniform("lightLocations", *lightLocations);
+    colorShader.setUniform("view", activeCamera.GetViewTransformation() * activeCamera.GetModel()->GetWorldTransformation());
+    colorShader.setUniform("projection", activeCamera.GetProjectionTransformation());
+//    colorShader.setUniform("lightColors", *lightColors);
+//    colorShader.setUniform("lightLocations", *lightLocations);
     
     // draw models
     for (std::shared_ptr<MeshModel> model : models) {
@@ -253,7 +240,7 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
         std::shared_ptr<MeshModel> cameraModel = cameras.at(i)->GetModel();
         cameraModel->scale = glm::vec3(0.1);
         cameraModel->CalculateWorldTransformation();
-        //TODO: Draw Camera
+        // Draw Camera model
         DrawModel(cameraModel, scene);
     }
     

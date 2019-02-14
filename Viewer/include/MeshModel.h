@@ -72,6 +72,7 @@ public:
     const std::vector<Line> GetBoundingBox() const;
     
     const glm::mat4 CalculateWorldTransformation();
+    const glm::mat4 CalculateInverseWorldTransformation();
     
     // getter setters
 	const glm::mat4x4& GetWorldTransformation() const;

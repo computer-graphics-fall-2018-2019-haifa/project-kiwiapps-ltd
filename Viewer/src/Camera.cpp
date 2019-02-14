@@ -13,10 +13,10 @@
 
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float aspectRatio) :
 projectionType(0),
+zoom(1),
 eye(eye),
 at(at),
 up(up),
-zoom(1),
 aspectRatio(aspectRatio),
 nearP(10),
 fovy(45),
@@ -25,11 +25,76 @@ height(2)
 {
     this->model = std::make_shared<MeshModel>(Utils::LoadMeshModel(GetCameraPath()));
 	SetCameraLookAt(eye, at, up);
-    SetOrthographicProjection();
+    CalculateProjectionMatrix();
 }
 
 Camera::~Camera()
 {
+}
+
+const glm::mat4 Camera::GetViewTransformation()
+{
+    return viewTransformation;
+}
+
+const glm::mat4 Camera::GetProjectionTransformation()
+{
+    return projectionTransformation;
+}
+
+void Camera::SetOrthographicProjection(const float height, const float aspectRatio, const float nearP, const float farP)
+{
+    this->height = height;
+    this->aspectRatio = aspectRatio;
+    this->nearP = nearP;
+    this->farP = farP;
+    this->projectionType = 0;
+    float width = aspectRatio * height;
+    projectionTransformation = glm::ortho(-width / 2, width / 2, -height / 2, height / 2, nearP, farP);
+}
+
+void Camera::SetPerspectiveProjection(const float fovy, const float aspectRatio, const float nearP, const float farP)
+{
+    this->fovy = fovy;
+    this->aspectRatio = aspectRatio;
+    this->nearP = nearP;
+    this->farP = farP;
+    this->projectionType = 1;
+    projectionTransformation = glm::perspective(fovy, aspectRatio, nearP, farP);
+}
+
+void Camera::CalculateProjectionMatrix()
+{
+    if (this->projectionType == 0) {
+        SetOrthographicProjection(height, aspectRatio, nearP, farP);
+    } else {
+        SetPerspectiveProjection(fovy, aspectRatio, nearP, farP);
+    }
+}
+
+void Camera::SwitchToOrthographic()
+{
+    this->projectionType = 0;
+}
+
+void Camera::SwitchToPrespective()
+{
+    this->projectionType = 1;
+}
+
+const float Camera::GetProjectionType()
+{
+    return this->projectionType;
+}
+
+std::shared_ptr<MeshModel> Camera::GetModel()
+{
+    return this->model;
+}
+
+void Camera::SetModelName(std::string name)
+{
+    this->model->modelName = name;
 }
 
 void Camera::SetCameraLookAt()
@@ -42,90 +107,9 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
 }
 void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float zoom)
 {
-    // https://www.dropbox.com/s/9e8fqucirrwcgng/TranformationsAgain.pptx?dl=0#
-    // page 64
-    // lookAt() with vec3 instead of vec4
-    
-    SetZoom(zoom);
-    this->eye = eye;
-    this->at = at;
-    this->up = up;
-    
-//    up4 = rotationMatrix * up4;
-
-    glm::vec4 z  =  normalize(glm::vec4(eye,1.0f)  - glm::vec4(at, eye.z));
-    glm::vec3 z3 = glm::vec3(z.x, z.y, z.z);
-    glm::vec3 x3 = glm::normalize(glm::cross(up, z3));
-    glm::vec3 y3 = glm::normalize(glm::cross(z3, x3));
-    
-    glm::vec4 x  =  glm::vec4(x3, 1.0f);
-    glm::vec4 y  =  glm::vec4(y3, 1.0f);
-    glm::vec4 t  =  glm::vec4(0.0, 0.0, 0.0, 1.0);
-    glm::mat4 c  =  glm::transpose(glm::mat4(x,  y,  z,  t));
-    
-    glm::mat4 translateEye = glm::translate(-eye);
-    
-    this->model->SetTranslate(eye);
-    this->model->SetRotate(up);
-    this->viewTransformation = c * translateEye * glm::scale(glm::vec3(zoom));
-    
-}
-
-
-void Camera::SetOrthographicProjection()
-{
-    SetOrthographicProjection(this->height, this->aspectRatio, this->nearP, this->farP);
-}
-
-void Camera::SetOrthographicProjection(
-	const float height,
-	const float aspectRatio,
-	const float nearP,
-	const float farP)
-{
-    this->height = height;
-    this->aspectRatio = aspectRatio;
-    this->nearP = nearP;
-    this->farP = farP;
-    this->projectionType = 0;
-    
-    float nearWidth = height * aspectRatio;
-    
-    float top = 0.5 * height;
-    float bottom = -top;
-    float right = 0.5 * nearWidth;
-    float left = -right;
-    
-//    this->projectionTransformation =
-//    glm::mat4(
-//       2 / (right - left)               , 0                                , 0                            , 0,
-//       0                                , 2 / (top - bottom)               , 0                            , 0,
-//       0                                , 0                                , 2 / (nearP - farP)             , 0,
-//       -(right + left) / (right - left) , -(top + bottom) / (top - bottom) , -(farP + nearP) / (farP - nearP) , 1
-//   );
-    
-    this->projectionTransformation = glm::ortho(left, right, bottom, top, nearP, farP);
-}
-
-void Camera::SetPerspectiveProjection()
-{
-    SetPerspectiveProjection(this->fovy, this->aspectRatio, this->nearP, this->farP);
-}
-
-void Camera::SetPerspectiveProjection(
-	const float fovy,
-	const float aspectRatio,
-	const float nearP,
-	const float farP)
-{
-    this->fovy = fovy;
-    this->aspectRatio = aspectRatio;
-    this->nearP = nearP;
-    this->farP = farP;
-    this->projectionType = 1;
-    
-    glm::mat4 matrix = glm::perspective(fovy, aspectRatio, nearP, farP);
-    this->projectionTransformation = matrix;
+    // display the camera model inversed to look at
+    model->CalculateInverseWorldTransformation();
+    this->viewTransformation = glm::lookAt(eye, at, up);
 }
 
 const float Camera::GetZoom()
@@ -135,104 +119,5 @@ const float Camera::GetZoom()
 void Camera::SetZoom(const float zoom)
 {
     this->zoom = zoom;
+    CalculateProjectionMatrix();
 }
-
-const glm::mat4 Camera::GetTransformation()
-{
-    return this->viewTransformation;
-}
-const glm::mat4 Camera::GetProjection()
-{
-    return this->projectionTransformation;
-}
-
-const glm::mat4 Camera::CalculateWorldTransformation()
-{
-    glm::mat4 scaleMat = glm::scale(glm::vec3(zoom));
-    glm::mat4 rotateMat = CalculateRotationMatrix();
-    glm::mat4 translateMat = glm::mat4(1, 0, 0, eye.x,
-                                       0, 1, 0, eye.y,
-                                       0, 0, 1, eye.z,
-                                       0, 0, 0, 1
-                                       );
-    
-    return glm::transpose(translateMat) * rotateMat * scaleMat;
-}
-
-
-const glm::mat4 Camera::CalculateRotationMatrix()
-{
-//    glm::vec3 rotationAngle = glm::vec3(glm::angle(this->at, this->eye));
-    glm::vec3 rotation = this->up * glm::vec3(M_PI / 180);
-    
-    glm::mat4 xRotationMatrix = glm::mat4(
-                                          1, 0                   , 0                          , 0,
-                                          0, glm::cos(rotation.x), glm::sin(rotation.x) * (-1), 0,
-                                          0, glm::sin(rotation.x), glm::cos(rotation.x)       , 0,
-                                          0, 0                   , 0                          , 1
-                                          );
-    
-    glm::mat4 yRotationMatrix = glm::mat4(
-                                          glm::cos(rotation.y)       , 0, glm::sin(rotation.y), 0,
-                                          0                          , 1, 0                   , 0,
-                                          glm::sin(rotation.y) * (-1), 0, glm::cos(rotation.y), 0,
-                                          0                          , 0, 0                   , 1
-                                          );
-    glm::mat4 zRotationMatirx = glm::mat4(
-                                          glm::cos(rotation.z), glm::sin(rotation.z) * (-1) , 0, 0,
-                                          glm::sin(rotation.z), glm::cos(rotation.z)        , 0, 0,
-                                          0                   , 0                           , 1, 0,
-                                          0                   , 0                           , 0, 1
-                                          );
-    
-    return xRotationMatrix * yRotationMatrix * zRotationMatirx;
-}
-
-
-
-const glm::vec3 Camera::GetEye()
-{
-    return this->eye;
-}
-const glm::vec3 Camera::GetAt()
-{
-    return this->at;
-}
-const glm::vec3 Camera::GetUp()
-{
-    return this->up;
-}
-const float Camera::GetAspectRatio()
-{
-    return this->aspectRatio;
-}
-const float Camera::GetNear()
-{
-    return this->nearP;
-}
-const float Camera::GetFovy()
-{
-    return this->fovy;
-}
-const float Camera::GetFar()
-{
-    return this->farP;
-}
-const float Camera::GetHeight()
-{
-    return this->height;
-}
-const float Camera::GetProjectionType()
-{
-    return this->projectionType;
-}
-std::shared_ptr<MeshModel> Camera::GetModel()
-{
-    return this->model;
-}
-void Camera::SetModelName(std::string name)
-{
-    this->model->modelName = name;
-}
-                                                             
-

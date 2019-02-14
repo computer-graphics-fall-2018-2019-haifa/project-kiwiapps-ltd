@@ -111,10 +111,7 @@ void MeshModel::CalculateBoundingBox()
     this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, minZ), glm::vec3(maxX, maxY, maxZ)));
 }
 
-
 // public methods:
-
-
 const std::string& MeshModel::GetModelName()
 {
     return modelName;
@@ -192,6 +189,12 @@ const glm::mat4 MeshModel::CalculateWorldTransformation()
         Utils::CalculateRotateMatrix(rotate) *
         Utils::CalculateScaleMatrix(scale);
     
+    return this->worldTransform;
+}
+
+const glm::mat4 MeshModel::CalculateInverseWorldTransformation()
+{
+    this->worldTransform = glm::inverse(CalculateWorldTransformation());
     return this->worldTransform;
 }
 

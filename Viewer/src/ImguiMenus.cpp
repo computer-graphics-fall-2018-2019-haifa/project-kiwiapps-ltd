@@ -48,6 +48,8 @@ bool lockScale = true;
 bool lockRotate = true;
 bool lockTranslate = true;
 
+float cameraZoom = 1;
+
 const glm::vec4& GetClearColor()
 {
 	return clearColor;
@@ -241,7 +243,10 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         
         ImGui::Text("Zooming: ");
         ImGui::SameLine();
-        ImGui::SliderFloat("##cameraZoom", &(activeCamera->zoom), 0.100f, 50.0f, "%.2f", 10.0f);
+        if (ImGui::SliderFloat("##cameraZoom", &(cameraZoom), 0.100f, 50.0f, "%.2f", 5.0f))
+        {
+            activeCamera->SetZoom(cameraZoom);
+        }
         activeCamera->SetCameraLookAt();
         
         bool isOrth = activeCamera->GetProjectionType() == 0;
@@ -249,11 +254,7 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         ImGui::SliderFloat("Aspect Ratio", &(activeCamera->aspectRatio), 0.1f, 2.0f);
         ImGui::SliderFloat("Near", &(activeCamera->nearP), 1.0f, 1000.0f);
         ImGui::SliderFloat("Far", &(activeCamera->farP), 1.0f, 1000.0f);
-        if(isOrth){
-            activeCamera->SetOrthographicProjection();
-        } else {
-            activeCamera->SetPerspectiveProjection();
-        }
+        activeCamera->CalculateProjectionMatrix();
         
         int colSize = ((mainMenuWidth - 82)/3)/3;
         ImGui::Text("\n|       Eye       |        Up       |        At       |");
@@ -366,12 +367,12 @@ void BuildToolbar(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* 
                 {
                     projectionTypeConfig = 0;
                     Camera* camera = scene->GetAllCameras().at(scene->activeCameraIndex);
-                    camera->SetOrthographicProjection();
+                    camera->SwitchToOrthographic();
                 }
                 if(ImGui::MenuItem("Perspective", "" , projectionTypeConfig == 1)) {
                     projectionTypeConfig = 1;
                     Camera* camera = scene->GetAllCameras().at(scene->activeCameraIndex);
-                    camera->SetPerspectiveProjection();
+                    camera->SwitchToPrespective();
                 }
                 ImGui::EndMenu();
             }
