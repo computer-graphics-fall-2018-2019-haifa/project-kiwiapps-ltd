@@ -7,7 +7,7 @@ class Light
 {
 private:
     glm::vec3 color;
-    MeshModel model;
+    std::shared_ptr<MeshModel> model;
 public:
 	Light();
 	virtual ~Light();
@@ -16,4 +16,6 @@ public:
 	void SetColor(const glm::vec3& color);
     const glm::vec3& GetTranslation() const;
     void SetTranslation(const glm::vec3& translation);
+    
+    void SetModelName(std::string name);
 };

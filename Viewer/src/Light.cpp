@@ -5,9 +5,10 @@
 #include <iostream>
 
 Light::Light():
-color(glm::vec3(1.0, 1.0, 1.0)),
-model(MeshModel(Utils::LoadMeshModel(GetLightPath())))
-{}
+color(glm::vec3(1.0, 1.0, 1.0))
+{
+    this->model = std::make_shared<MeshModel>(MeshModel(Utils::LoadMeshModel(GetLightPath())));
+}
 
 Light::~Light()
 {
@@ -25,9 +26,15 @@ void Light::SetColor(const glm::vec3& color)
 
 const glm::vec3& Light::GetTranslation() const
 {
-    return model.GetTranslate();
+    return model->GetTranslate();
 }
 void Light::SetTranslation(const glm::vec3& translation)
 {
-    return model.SetTranslate(translation);
+    return model->SetTranslate(translation);
+}
+
+
+void Light::SetModelName(std::string name)
+{
+    this->model->modelName = name;
 }
