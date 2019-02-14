@@ -20,6 +20,8 @@ private:
 	std::vector<std::shared_ptr<MeshModel>> models;
 	std::vector<Camera*> cameras;
     std::vector<Light*> lights;
+    glm::mat4 worldTransformation;
+    
 public:
 	Scene();
     ~Scene();
@@ -56,5 +58,6 @@ public:
     const Light& GetActiveLight();
     std::vector<Light*> GetAllLights() const;
     
-    glm::mat4 CalculateWorldTransformationMatrix() const;
+    void CalculateWorldTransformationMatrix();
+    glm::mat4 GetWorldTransformationMatrix() const;
 };

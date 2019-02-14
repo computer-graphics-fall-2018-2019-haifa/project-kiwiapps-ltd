@@ -1,11 +1,16 @@
 #include "Scene.h"
 #include "MeshModel.h"
+#include "Utils.h"
 #include <string>
 
 Scene::Scene() :
-	activeCameraIndex(-1),
-	activeModelIndex(-1),
-    activeLightIndex(-1)
+    worldTransformation(glm::mat4(1)),
+    activeCameraIndex(-1),
+    activeModelIndex(-1),
+    activeLightIndex(-1),
+    scale(glm::vec3(1)),
+    rotate(glm::vec3(0)),
+    translate(glm::vec3(0))
 {
 }
 
@@ -142,16 +147,17 @@ std::vector<Light*> Scene::GetAllLights() const
     return lights;
 }
 
-glm::mat4 Scene::CalculateWorldTransformationMatrix() const
+
+// other functions
+void Scene::CalculateWorldTransformationMatrix()
 {
-    Camera* camera = this->cameras.at(activeCameraIndex);
-    camera->SetCameraLookAt();
-
-    glm::mat4
-        projectionTrans = camera->GetProjection(),
-        viewTrans = camera->GetTransformation();
-
-    return projectionTrans * viewTrans;
+    this->worldTransformation =
+        glm::transpose(Utils::CalculateTranslateMatrix(translate)) *
+        Utils::CalculateRotateMatrix(rotate) *
+        Utils::CalculateScaleMatrix(scale);
 }
 
-
+glm::mat4 Scene::GetWorldTransformationMatrix() const
+{
+    return this->worldTransformation;
+}

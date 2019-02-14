@@ -70,6 +70,44 @@ MeshModel Utils::LoadMeshModel(const std::string& filePath)
 	return MeshModel(faces, vertices, normals, textures, Utils::GetFileName(filePath));
 }
 
+
+
+glm::mat4 Utils::CalculateScaleMatrix(const glm::vec3 scale) const
+{
+    return glm::mat4(scale.x, 0, 0, 0,
+                     0, scale.y, 0, 0,
+                     0, 0, scale.z, 0,
+                     0, 0, 0, 1);
+}
+
+glm::mat4 Utils::CalculateTranslateMatrix(const glm::vec3 translate) const
+{
+    return glm::mat4(1, 0, 0, translate.x,
+                     0, 1, 0, translate.y,
+                     0, 0, 1, translate.z,
+                     0, 0, 0, 1);
+}
+
+glm::mat4 Utils::CalculateRotateMatrix(const glm::vec3 rotate) const
+{
+    glm::mat3 x, y, z;
+    glm::vec3 rotatePI = rotate * glm::vec3(M_PI);
+    
+    x = glm::mat4(1, 0, 0, 0,
+                      0, cos(rotatePI.x), -sin(rotatePI.x), 0,
+                      0, sin(rotatePI.x),  cos(rotatePI.x), 0,
+                      0, 0, 0, 1);
+    y = glm::mat4(cos(rotatePI.y), 0,  sin(rotatePI.y), 0,
+                      0, 1, 0, 0,
+                      -sin(rotatePI.y), 0, cos(rotatePI.y), 0,
+                      0, 0, 0, 1);
+    z = glm::mat4(cos(rotatePI.z), -sin(rotatePI.z), 0, 0,
+                      sin(rotatePI.z), cos(rotatePI.z),  0, 0,
+                      0, 0, 1, 0,
+                      0, 0, 0, 1);
+    return x * y * z;
+}
+
 std::string Utils::GetFileName(const std::string& filePath)
 {
 	if (filePath.empty()) {
