@@ -8,12 +8,11 @@
 #include "Texture2D.h"
 
 
-struct openGLVertex
+struct Vertex
 {
-    glm::vec3 vertex;
+    glm::vec3 position;
     glm::vec3 normal;
-    glm::vec2 texCoords;
-    //https://www.khronos.org/opengl/wiki/VBO_-_just_examples
+    glm::vec2 textureCoords;
 };
 
 /*
@@ -29,7 +28,7 @@ private:
 	std::vector<glm::vec3> normals;
     std::vector<glm::vec2> textures;
     std::vector<Line> boundingBox;
-    std::vector<openGLVertex> allVertex;
+    std::vector<Vertex> modelVertices;
     
     
 	glm::mat4x4 worldTransform;
@@ -96,5 +95,5 @@ public:
     void initializeOpenGL();
     GLuint GetVAO() const;
     GLuint GetVBO() const;
-    const std::vector<openGLVertex>& GetAllVertex();
+    const std::vector<Vertex>& GetAllVertex();
 };

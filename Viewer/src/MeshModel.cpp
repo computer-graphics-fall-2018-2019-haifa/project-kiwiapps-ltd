@@ -28,26 +28,23 @@ modelName(modelName)
 {
     //init openGL vertex
     //need to check !!!!
-    allVertex.reserve(3 * faces.size());
+    modelVertices.reserve(3 * faces.size());
     for (Face face : faces) {
         for (int i = 0; i < 3; i++)
         {
-            openGLVertex vertex;
+            Vertex vertex;
             int vertexIndex = face.GetVertexByIndex(i) - 1;
             
-            vertex.vertex = vertices[vertexIndex];
+            vertex.position = vertices[vertexIndex];
             vertex.normal = normals[vertexIndex];
             
             if (textures.size() > 0)
             {
                 int textureCoordsIndex = face.GetTextureIndex(i) - 1;
-                vertex.texCoords = textures[textureCoordsIndex];
-            }
-            else {
-                vertex.texCoords = glm::vec2(vertex.vertex);
+                vertex.textureCoords = textures[textureCoordsIndex];
             }
             
-            allVertex.push_back(vertex);
+            modelVertices.push_back(vertex);
         }
     }
     
@@ -291,20 +288,20 @@ void MeshModel::initializeOpenGL() {
     
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, allVertex.size() * sizeof(openGLVertex), &allVertex[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, modelVertices.size() * sizeof(Vertex), &modelVertices[0], GL_STATIC_DRAW);
     
     // load vertex positions
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),(GLvoid*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(openGLVertex),(GLvoid*)sizeof(glm::vec3));
-    
+
     // load normals
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(openGLVertex), (GLvoid*)sizeof(glm::vec3));
-    
+
     // load textures
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(openGLVertex), (GLvoid*)sizeof(glm::vec2));
-    
+
     // unbind
     glBindVertexArray(0);
 }
@@ -317,7 +314,7 @@ GLuint MeshModel::GetVBO() const{
     return this->vbo;
 }
 
-const std::vector<openGLVertex>& MeshModel::GetAllVertex(){
-    return this->allVertex;
+const std::vector<Vertex>& MeshModel::GetAllVertex(){
+    return this->modelVertices;
 }
 
