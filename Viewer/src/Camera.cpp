@@ -124,20 +124,6 @@ void Camera::SetPerspectiveProjection(
     this->farP = farP;
     this->projectionType = 1;
     
-    float nearHeight = (farP - nearP) * tan(fovy * M_PI / 180);
-    float nearWidth = nearHeight * aspectRatio;
-    
-    float top = 0.5 * nearHeight;
-//    float bottom = -top;
-    float right = 0.5 * nearWidth;
-//    float left = -right;
-    
-//    glm::vec4 r1 = glm::vec4((2 * nearP) / (right - left), 0, (right + left) / (right - left), 0);
-//    glm::vec4 r2 = glm::vec4(0, (2 * nearP) / (top - bottom), (top + bottom) / (top - bottom), 0);
-//    glm::vec4 r3 = glm::vec4(0, 0, -(farP + nearP) / (farP - nearP), -(2 * farP * nearP) / (farP - nearP));
-//    glm::vec4 r4 = glm::vec4(0, 0, -1, 0);
-    
-//    glm::mat4 matrix = glm::mat4(r1, r2, r3, r4);
     glm::mat4 matrix = glm::perspective(fovy, aspectRatio, nearP, farP);
     this->projectionTransformation = matrix;
 }
@@ -176,7 +162,7 @@ const glm::mat4 Camera::CalculateWorldTransformation()
 
 const glm::mat4 Camera::CalculateRotationMatrix()
 {
-    glm::vec3 rotationAngle = glm::vec3(glm::angle(this->at, this->eye));
+//    glm::vec3 rotationAngle = glm::vec3(glm::angle(this->at, this->eye));
     glm::vec3 rotation = this->up * glm::vec3(M_PI / 180);
     
     glm::mat4 xRotationMatrix = glm::mat4(
