@@ -142,73 +142,39 @@ Renderer::~Renderer()
 // build face vertics from model vertices positions
 // draw bounding box
 void Renderer::DrawModel(std::shared_ptr<MeshModel> model, const std::shared_ptr<Scene>& scene) {
-    glm::mat4 modelMat = model->GetWorldTransformation();
-    
     // Set the uniform variables
-    colorShader.setUniform("model", modelMat);
     colorShader.setUniform("material.color", model->color);
-//    colorShader.setUniform("useTexture", model->useTexture);
-
-//    if (model->fill) {
-//        // Set the model's texture as the active texture at slot #0
-//        model->BindTexture();
-//
-//        // Drag our model's faces (triangles) in fill mode
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//        glBindVertexArray(model->GetVAO());
-//        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)model->GetModelVertices().size());
-//        glBindVertexArray(0);
-//
-//        // Unset the model's texture as the active texture at slot #0
-//        model->UnbindTexture();
-//    }
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glBindVertexArray(model->GetVAO());
+    glDrawArrays(GL_TRIANGLES, 0, (GLsizei)model->GetAllVertex().size());
+    glBindVertexArray(0);
     
-//    if (model->showWire) {
-        // Drag our model's faces (triangles) in line mode (wireframe)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glBindVertexArray(model->GetVAO());
-        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)model->GetAllVertex().size());
-        glBindVertexArray(0);
-//    }
+    // Set 'texture1' as the active texture at slot #0
+    texture1.bind(0);
     
-//    // get model faces
-//    // get model vertics
-//    // get model normals
-//    // get model color by checking if is active model -> green else darkGray
-//
-//    std::vector<Face> faces = model->GetFaces();
-//    std::vector<glm::vec3> vertices = model->GetVertices();
-//    std::vector<glm::vec3> normals = model->GetNormals();
-//
-//    // call draw bounding box if requested
-//    if (model->boundingBoxVisibility) {
-////        DrawModelBoundingBox(model, transformMatrix);
-//    }
-//
-//    // loop over faces and draw each face by calling the DrawFace function
-//        // use the provided transformMatrix when drawing the Faces
-//        // check if draw face normals requested
-//
-//    for (int i = 0; i < faces.size(); i++) {
-//        std::vector<glm::vec3> vertices;
-//        Face face = faces.at(i);
-//        for(int j=0; j<3; j++){
-//            vertices.push_back(model->GetVertexByIndex(face.GetVertexByIndex(j) - 1));
-//        }
-//
-//        if (model->faceNoramlVisibility == 1) {
-////            DrawFaceNormal(vertices, transformMatrix);
-//        }
-//        if(model->verticesNoramlVisibility) {
-//
-//        }
-////        DrawTriangle(vertices, transformMatrix, model->GetColor());
-//    }
+    // Drag our model's faces (triangles) in fill mode
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glBindVertexArray(model->GetVAO());
+    glDrawArrays(GL_TRIANGLES, 0, model->GetAllVertex().size());
+    glBindVertexArray(0);
+    
+    // Unset 'texture1' as the active texture at slot #0
+    texture1.unbind(0);
+    
+    colorShader.setUniform("color", glm::vec3(0,0,0));
+    
+    // Drag our model's faces (triangles) in line mode (wireframe)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glBindVertexArray(model->GetVAO());
+    glDrawArrays(GL_TRIANGLES, 0, model->GetAllVertex().size());
+    glBindVertexArray(0);
+    
 }
 
 void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
 {
-    if (!scene->GetCameraCount()) {
+    if (scene->GetCameraCount() < 1) {
+        std::logic_error("No no Cameras loaded");
         return;
     }
     
@@ -220,20 +186,18 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
     
     colorShader.use();
     
-    // camera params
-    colorShader.setUniform("view", activeCamera.GetViewTransformation() * activeCamera.GetModel()->GetWorldTransformation());
-    colorShader.setUniform("projection", activeCamera.GetProjectionTransformation());
-//    colorShader.setUniform("lightColors", *lightColors);
-//    colorShader.setUniform("lightLocations", *lightLocations);
-    
     // draw models
     for (std::shared_ptr<MeshModel> model : models) {
-        model->CalculateWorldTransformation();
+        // camera params
+        colorShader.setUniform("model", model->GetWorldTransformation() * model->CalculateTranslationMatrix());
+        colorShader.setUniform("view", activeCamera.GetViewTransformation());
+        colorShader.setUniform("projection", activeCamera.GetProjectionTransformation());
+        colorShader.setUniform("material.textureMap", 0);
         DrawModel(model, scene);
     }
     
     // draw cameras
-    std::logic_error("need to check this!!! maybe change the impl remove inherit");
+//    std::logic_error("need to check this!!! maybe change the impl remove inherit");
     for (int i = 0; i < scene->GetCameraCount(); i++) {
         if (scene->activeCameraIndex == i)
             continue;
