@@ -29,7 +29,7 @@ private:
     std::vector<glm::vec2> textures;
     std::vector<Line> boundingBox;
     std::vector<Vertex> modelVertices;
-    
+    Texture2D texture;
     
 	glm::mat4x4 worldTransform;
 
@@ -59,6 +59,12 @@ public:
     GLuint vao; // vertex array object
     GLuint vbo; // vertex buffers object
 
+    bool textureEnabled;
+    
+    // https://en.wikipedia.org/wiki/Wavefront_.obj_file
+    float ambientColor;
+    float diffuseColor;
+    float specularColor;
     
     //get minimum index value in all the verticses
     // 0 -> x, 1 -> y, 2 -> z
@@ -101,4 +107,8 @@ public:
     GLuint GetVAO() const;
     GLuint GetVBO() const;
     const std::vector<Vertex>& GetAllVertex();
+    
+    void LoadTexture(const char * path);
+    void BindTexture();
+    void UnbindTexture();
 };

@@ -36,13 +36,12 @@ float incrementalSizeConfig = 1.0f;
 
 std::string cameraObjPath = "/Users/davidantoon/git/project-kiwiapps-ltd/Data/camera.obj";
 std::string lightObjPath = "/Users/davidantoon/git/project-kiwiapps-ltd/Data/sphere.obj";
-std::string textureObjPath = "/Users/davidantoon/git/project-kiwiapps-ltd/Data/crate.jpg";
 
 // new camera page
 bool newCameraResult = false;
-static glm::vec3 eye = glm::vec3(0.0f, 0.0f, 0.0f);
+static glm::vec3 eye = glm::vec3(0.0f, 0.0f, 100.0f);
 static glm::vec3 at = glm::vec3(0.0f, 0.0f, 0.0f);
-static glm::vec3 up = glm::vec3(0.0f, 0.0f, 0.0f);
+static glm::vec3 up = glm::vec3(0.0f, 0.0f, 1.0f);
 
 // others
 bool lockScale = true;
@@ -110,36 +109,6 @@ void DisplayAlertLightObj(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFW
     ImGui::End();
 }
 
-void DisplayAlertTextureImage(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
-{
-    ImGui::Begin("Welcome to MeshModel Viewer", 0, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-    ImGui::SetWindowSize(ImVec2(std::min(600, display_w), std::min(300, display_h)));
-    ImGui::SetWindowPos(ImVec2((display_w - std::min(600, display_w))/2, 100));
-    ImGui::Text("Assigment No. : 3");
-    ImGui::Text("");
-    ImGui::Text("Students:");
-    ImGui::Text("   - David Antoon (204489470)");
-    ImGui::Text("   - Ameer Dow    (203844956)");
-    ImGui::Text("");
-    
-    ImGui::TextWrapped("Selected Camera Path:\n\"%s\"\n\n", GetCameraPath().c_str());
-    ImGui::TextWrapped("Selected Light Path:\n\"%s\"\n\n", GetLightPath().c_str());
-    
-    ImGui::TextWrapped("Please provide the Crate Texture object file:");
-    ImGui::Text("");
-    if(ImGui::Button("Browse")){
-        nfdchar_t *outPath = NULL;
-        nfdresult_t result = NFD_OpenDialog("jpg;jpeg;png;", NULL, &outPath);
-        if (result == NFD_OKAY) {
-            printf("DisplayAlertTextureObj() light obj Loaded\n");
-            textureObjPath = outPath;
-            free(outPath);
-        }
-    }
-    ImGui::End();
-}
-
-
 void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* window, int display_w, int display_h)
 {
     std::vector<std::shared_ptr<MeshModel>> models = scene->GetAllModels();
@@ -185,9 +154,27 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         
 		if (ImGui::Button("Focus")) {
 			activeCamera->at = activeModel->translate;
+            activeCamera->SetCameraLookAt();
 		}
         ImGui::Separator();
         
+        if(activeModel->textureEnabled){
+            if (ImGui::Button("Unload Texture")) {
+                activeModel->textureEnabled = false;
+            }
+        } else {
+            if (ImGui::Button("Load Texture")) {
+                nfdchar_t *outPath = NULL;
+                nfdresult_t result = NFD_OpenDialog("jpg,jpeg;", NULL, &outPath);
+                if (result == NFD_OKAY) {
+                    activeModel->LoadTexture(outPath);
+                    free(outPath);
+                }
+            }
+        }
+        ImGui::Separator();
+        
+        bool changed = false;
         ImGui::Text("Lock Scale:");
         ImGui::SameLine();
         ImGui::Checkbox("##lockScaleCheckbox", &lockScale);
@@ -195,25 +182,27 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
             if(ImGui::SliderFloat("Scale", &(activeModel->scale.x), 0.0f, 3.0f)){
                 float x = activeModel->scale.x;
                 activeModel->scale = { x, x, x };
-                activeModel->CalculateScaleMatrix();
+                activeModel->CalculateWorldTransformation();
             }
         }
         else {
             ImGui::Text("Scale X:");
             ImGui::SameLine();
-            bool changed = false;
             if(ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleX", &(activeModel->scale.x), 0.0f, 3.0f))
+            {
                 changed = true;
+            }
             ImGui::Text("Scale Y:");
             ImGui::SameLine();
             if(ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleY", &(activeModel->scale.y), 0.0f, 3.0f))
+            {
                 changed = true;
+            }
             ImGui::Text("Scale Z:");
             ImGui::SameLine();
             if(ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleZ", &(activeModel->scale.z), 0.0f, 3.0f))
+            {
                 changed = true;
-            if(changed){
-                activeModel->CalculateScaleMatrix();
             }
         }
         ImGui::Separator();
@@ -225,41 +214,53 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
             if(ImGui::SliderFloat("Rotate all", &(activeModel->rotate.x), 0.0f, 5.0f)){
                 float x = activeModel->rotate.x;
                 activeModel->rotate = { x, x, x };
-                activeModel->CalculateRotationMatrix();
+                activeModel->CalculateWorldTransformation();
             }
         }
         else {
-            bool changed = false;
             if(ImGui::SliderFloat("Rotate X", &(activeModel->rotate.x), 0.0f, 5.0f))
+            {
                 changed = true;
+            }
             if(ImGui::SliderFloat("Rotate Y", &(activeModel->rotate.y), 0.0f, 5.0f))
+            {
                 changed = true;
+            }
             if(ImGui::SliderFloat("Rotate Z", &(activeModel->rotate.z), 0.0f, 5.0f))
+            {
                 changed = true;
-            if(changed){
-                activeModel->CalculateRotationMatrix();
             }
         }
         ImGui::Separator();
+        ImGui::Text("Translation X:");
+        ImGui::SameLine();
+        if(ImGui::SliderFloat("##TranslationX", &(activeModel->translate.x), -5.0f, 5.0f))
         {
-            bool changed = false;
-            ImGui::Text("Translation X:");
-            ImGui::SameLine();
-            if(ImGui::SliderFloat("##TranslationX", &(activeModel->translate.x), -5.0f, 5.0f))
-                changed = true;
-            ImGui::Text("Translation Y:");
-            ImGui::SameLine();
-            if(ImGui::SliderFloat("##TranslationY", &(activeModel->translate.y), -5.0f, 5.0f))
-                changed = true;
-            ImGui::Text("Translation Z:");
-            ImGui::SameLine();
-            if(ImGui::SliderFloat("##TranslationZ", &(activeModel->translate.z), -5.0f, 5.0f))
-                changed = true;
-            if(changed)
-                activeModel->CalculateTranslationMatrix();
+            changed = true;
         }
-        activeModel->CalculateWorldTransformation();
-        scene->CalculateWorldTransformationMatrix();
+        ImGui::Text("Translation Y:");
+        ImGui::SameLine();
+        if(ImGui::SliderFloat("##TranslationY", &(activeModel->translate.y), -5.0f, 5.0f))
+        {
+            changed = true;
+        }
+        ImGui::Text("Translation Z:");
+        ImGui::SameLine();
+        if(ImGui::SliderFloat("##TranslationZ", &(activeModel->translate.z), -5.0f, 5.0f))
+        {
+            changed = true;
+        }
+        
+        if(changed)
+        {
+            activeModel->CalculateWorldTransformation();
+        }
+ 
+        ImGui::Separator();
+        ImGui::Text("Reflection:");
+        ImGui::SliderFloat("Ambient", &(activeModel->ambientColor), 0.0f, 1.0f);
+        ImGui::SliderFloat("Diffuse", &(activeModel->diffuseColor), 0.0f, 1.0f);
+        ImGui::SliderFloat("Specular", &(activeModel->specularColor), 0.0f, 1.0f);
     }
     
     
@@ -276,18 +277,32 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         
         ImGui::Text("Zooming: ");
         ImGui::SameLine();
-        if (ImGui::SliderFloat("##cameraZoom", &(cameraZoom), 0.100f, 50.0f, "%.2f", 5.0f))
+        if (ImGui::SliderFloat("##cameraZoom", &(activeCamera->zoom), 0.100f, 50.0f, "%.2f", 5.0f))
         {
-            activeCamera->SetZoom(cameraZoom);
+            activeCamera->CalculateProjectionMatrix();
+            activeCamera->SetCameraLookAt();
         }
-        activeCamera->SetCameraLookAt();
-        
+        ImGui::Separator();
+        if(ImGui::RadioButton("Orthographic", &(activeCamera->projectionType), 0))
+        {
+            activeCamera->SwitchToOrthographic();
+        }
+        if(ImGui::RadioButton("Perspective", &(activeCamera->projectionType), 1))
+        {
+            activeCamera->SwitchToPrespective();
+        }
+        ImGui::Separator();
         bool isOrth = activeCamera->GetProjectionType() == 0;
-        ImGui::SliderFloat(isOrth ? "Height": "Fovy", isOrth ? &(activeCamera->height) : &(activeCamera->fovy), 1.0f, 100.0f);
+        if(isOrth){
+            ImGui::SliderFloat("Height", &(activeCamera->height), 0.01f, 200.0f);
+        } else {
+            ImGui::SliderFloat("Fovy", &(activeCamera->fovy), 0.01f, 3.14f);
+        }
         ImGui::SliderFloat("Aspect Ratio", &(activeCamera->aspectRatio), 0.1f, 2.0f);
-        ImGui::SliderFloat("Near", &(activeCamera->nearP), 1.0f, 1000.0f);
-        ImGui::SliderFloat("Far", &(activeCamera->farP), 1.0f, 1000.0f);
+        ImGui::SliderFloat("Near", &(activeCamera->nearP), 1.0f, 200.0f);
+        ImGui::SliderFloat("Far", &(activeCamera->farP), 1.0f, 200.0f);
         activeCamera->CalculateProjectionMatrix();
+        ImGui::Separator();
         
         int colSize = ((mainMenuWidth - 82)/3)/3;
         ImGui::Text("\n|       Eye       |        Up       |        At       |");
@@ -297,11 +312,20 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(200, 0, 0));
         ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor(255, 255, 255));
 
-        ImGui::VSliderFloat("##eyeX", ImVec2(colSize, 100), &(activeCamera->eye.x), -2000,2000, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##eyeX", ImVec2(colSize, 200), &(activeCamera->eye.x), -199,199, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
-        ImGui::VSliderFloat("##eyeY", ImVec2(colSize, 100), &(activeCamera->eye.y), -2000,2000, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##eyeY", ImVec2(colSize, 200), &(activeCamera->eye.y), -199,199, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
-        ImGui::VSliderFloat("##eyeZ", ImVec2(colSize, 100), &(activeCamera->eye.z), -2000,2000, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##eyeZ", ImVec2(colSize, 200), &(activeCamera->eye.z), -199,199, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
         ImGui::PopStyleColor(2);
         ImGui::PopID();
@@ -309,11 +333,20 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         ImGui::PushID(1);
         ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(0, 200, 0));
         ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor(255, 255, 255));
-        ImGui::VSliderFloat("##upX", ImVec2(colSize, 100), &(activeCamera->up.x), -10,10, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##upX", ImVec2(colSize, 200), &(activeCamera->up.x), -10,10, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
-        ImGui::VSliderFloat("##upY", ImVec2(colSize, 100), &(activeCamera->up.y), 0.1,10, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##upY", ImVec2(colSize, 200), &(activeCamera->up.y), 0.1,10, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
-        ImGui::VSliderFloat("##upZ", ImVec2(colSize, 100), &(activeCamera->up.z), -10,10, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##upZ", ImVec2(colSize, 200), &(activeCamera->up.z), -10,10, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
         ImGui::PopStyleColor(2);
         ImGui::PopID();
@@ -321,11 +354,20 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         ImGui::PushID(2);
         ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor(0, 0, 200));
         ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor(255, 255, 255));
-        ImGui::VSliderFloat("##atX", ImVec2(colSize, 100), &(activeCamera->at.x), -2000,2000, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##atX", ImVec2(colSize, 200), &(activeCamera->at.x), -30,30, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
-        ImGui::VSliderFloat("##atY", ImVec2(colSize, 100), &(activeCamera->at.y), -2000,2000, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##atY", ImVec2(colSize, 200), &(activeCamera->at.y), -30,30, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
-        ImGui::VSliderFloat("##atZ", ImVec2(colSize, 100), &(activeCamera->at.z), -2000,2000, "%.0f", incrementalSizeConfig);
+        if(ImGui::VSliderFloat("##atZ", ImVec2(colSize, 200), &(activeCamera->at.z), -30,30, "%f"))
+        {
+            activeCamera->SetCameraLookAt();
+        }
         ImGui::SameLine();
         ImGui::PopStyleColor(2);
         ImGui::PopID();
@@ -393,22 +435,6 @@ void BuildToolbar(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* 
             ImGui::MenuItem("Display FPS", "", &displayFPSConfig);
             ImGui::MenuItem("Display Axes", "", &displayAxesConfig);
             ImGui::MenuItem("Display only selected Model", "", &displaySelectedModelOnlyConfig);
-            
-            if (ImGui::BeginMenu("Projection Type", ""))
-            {
-                if(ImGui::MenuItem("Orthographic", "" , projectionTypeConfig == 0))
-                {
-                    projectionTypeConfig = 0;
-                    Camera* camera = scene->GetAllCameras().at(scene->activeCameraIndex);
-                    camera->SwitchToOrthographic();
-                }
-                if(ImGui::MenuItem("Perspective", "" , projectionTypeConfig == 1)) {
-                    projectionTypeConfig = 1;
-                    Camera* camera = scene->GetAllCameras().at(scene->activeCameraIndex);
-                    camera->SwitchToPrespective();
-                }
-                ImGui::EndMenu();
-            }
             ImGui::EndMenu();
         }
         ImGui::MenuItem("Help", "", &showDemoWindow);
@@ -544,14 +570,6 @@ void DrawImguiMenus(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow
         return;
     }
     
-    if(textureObjPath == "")
-    {
-        DisplayAlertTextureImage(io, scene, window, display_w, display_h);
-        return;
-    }
-    
-    
-    
     BuildToolbar(io, scene, window, display_w, display_h);
     buildMainMenu(io, scene, window, display_w, display_h);
     if(aboutPageVisible) BuildAboutPage(io, scene, window, display_w, display_h);
@@ -570,11 +588,6 @@ const std::string GetCameraPath()
 const std::string GetLightPath()
 {
     return lightObjPath;
-}
-
-const std::string GetTexturePath()
-{
-    return textureObjPath;
 }
 
 const bool ShouldDisplayAxes()

@@ -54,7 +54,6 @@ void glfw_OnMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
 void glfw_OnFramebufferSize(GLFWwindow* window, int width, int height);
 
 float GetAspectRatio();
-//void DrawImguiMenus();
 void HandleImguiInput();
 
 int main(int argc, char **argv)
@@ -69,28 +68,23 @@ int main(int argc, char **argv)
     scene = std::make_shared<Scene>();
     
     Renderer renderer;
+    renderer.LoadShaders();
+    
     
     while (!glfwWindowShouldClose(window))
     {
         if(!cameraAndLightsInitialized){
-            if(GetCameraPath() != "" && GetLightPath() != "" && GetTexturePath() != ""){
+            if(GetCameraPath() != "" && GetLightPath() != ""){
                 cameraAndLightsInitialized = true;
                 
                 // add default camera after getting the absolute .obj path
                 Camera* defaultCam = new Camera(defaultEye, defaultAt, defaultUp, GetAspectRatio());
                 scene->AddCamera(defaultCam);
                 
-//                scene->AddLight(new PointLight(glm::vec3( 0, 0, 15), glm::vec3(1, 1, 1)));
-//                scene->AddLight(new PointLight(glm::vec3( 0, 5, 5),  glm::vec3(0, 0, 0)));
-//                scene->AddLight(new PointLight(glm::vec3(-5, 0, 0),  glm::vec3(0, 0, 0)));
                 // add default light after getting the absolute .obj path
-                //                Light* defaultLight = new Light();
-                //            scene->AddLight(defaultLight);
+                Light* defaultLight = new Light();
+                scene->AddLight(defaultLight);
                 
-                
-                // setup renderer
-                renderer.LoadShaders();
-                renderer.LoadTextures();
             }
         }
         
@@ -104,7 +98,6 @@ int main(int argc, char **argv)
         DrawImguiMenus(*imgui, scene, window);
         ImGui::Render();
         HandleImguiInput();
-        
         
         // Clear the screen and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -160,7 +153,9 @@ GLFWwindow* SetupGlfwWindow(int windowWidth, int windowHeight, const char* windo
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     // forward compatible with newer versions of OpenGL as they become available but not backward compatible (it will not run on devices that do not support OpenGL 3.3
+#if __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
     
     // Create an OpenGL 3.3 core, forward compatible context window
     window = glfwCreateWindow(windowWidth, windowHeight, windowName, NULL, NULL);

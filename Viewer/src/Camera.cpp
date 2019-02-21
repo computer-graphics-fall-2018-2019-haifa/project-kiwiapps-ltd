@@ -21,10 +21,9 @@ aspectRatio(aspectRatio),
 nearP(0.1f),
 fovy(glm::pi<float>() / 4.0f),
 farP(200.0f),
-height(5)
+height(5),
+model(Utils::LoadMeshModelPointer(GetCameraPath()))
 {
-    this->model = std::make_shared<MeshModel>(Utils::LoadMeshModel(GetCameraPath()));
-    
     CalculateProjectionMatrix();
     SetCameraLookAt(eye, at, up);
 }

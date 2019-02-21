@@ -63,58 +63,6 @@ std::vector<glm::vec3> Utils::CalculateNormals(std::vector<glm::vec3> vertices, 
     return normals;
 }
 
-MeshModel Utils::LoadMeshModel(const std::string& filePath)
-{
-    std::vector<Face> faces;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec2> textureCoords;
-    std::ifstream ifile(filePath.c_str());
-    
-    // while not end of file
-    while (!ifile.eof())
-    {
-        // get line
-        std::string curLine;
-        std::getline(ifile, curLine);
-        
-        // read the type of the line
-        std::istringstream issLine(curLine);
-        std::string lineType;
-        
-        issLine >> std::ws >> lineType;
-        
-        // based on the type parse data
-        if (lineType == "v")
-        {
-            vertices.push_back(Utils::Vec3fFromStream(issLine));
-        }
-        else if (lineType == "vn")
-        {
-            normals.push_back(Utils::Vec3fFromStream(issLine));
-        }
-        else if (lineType == "vt")
-        {
-            textureCoords.push_back(Utils::Vec2fFromStream(issLine));
-        }
-        else if (lineType == "f")
-        {
-            faces.push_back(Face(issLine));
-        }
-        else if (lineType == "#" || lineType == "")
-        {
-            // comment / empty line
-        }
-        else
-        {
-            std::cout << "Found unknown line Type \"" << lineType << "\"";
-        }
-    }
-    
-    return MeshModel(faces, vertices, CalculateNormals(vertices, faces), textureCoords, Utils::GetFileName(filePath));
-}
-
-
 std::shared_ptr<MeshModel> Utils::LoadMeshModelPointer(const std::string& filePath)
 {
     std::vector<Face> faces;

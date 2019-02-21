@@ -26,7 +26,6 @@ private:
     
     ShaderProgram lightShader;
     ShaderProgram colorShader;
-    Texture2D texture1;
 
 public:
     Renderer();
@@ -44,6 +43,5 @@ public:
 //    void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix);
 
     void LoadShaders();
-    void LoadTextures();
     
 };

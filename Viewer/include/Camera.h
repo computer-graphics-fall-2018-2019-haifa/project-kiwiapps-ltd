@@ -15,10 +15,6 @@
 class Camera
 {
 private:
-    // 0 => orth , 1 => perspective
-    int projectionType;
-    float zoom;
-    
 	glm::mat4x4 viewTransformation;
 	glm::mat4x4 projectionTransformation;
     std::shared_ptr<MeshModel> model;
@@ -26,6 +22,9 @@ private:
 public:
     Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float aspectRatio);
 	~Camera();
+    
+    // 0 => orth , 1 => perspective
+    int projectionType;
     
     glm::vec3 eye;
     glm::vec3 at;
@@ -35,6 +34,7 @@ public:
     float fovy;
     float farP;
     float height;
+    float zoom;
 
     const glm::mat4 GetViewTransformation() const;
     const glm::mat4 GetProjectionTransformation() const;

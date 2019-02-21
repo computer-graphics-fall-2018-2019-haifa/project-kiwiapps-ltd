@@ -24,7 +24,11 @@ worldTransform(glm::mat4x4(1)),
 boundingBoxVisibility(false),
 verticesNoramlVisibility(false),
 faceNoramlVisibility(false),
-modelName(modelName)
+modelName(modelName),
+textureEnabled(false),
+ambientColor(0.5f),
+diffuseColor(0.7f),
+specularColor(0.2f)
 {
     //init openGL vertex
     //need to check !!!!
@@ -326,3 +330,17 @@ const std::vector<Vertex>& MeshModel::GetAllVertex(){
     return this->modelVertices;
 }
 
+
+void MeshModel::LoadTexture(const char * path) {
+    texture.loadTexture(path, true);
+    textureEnabled = true;
+}
+
+void MeshModel::BindTexture() {
+    texture.bind(0);
+}
+
+void MeshModel::UnbindTexture()
+{
+    texture.unbind(0);
+}

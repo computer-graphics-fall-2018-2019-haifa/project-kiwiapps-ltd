@@ -5,16 +5,17 @@
 #include <iostream>
 
 Light::Light():
-color(glm::vec3(1.0, 1.0, 1.0))
+color(glm::vec3(1.0, 1.0, 1.0)),
+model(Utils::LoadMeshModelPointer(GetLightPath()))
 {
-    this->model = std::make_shared<MeshModel>(MeshModel(Utils::LoadMeshModel(GetLightPath())));
+    model->translate = glm::vec3(10, 10, 0);
 }
 
 Light::~Light()
 {
 }
 
-const glm::vec3& Light::GetColor() const
+glm::vec3& Light::GetColor()
 {
 	return color;
 }
