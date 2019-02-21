@@ -17,7 +17,7 @@ faces(faces),
 vertices(vertices),
 normals(normals),
 textures(textures),
-scale({ 20,20,20}),
+scale({ 1,1,1 }),
 rotate({ 0,0,0 }),
 translate({ 0,0,0 }),
 worldTransform(glm::mat4x4(1)),
@@ -42,6 +42,8 @@ modelName(modelName)
             {
                 int textureCoordsIndex = face.GetTextureIndex(i) - 1;
                 vertex.textureCoords = textures[textureCoordsIndex];
+            } else {
+                vertex.textureCoords = {0, 0};
             }
             
             modelVertices.push_back(vertex);
@@ -57,7 +59,35 @@ modelName(modelName)
     
     
     initializeOpenGL();
+    CalculateWorldTransformation();
 }
+
+
+void MeshModel::initializeOpenGL() {
+    //GL stuff
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+    
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, modelVertices.size() * sizeof(Vertex), &modelVertices[0], GL_STATIC_DRAW);
+    
+    // load vertex positions
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),(GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    
+    // load normals
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+    
+    // load textures
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
+    
+    // unbind
+    glBindVertexArray(0);
+}
+
 
 MeshModel::~MeshModel()
 {
@@ -283,31 +313,6 @@ glm::mat4 MeshModel::CalculateRotationMatrix()
 	return xRotationMatrix * yRotationMatrix * zRotationMatirx;
 }
 
-
-void MeshModel::initializeOpenGL() {
-    //GL stuff
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, modelVertices.size() * sizeof(Vertex), &modelVertices[0], GL_STATIC_DRAW);
-    
-    // load vertex positions
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),(GLvoid*)0);
-    glEnableVertexAttribArray(0);
-
-    // load normals
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-
-    // load textures
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(6 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(2);
-
-    // unbind
-    glBindVertexArray(0);
-}
 
 GLuint MeshModel::GetVAO() const{
     return this->vao;

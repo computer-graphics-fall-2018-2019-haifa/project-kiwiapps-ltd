@@ -12,32 +12,33 @@
 #include "ImguiMenus.h"
 
 Camera::Camera(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float aspectRatio) :
-projectionType(0),
-zoom(1),
+projectionType(1),
+zoom(1.0f),
 eye(eye),
 at(at),
 up(up),
 aspectRatio(aspectRatio),
-nearP(10),
-fovy(45),
-farP(1000),
-height(2)
+nearP(0.1f),
+fovy(glm::pi<float>() / 4.0f),
+farP(200.0f),
+height(5)
 {
     this->model = std::make_shared<MeshModel>(Utils::LoadMeshModel(GetCameraPath()));
-	SetCameraLookAt(eye, at, up);
+    
     CalculateProjectionMatrix();
+    SetCameraLookAt(eye, at, up);
 }
 
 Camera::~Camera()
 {
 }
 
-const glm::mat4 Camera::GetViewTransformation()
+const glm::mat4 Camera::GetViewTransformation() const
 {
     return viewTransformation;
 }
 
-const glm::mat4 Camera::GetProjectionTransformation()
+const glm::mat4 Camera::GetProjectionTransformation()  const
 {
     return projectionTransformation;
 }
@@ -49,8 +50,9 @@ void Camera::SetOrthographicProjection(const float height, const float aspectRat
     this->nearP = nearP;
     this->farP = farP;
     this->projectionType = 0;
-    float width = aspectRatio * height;
-    projectionTransformation = glm::ortho(-width / 2, width / 2, -height / 2, height / 2, nearP, farP);
+    float zoomHight = height * zoom;
+    float width = aspectRatio * zoomHight;
+    projectionTransformation = glm::ortho(-width / 2, width / 2, -zoomHight / 2, zoomHight / 2, nearP, farP);
 }
 
 void Camera::SetPerspectiveProjection(const float fovy, const float aspectRatio, const float nearP, const float farP)
@@ -60,7 +62,9 @@ void Camera::SetPerspectiveProjection(const float fovy, const float aspectRatio,
     this->nearP = nearP;
     this->farP = farP;
     this->projectionType = 1;
-    projectionTransformation = glm::perspective(fovy, aspectRatio, nearP, farP);
+    float zoomFovy = fovy * zoom;
+    zoomFovy = zoomFovy > glm::pi<float>() ? glm::pi<float>() : zoomFovy;
+    projectionTransformation = glm::perspective(zoomFovy, aspectRatio, nearP, farP);
 }
 
 void Camera::CalculateProjectionMatrix()
@@ -118,6 +122,17 @@ const float Camera::GetZoom()
 }
 void Camera::SetZoom(const float zoom)
 {
-    this->zoom = zoom;
+    this->zoom = this->zoom * zoom;
+    CalculateProjectionMatrix();
+}
+
+
+const float Camera::GetAspectRatio()
+{
+    return aspectRatio;
+}
+void Camera::SetAspectRatio(const float aspectRatio)
+{
+    this->aspectRatio = aspectRatio;
     CalculateProjectionMatrix();
 }

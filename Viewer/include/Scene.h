@@ -39,7 +39,7 @@ public:
 	const int GetCameraCount() const;
 	void SetActiveCameraIndex(int index);
     const Camera& GetCameraByIndex(int index);
-    const Camera& GetActiveCamera();
+    Camera& GetActiveCamera();
     std::vector<Camera*> GetAllCameras() const;
     
     // Model functions

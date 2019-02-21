@@ -54,7 +54,7 @@ const Camera& Scene::GetCameraByIndex(int index)
     }
 }
 
-const Camera& Scene::GetActiveCamera()
+Camera& Scene::GetActiveCamera()
 {
     return *cameras.at(activeCameraIndex);
 }

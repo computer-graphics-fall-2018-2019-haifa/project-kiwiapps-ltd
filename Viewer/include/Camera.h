@@ -36,8 +36,8 @@ public:
     float farP;
     float height;
 
-    const glm::mat4 GetViewTransformation();
-    const glm::mat4 GetProjectionTransformation();
+    const glm::mat4 GetViewTransformation() const;
+    const glm::mat4 GetProjectionTransformation() const;
     
     void SetOrthographicProjection(const float height, const float aspectRatio, const float nearP, const float farP);
     void SetPerspectiveProjection(const float fovy, const float aspectRatio, const float nearP, const float farP);
@@ -56,5 +56,8 @@ public:
     
     const float GetZoom();
     void SetZoom(const float zoom);
+    
+    const float GetAspectRatio();
+    void SetAspectRatio(const float aspectRatio);
 
 };

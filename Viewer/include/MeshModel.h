@@ -37,7 +37,11 @@ private:
 
 public:
     MeshModel() {};
-	MeshModel(const std::vector<Face>& faces, const std::vector<glm::vec3>& vertices, const std::vector<glm::vec3>& normals, const std::vector<glm::vec2>& textures, const std::string& modelName = "");
+	MeshModel(const std::vector<Face>& faces,
+              const std::vector<glm::vec3>& vertices,
+              const std::vector<glm::vec3>& normals,
+              const std::vector<glm::vec2>& textures,
+              const std::string& modelName = "");
 	virtual ~MeshModel();
     const std::string& GetModelName();
 

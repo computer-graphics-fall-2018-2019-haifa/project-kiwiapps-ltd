@@ -41,7 +41,6 @@ public:
 //    void DrawLine(const Line& line, glm::mat4& transMatrix, const glm::vec3& color);
 //    void DrawTriangle(const std::vector<glm::vec3>& vertices, glm::mat4& transMatrix, const glm::vec3& color);
 //    void DrawFaceNormal(const std::vector<glm::vec3>& vertices, glm::mat4& transformMatrix);
-    void DrawModel(std::shared_ptr<MeshModel> model, const std::shared_ptr<Scene>& scene);
 //    void DrawModelBoundingBox(MeshModel* model, glm::mat4 transformMatrix);
 
     void LoadShaders();

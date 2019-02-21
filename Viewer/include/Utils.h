@@ -12,7 +12,10 @@ class Utils
 public:
 	static glm::vec3 Vec3fFromStream(std::istream& issLine);
 	static glm::vec2 Vec2fFromStream(std::istream& issLine);
-	static MeshModel LoadMeshModel(const std::string& filePath);
+    
+    static std::vector<glm::vec3> CalculateNormals(std::vector<glm::vec3> vertices, std::vector<Face> faces);
+    static MeshModel LoadMeshModel(const std::string& filePath);
+    static std::shared_ptr<MeshModel> LoadMeshModelPointer(const std::string& filePath);
 
     static glm::mat4 CalculateScaleMatrix(const glm::vec3 scale);
     static glm::mat4 CalculateTranslateMatrix(const glm::vec3 translate);

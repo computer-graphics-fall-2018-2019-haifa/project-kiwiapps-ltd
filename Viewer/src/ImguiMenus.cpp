@@ -28,14 +28,15 @@ bool settingsPageVisible = false;
 bool newCameraPageVisible = false;
 
 // configurations
-bool displayFPSConfig = false;
+bool displayFPSConfig = true;
 bool displayAxesConfig = true;
 bool displaySelectedModelOnlyConfig = false;
-int projectionTypeConfig = 0;
+int projectionTypeConfig = 1;
 float incrementalSizeConfig = 1.0f;
-std::string cameraObjPath = "";
-std::string lightObjPath = "";
-std::string textureObjPath = "";
+
+std::string cameraObjPath = "/Users/davidantoon/git/project-kiwiapps-ltd/Data/camera.obj";
+std::string lightObjPath = "/Users/davidantoon/git/project-kiwiapps-ltd/Data/sphere.obj";
+std::string textureObjPath = "/Users/davidantoon/git/project-kiwiapps-ltd/Data/crate.jpg";
 
 // new camera page
 bool newCameraResult = false;
@@ -331,7 +332,7 @@ void BuildToolbar(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow* 
                 nfdresult_t result = NFD_OpenDialog("obj;png,jpg", NULL, &outPath);
                 if (result == NFD_OKAY) {
                     printf("Load_Model obj Loaded\n");
-                    scene->AddModel(std::make_shared<MeshModel>(Utils::LoadMeshModel(outPath)));
+                    scene->AddModel(Utils::LoadMeshModelPointer(outPath));
                     free(outPath);
                 }
                 else if (result == NFD_CANCEL) {
