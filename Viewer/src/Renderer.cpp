@@ -45,11 +45,10 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
     colorShader.setUniform("lightColors", lightColors);
     colorShader.setUniform("lightTranslations", lightTranslations);
     
-    activeCamera.SetCameraLookAt();
     for (std::shared_ptr<MeshModel> model : models) {
         
         // Set the uniform variables
-        colorShader.setUniform("model", model->GetWorldTransformation() * model->CalculateTranslationMatrix());
+        colorShader.setUniform("model", model->GetWorldTransformation());
         colorShader.setUniform("view", activeCamera.GetViewTransformation());
         colorShader.setUniform("projection", activeCamera.GetProjectionTransformation());
         colorShader.setUniform("material.textureMap", 0);
