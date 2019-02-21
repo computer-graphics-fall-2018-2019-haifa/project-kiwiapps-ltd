@@ -25,6 +25,7 @@ height(5),
 model(Utils::LoadMeshModelPointer(GetCameraPath()))
 {
     CalculateProjectionMatrix();
+    model->SetScale(glm::vec3({0.3,0.3,0.3}));
     SetCameraLookAt(eye, at, up);
 }
 
@@ -111,6 +112,7 @@ void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const gl
 void Camera::SetCameraLookAt(const glm::vec3& eye, const glm::vec3& at, const glm::vec3& up, float zoom)
 {
     // display the camera model inversed to look at
+    this->model->SetTranslate(eye);
     model->CalculateInverseWorldTransformation();
     this->viewTransformation = glm::lookAt(eye, at, up);
 }

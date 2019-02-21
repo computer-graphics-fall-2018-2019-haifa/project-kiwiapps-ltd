@@ -514,6 +514,7 @@ void DisplayAddNewCamera(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWw
         newCameraResult = false;
         Camera* camera = new Camera(eye, at, up, scene->GetActiveCamera().aspectRatio);
         scene->AddCamera(camera);
+        camera->SetCameraLookAt();
         return;
     }
     

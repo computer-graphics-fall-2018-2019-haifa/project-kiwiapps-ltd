@@ -80,14 +80,27 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
     
     // draw cameras
 //    std::logic_error("need to check this!!! maybe change the impl remove inherit");
-//    for (int i = 0; i < scene->GetCameraCount(); i++) {
-//        if (scene->activeCameraIndex == i)
-//            continue;
-//        std::shared_ptr<MeshModel> cameraModel = cameras.at(i)->GetModel();
-//        cameraModel->CalculateWorldTransformation();
-//        // Draw Camera model
-////        DrawModel(cameraModel, scene);
-//    }
+    for (int i = 0; i < scene->GetCameraCount(); i++) {
+        if (scene->activeCameraIndex == i)
+            continue;
+        std::shared_ptr<MeshModel> cameraModel = cameras.at(i)->GetModel();
+        cameraModel->CalculateInverseWorldTransformation();
+        
+        // Set the uniform variables
+        colorShader.setUniform("model", cameraModel->GetWorldTransformation());
+        colorShader.setUniform("view", activeCamera.GetViewTransformation());
+        colorShader.setUniform("projection", activeCamera.GetProjectionTransformation());
+        colorShader.setUniform("material.textureMap", 0);
+        colorShader.setUniform("material.color", cameraModel->color);
+        colorShader.setUniform("textureEnabled", false);
+        
+        // Drag our model's faces (triangles) in fill mode
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glBindVertexArray(cameraModel->GetVAO());
+        glDrawArrays(GL_TRIANGLES, 0, cameraModel->GetAllVertex().size());
+        glBindVertexArray(0);
+        
+    }
     
     //TODO : Draw lights
 }
