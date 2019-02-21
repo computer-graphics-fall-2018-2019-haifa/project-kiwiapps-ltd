@@ -154,7 +154,7 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         ImGui::Text("\n           *** No loaded models yet! ***\n");
         ImGui::Text("              Load model by going to \n            Insert -> Load model from file...\n");
         ImGui::Text("");
-    } else if (ImGui::CollapsingHeader("Models")) {
+    } else if (ImGui::CollapsingHeader("Models") && models.size() > 0) {
         std::shared_ptr<MeshModel> activeModel = models.at(scene->activeModelIndex);
         char** modelNames = new char*[models.size()];
         for (int i = 0; i < models.size(); i++)
@@ -191,43 +191,75 @@ void buildMainMenu(ImGuiIO& io, const std::shared_ptr<Scene>& scene, GLFWwindow*
         ImGui::Text("Lock Scale:");
         ImGui::SameLine();
         ImGui::Checkbox("##lockScaleCheckbox", &lockScale);
-        ImGui::Text("Scale X:");
-        ImGui::SameLine();
-        ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleX", &(activeModel->scale.x), 1.0f, 500.0f);
-        ImGui::Text("Scale Y:");
-        ImGui::SameLine();
-        ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleY", &(activeModel->scale.y), 1.0f, 500.0f);
-        ImGui::Text("Scale Z:");
-        ImGui::SameLine();
-        ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleZ", &(activeModel->scale.z), 1.0f, 500.0f);
-    
+        if (lockScale) {
+            if(ImGui::SliderFloat("Scale", &(activeModel->scale.x), 0.0f, 3.0f)){
+                float x = activeModel->scale.x;
+                activeModel->scale = { x, x, x };
+                activeModel->CalculateScaleMatrix();
+            }
+        }
+        else {
+            ImGui::Text("Scale X:");
+            ImGui::SameLine();
+            bool changed = false;
+            if(ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleX", &(activeModel->scale.x), 0.0f, 3.0f))
+                changed = true;
+            ImGui::Text("Scale Y:");
+            ImGui::SameLine();
+            if(ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleY", &(activeModel->scale.y), 0.0f, 3.0f))
+                changed = true;
+            ImGui::Text("Scale Z:");
+            ImGui::SameLine();
+            if(ImGui::SliderFloat(lockScale ? "##lockedScale" : "##ScaleZ", &(activeModel->scale.z), 0.0f, 3.0f))
+                changed = true;
+            if(changed){
+                activeModel->CalculateScaleMatrix();
+            }
+        }
         ImGui::Separator();
-        
+
         ImGui::Text("Lock Rotate:");
         ImGui::SameLine();
         ImGui::Checkbox("##lockRotateCheckbox", &lockRotate);
-        ImGui::Text("Rotate X:");
-        ImGui::SameLine();
-        ImGui::SliderFloat(lockRotate ? "##lockedRotate" : "##RotateX", &(activeModel->rotate.x), -360.0f, 360.0f);
-        ImGui::Text("Rotate Y:");
-        ImGui::SameLine();
-        ImGui::SliderFloat(lockRotate ? "##lockedRotate" : "##RotateY", &(activeModel->rotate.y), -360.0f, 360.0f);
-        ImGui::Text("Rotate Z:");
-        ImGui::SameLine();
-        ImGui::SliderFloat(lockRotate ? "##lockedRotate" : "##RotateZ", &(activeModel->rotate.z), -360.0f, 360.0f);
-        
+        if (lockRotate) {
+            if(ImGui::SliderFloat("Rotate all", &(activeModel->rotate.x), 0.0f, 5.0f)){
+                float x = activeModel->rotate.x;
+                activeModel->rotate = { x, x, x };
+                activeModel->CalculateRotationMatrix();
+            }
+        }
+        else {
+            bool changed = false;
+            if(ImGui::SliderFloat("Rotate X", &(activeModel->rotate.x), 0.0f, 5.0f))
+                changed = true;
+            if(ImGui::SliderFloat("Rotate Y", &(activeModel->rotate.y), 0.0f, 5.0f))
+                changed = true;
+            if(ImGui::SliderFloat("Rotate Z", &(activeModel->rotate.z), 0.0f, 5.0f))
+                changed = true;
+            if(changed){
+                activeModel->CalculateRotationMatrix();
+            }
+        }
         ImGui::Separator();
-    
-        ImGui::Text("Translation X:");
-        ImGui::SameLine();
-        ImGui::SliderFloat("##TranslationX", &(activeModel->translate.x), -1000.0f, 1000.0f);
-        ImGui::Text("Translation Y:");
-        ImGui::SameLine();
-        ImGui::SliderFloat("##TranslationY", &(activeModel->translate.y), -1000.0f, 1000.0f);
-        ImGui::Text("Translation Z:");
-        ImGui::SameLine();
-        ImGui::SliderFloat("##TranslationZ", &(activeModel->translate.z), -1000.0f, 1000.0f);
-
+        {
+            bool changed = false;
+            ImGui::Text("Translation X:");
+            ImGui::SameLine();
+            if(ImGui::SliderFloat("##TranslationX", &(activeModel->translate.x), -5.0f, 5.0f))
+                changed = true;
+            ImGui::Text("Translation Y:");
+            ImGui::SameLine();
+            if(ImGui::SliderFloat("##TranslationY", &(activeModel->translate.y), -5.0f, 5.0f))
+                changed = true;
+            ImGui::Text("Translation Z:");
+            ImGui::SameLine();
+            if(ImGui::SliderFloat("##TranslationZ", &(activeModel->translate.z), -5.0f, 5.0f))
+                changed = true;
+            if(changed)
+                activeModel->CalculateTranslationMatrix();
+        }
+        activeModel->CalculateWorldTransformation();
+        scene->CalculateWorldTransformationMatrix();
     }
     
     
