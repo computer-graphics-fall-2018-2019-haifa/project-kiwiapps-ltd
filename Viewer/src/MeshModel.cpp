@@ -90,6 +90,31 @@ void MeshModel::initializeOpenGL() {
     
     // unbind
     glBindVertexArray(0);
+    
+    
+    
+    //bounding box gen
+    glGenVertexArrays(1, &boundingBoxVao);
+    glBindVertexArray(boundingBoxVao);
+    
+    glGenBuffers(1, &boundingBoxVbo);
+    glBindBuffer(GL_ARRAY_BUFFER, boundingBoxVbo);
+    glBufferData(GL_ARRAY_BUFFER, boundingBox.size() * sizeof(Vertex), &boundingBox[0], GL_STATIC_DRAW);
+    
+    // load vertex positions
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+    
+    // load normals
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
+    
+    // load textures
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, textureCoords));
+    
+    // unbind
+    glBindVertexArray(0);
 }
 
 
@@ -109,6 +134,48 @@ void MeshModel::CalculateBoundingBox()
     float maxY = GetMax(1);
     float maxZ = GetMax(2);
     
+    
+    
+    Vertex v0, v1, v2, v3, v4, v5, v6, v7;
+    v0.normal = v0.position = glm::vec3(minX, minY, minZ); // left low close 0
+    v1.normal = v1.position = glm::vec3(maxX, minY, minZ); // right low close 1
+    v2.normal = v2.position = glm::vec3(minX, maxY, minZ); // left high close 2
+    v3.normal = v3.position = glm::vec3(maxX, maxY, minZ); // right high close 3
+    v4.normal = v4.position = glm::vec3(minX, minY, maxZ); // left low far 4
+    v5.normal = v5.position = glm::vec3(maxX, minY, maxZ); // right low far 5
+    v6.normal = v6.position = glm::vec3(minX, maxY, maxZ); // left high far 6
+    v7.normal = v7.position = glm::vec3(maxX, maxY, maxZ); // right high far 7
+    v0.textureCoords = v1.textureCoords = v2.textureCoords = v3.textureCoords = v4.textureCoords = v5.textureCoords = v6.textureCoords = v7.textureCoords = glm::vec2(0.0f, 0.0f);
+    boundingBox.reserve(36);
+    boundingBox.push_back(v0); boundingBox.push_back(v1); boundingBox.push_back(v3);
+    boundingBox.push_back(v0); boundingBox.push_back(v1); boundingBox.push_back(v2);
+    boundingBox.push_back(v1); boundingBox.push_back(v3); boundingBox.push_back(v5);
+    boundingBox.push_back(v1); boundingBox.push_back(v5); boundingBox.push_back(v7);
+    boundingBox.push_back(v4); boundingBox.push_back(v5); boundingBox.push_back(v6);
+    boundingBox.push_back(v5); boundingBox.push_back(v6); boundingBox.push_back(v7);
+    boundingBox.push_back(v0); boundingBox.push_back(v2); boundingBox.push_back(v4);
+    boundingBox.push_back(v2); boundingBox.push_back(v4); boundingBox.push_back(v6);
+    boundingBox.push_back(v2); boundingBox.push_back(v3); boundingBox.push_back(v7);
+    boundingBox.push_back(v2); boundingBox.push_back(v6); boundingBox.push_back(v7);
+    boundingBox.push_back(v0); boundingBox.push_back(v1); boundingBox.push_back(v5);
+    boundingBox.push_back(v0); boundingBox.push_back(v4); boundingBox.push_back(v5);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /*
     this->boundingBox.clear();
     
     //  square 1
@@ -142,7 +209,7 @@ void MeshModel::CalculateBoundingBox()
     this->boundingBox.push_back(Line(glm::vec3(minX, minY, minZ), glm::vec3(minX, minY, maxZ)));
     this->boundingBox.push_back(Line(glm::vec3(maxX, minY, minZ), glm::vec3(maxX, minY, maxZ)));
     this->boundingBox.push_back(Line(glm::vec3(minX, maxY, minZ), glm::vec3(minX, maxY, maxZ)));
-    this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, minZ), glm::vec3(maxX, maxY, maxZ)));
+    this->boundingBox.push_back(Line(glm::vec3(maxX, maxY, minZ), glm::vec3(maxX, maxY, maxZ)));*/
 }
 
 // public methods:
@@ -211,7 +278,7 @@ const glm::vec3 MeshModel::GetNormalByIndex(int index) const
 }
 
 
-const std::vector<Line> MeshModel::GetBoundingBox() const
+const std::vector<Vertex> MeshModel::GetBoundingBox() const
 {
     return this->boundingBox;
 }

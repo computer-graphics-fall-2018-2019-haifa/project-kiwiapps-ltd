@@ -27,7 +27,7 @@ private:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
     std::vector<glm::vec2> textures;
-    std::vector<Line> boundingBox;
+    std::vector<Vertex> boundingBox;
     std::vector<Vertex> modelVertices;
     Texture2D texture;
     
@@ -58,6 +58,9 @@ public:
     
     GLuint vao; // vertex array object
     GLuint vbo; // vertex buffers object
+    
+    GLuint boundingBoxVao; // vertex array bounding box
+    GLuint boundingBoxVbo; // vertex buffers bounding box
 
     bool textureEnabled;
     
@@ -79,7 +82,7 @@ public:
     const glm::vec3 CalculateFaceNormal(Face face) const;
     const glm::vec3 GetVertexByIndex(int index) const;
     const glm::vec3 GetNormalByIndex(int index) const;
-    const std::vector<Line> GetBoundingBox() const;
+    const std::vector<Vertex> GetBoundingBox() const;
     
     const glm::mat4 CalculateWorldTransformation();
     const glm::mat4 CalculateInverseWorldTransformation();

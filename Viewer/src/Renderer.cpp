@@ -76,6 +76,16 @@ void Renderer::Render(const std::shared_ptr<Scene>& scene, GLFWwindow* window)
         glBindVertexArray(model->GetVAO());
         glDrawArrays(GL_TRIANGLES, 0, model->GetAllVertex().size());
         glBindVertexArray(0);
+        
+        
+        if(model->boundingBoxVisibility)
+        {
+            // Drag our model's faces (triangles) in line mode (wireframe)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glBindVertexArray(model->boundingBoxVao);
+            glDrawArrays(GL_TRIANGLES, 0, model->GetBoundingBox().size());
+            glBindVertexArray(0);
+        }
     }
     
     // draw cameras
